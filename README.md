@@ -28,3 +28,5 @@ In addition, you must have any implementation of LAPACK on your computer, see sr
 How to uninstall:
 $ cd src
 $ make uninstall
+
+For help and questions, ao2310@yandex.ru
