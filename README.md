@@ -1,7 +1,8 @@
 # minichem
 A very simple quantum chemistry program.
 
-Minichem is a tiny educational project, created in order to better understand the computational methods in quantum chemistry. I will improve it while studying new method.
+Minichem is a tiny educational project, created in order to better understand the computational methods of quantum chemistry. I will improve it while studying new method.
+For details, see A. Szabo, N. Ostlund, "Modern Quantim Chemistry", and T. Helgaker, P. Jorgensen, J. Olsen, "Molecular Electronic-Structure Theory".
 
 Features:
  - Single-point energy calculation
@@ -14,7 +15,7 @@ Features:
  
 Possibilities to be implemented in the future:
  - More scalable OpenMP parallelization
- - Analytic gradients
+ - Analytic gradients and geometry optimization
  - Unrestricted Hartree-Fock method
  
 How to compile:
