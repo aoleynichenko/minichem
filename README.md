@@ -20,7 +20,7 @@ Possibilities to be implemented in the future:
  - I want to try to implement four-index transformation, MP2, CCSD and CCSD(T) energies.
  
 How to compile:
-  cd src
+  cd src <br>
   make
   make install
 To compile project, you must have any MPI implementation (I use openmpi on my laptop) and gcc compiler.
