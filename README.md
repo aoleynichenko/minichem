@@ -11,7 +11,7 @@ Features:
  - OpenMP parallelization
  - Available elements: H-Ne
  - Available basis sets: any basis sets with only s and p functions
- - NWChem file format
+ - NWChem input file format
  
 Possibilities to be implemented in the future:
  - More scalable OpenMP parallelization
