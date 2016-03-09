@@ -19,9 +19,9 @@ Possibilities to be implemented in the future:
  - Unrestricted Hartree-Fock method
  
 How to compile:
-$ cd src
-$ make
-$ make install
+$ cd src \n
+$ make \n
+$ make install \n
 To compile project, you must have any MPI implementation (I use openmpi on my laptop) and gcc compiler.
 In addition, you must have any implementation of LAPACK on your computer, see src/Makefile for details.
 
