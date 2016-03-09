@@ -19,15 +19,15 @@ Possibilities to be implemented in the future:
  - Unrestricted Hartree-Fock method;
  - I want to try to implement four-index transformation, MP2, CCSD and CCSD(T) energies.
  
-How to compile:
-  cd src <br>
-  make
-  make install
+How to compile: <br>
+ $ cd src <br>
+ $ make <br>
+ $ make install <br>
 To compile project, you must have any MPI implementation (I use openmpi on my laptop) and gcc compiler.
 In addition, you must have any implementation of LAPACK on your computer, see src/Makefile for details.
 
-How to uninstall:
-  cd src
-  make uninstall
+How to uninstall: <br>
+ $ cd src <br>
+ $ make uninstall <br>
 
 For suggestions and questions, ao2310@yandex.ru, I look forward to any comments!
