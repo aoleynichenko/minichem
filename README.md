@@ -6,7 +6,7 @@ For details, see A. Szabo, N. Ostlund, "Modern Quantim Chemistry", and T. Helgak
 
 Features:
  - Single-point energy calculation;
- - Restricted Hartee-Fock method;
+ - Restricted Hartree-Fock method;
  - DIIS convergence acceleration algorithm;
  - OpenMP parallelization;
  - Available elements: H-Ne;
