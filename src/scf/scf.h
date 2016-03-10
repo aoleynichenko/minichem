@@ -85,6 +85,7 @@ struct scf_opt {
 
 extern struct scf_opt scf_options;
 
+void print_scf_options(struct scf_opt *opt);
 
 // for initial guess
 void guess_F_eht(double *F, double *S, struct basis_function *bfn, int n);

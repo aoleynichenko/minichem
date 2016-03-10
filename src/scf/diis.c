@@ -27,15 +27,16 @@ DIISList_t *newDIISList(double *errm, double *fock, int dim)
 	return leaf;
 }
 
-/* Удаляет следующий за prev элемент списка и освобождает все его ресурсы.
+/* Удаляет список данных DIIS начиная с элемента p включительно.
+ * Работает рекурсивно, сначала уничтожает все элементы после данного,
+ * потом уже данный.
  */
-void removeDIISList(DIISList_t *prev)
+void removeDIISList(DIISList_t *p)
 {
-	if (!prev)
+	if (!p)
 		return;
 	else {
-		DIISList_t *p = prev->next;
-		prev->next = NULL;
+		removeDIISList(p->next);
 		qfree(p->E, sizeof(double) * p->dim * p->dim);
 		qfree(p->F, sizeof(double) * p->dim * p->dim);
 		qfree(p, sizeof(DIISList_t));
@@ -193,5 +194,6 @@ void diis_extrapolate(double *F, DIISList_t *diislist, int diisbas)
 		}
 	
 	qfree(focks, diislen * sizeof(double *));
+	qfree(right, sizeof(double) * bdim);
 }
 

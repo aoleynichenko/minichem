@@ -119,8 +119,9 @@ void scf_energy(struct cart_mol *molecule)
 		printf("          *      Parallel SCF Module     *\n");
 		printf("          ********************************\n\n");
 		
+		print_scf_options(&scf_options);
 		mol_summary(&calc_info.molecule);
-		line_separator();
+		//line_separator();
 	}
 	
 	scf_timing.time_dens  = 0.0;
@@ -165,6 +166,20 @@ double hf_energy(double *P, double *F, double *H)
 		for (j = 0; j < M; j++)
 			E0 += 0.5*P[i*M+j]*(H[i*M+j] + F[i*M+j]);
 	return E0;
+}
+
+void print_scf_options(struct scf_opt *opt)
+{
+	printf("                    SCF Parameters\n");
+	printf("                    --------------\n");
+	printf("               Wavefunction : %s\n", opt->wavefuntype == SCF_RHF ? "rhf" : "uhf");
+	printf("             Max iterations : %d\n", opt->maxiter);
+	printf("               Density conv : %g\n", opt->conv_dens);
+	printf("                Energy conv : %g\n", opt->conv_en);
+	printf("                       DIIS : %s\n", opt->diis ? "on" : "off");
+	if (opt->diis)
+	printf("                    diisbas : %d\n", opt->diisbas);
+	printf("\n");
 }
 
 // Ортогонализация базиса
@@ -418,6 +433,10 @@ void scf_loop()
 	printf("  Fock matrix        %9.3f\n", scf_timing.time_fock);
 	printf("  Diagonalization    %9.3f\n", scf_timing.time_diag);
 	printf("---------------------------------\n\n");
+	
+	// Освобождение ресурсов, которые были заняты DIIS
+	if (scf_options.diis && diislist)
+		removeDIISList(diislist);
 	
 	// Вывод результатов
 	// Энергии орбиталей
