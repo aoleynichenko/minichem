@@ -129,6 +129,7 @@ void scf_energy(struct cart_mol *molecule)
 	scf_timing.time_fock  = 0.0;
 	scf_timing.time_guess = 0.0;
 	scf_timing.time_ortho = 0.0;
+	omp_set_num_threads(calc_info.nproc);
 	
 	// теперь мы должны понять, как распределены по узлам матрицы:
 	//  - перекрывания S
@@ -545,6 +546,136 @@ void makefock_naive()
 	}
 }
 
+// highly scalable implementation
+void makefock()
+{
+	int m, i, j;
+	int neri = 0;
+	double t0 = MPI_Wtime();
+	int maxthreads = omp_get_max_threads();
+	int work[] = {0,0,0,0,0,0,0,0};
+	double **Fi = (double **) qalloc(maxthreads * sizeof(double *));
+	
+	for (i = 0; i < maxthreads; i++) {
+		Fi[i] = (double *) qalloc(M*M*sizeof(double));
+		memset(Fi[i], 0, M*M*sizeof(double));
+	}
+	
+	#pragma omp parallel for schedule(dynamic,1)
+	for (m = 0; m < M; m++) {
+		int n, p, q;
+		int tnum = omp_get_thread_num();
+		double *f = Fi[tnum];
+	for (n = m; n < M; n++)
+	for (p = m; p < M; p++)
+	for (q = (p == m) ? n : p; q < M; q++) {
+		struct basis_function *fm, *fn, *fp, *fq;
+		double Int;
+		
+		double Dmm = P[m*M+m];
+		double Dnn = P[n*M+n];
+		double Dpp = P[p*M+p];
+		double Dqq = P[q*M+q];
+		
+		double Dpq = P[p*M+q];
+		double Dqp = P[q*M+p];
+		double Dmn = P[m*M+n];
+		double Dnm = P[n*M+m];
+		
+		double Dnq = P[n*M+q];
+		double Dqn = P[q*M+n];
+		double Dmq = P[m*M+q];
+		double Dqm = P[q*M+m];
+		double Dnp = P[n*M+p];
+		double Dpn = P[p*M+n];
+		double Dmp = P[m*M+p];
+		double Dpm = P[p*M+m];
+		
+		
+		fm = &bfns[m];
+		fn = &bfns[n];
+		fp = &bfns[p];
+		fq = &bfns[q];
+		
+		Int = aoint_eri(fm, fn, fp, fq);
+		
+		if (m == n && m == p && m == q) {  // (mm|mm) - 1
+			f[m*M+m] += 0.5 * Dmm * Int;
+		}
+		else if (n == m && p == q) {  // (mm|pp) - 2
+			f[m*M+m] += Dpp * Int;
+			f[p*M+p] += Dmm * Int;
+				
+			f[m*M+p] -= 0.5 * Dmp * Int;
+			f[p*M+m] -= 0.5 * Dpm * Int;
+		}
+		else if (m == p && n == q) { // (mn|mn) - 4
+			f[m*M+n] += Int * (Dmn + 0.5*Dnm);
+			f[n*M+m] += Int * (Dnm + 0.5*Dmn);
+			
+			f[n*M+n] -= 0.5 * Dmm * Int;
+			f[m*M+m] -= 0.5 * Dnn * Int;
+		}
+		else if (n == m) { // (mm|pq) - 4
+			f[m*M+m] += Dpq * Int;
+			f[m*M+m] += Dqp * Int;
+			f[p*M+q] += Dmm * Int;
+			f[q*M+p] += Dmm * Int;
+			
+			f[m*M+p] -= 0.5 * Dmq * Int;
+			f[p*M+m] -= 0.5 * Dqm * Int;
+			f[m*M+q] -= 0.5 * Dmp * Int;
+			f[q*M+m] -= 0.5 * Dpm * Int;
+		}
+		else if (p == q) {  // (mn|pp) - 4
+			f[m*M+n] += Dpp * Int;
+			f[n*M+m] += Dpp * Int;
+			f[p*M+p] += Dmn * Int;
+			f[p*M+p] += Dnm * Int;
+			
+			f[m*M+p] -= 0.5 * Dnp * Int;
+			f[p*M+m] -= 0.5 * Dpn * Int;
+			f[n*M+p] -= 0.5 * Dmp * Int;
+			f[p*M+n] -= 0.5 * Dpm * Int;
+		}
+		else {  // (mn|pq) - 8
+			f[m*M+n] += Dpq * Int;
+			f[n*M+m] += Dpq * Int;
+			f[m*M+n] += Dqp * Int;
+			f[n*M+m] += Dqp * Int;
+			f[p*M+q] += Dmn * Int;
+			f[p*M+q] += Dnm * Int;
+			f[q*M+p] += Dmn * Int;
+			f[q*M+p] += Dnm * Int;
+				
+			f[m*M+p] -= 0.5 * Dnq * Int;
+			f[p*M+m] -= 0.5 * Dqn * Int;
+			f[n*M+p] -= 0.5 * Dmq * Int;
+			f[p*M+n] -= 0.5 * Dqm * Int;
+			f[m*M+q] -= 0.5 * Dnp * Int;
+			f[q*M+m] -= 0.5 * Dpn * Int;
+			f[n*M+q] -= 0.5 * Dmp * Int;
+			f[q*M+n] -= 0.5 * Dpm * Int;
+		}
+	}
+	} // end loop
+	
+	memcpy(F, Hcore, M*M*sizeof(double));
+	
+	int k;
+	#pragma omp parallel for private(j,k)
+	for (i = 0; i < M; i++)
+		for (j = 0; j < M; j++)
+			for (k = 0; k < maxthreads; k++)
+				F[i*M+j] += Fi[k][i*M+j];
+	
+	for (i = 0; i < maxthreads; i++)
+		qfree(Fi[i], M*M*sizeof(double));
+	qfree(Fi, maxthreads * sizeof(double *));
+	
+	scf_timing.time_fock += MPI_Wtime() - t0;
+}
+
 /*
 F(m, n) += D(p, q) * I(m, n, p, q)
 F(n, m) += D(p, q) * I(n, m, p, q)
@@ -564,7 +695,12 @@ F(q, m) -= 0.5 * D(p, n) * I(q, p, m, n)
 F(n, q) -= 0.5 * D(m, p) * I(n, m, q, p)
 F(q, n) -= 0.5 * D(p, m) * I(q, p, n, m)
 */
-void makefock()
+/* Too many critical sections!
+ * However, the performance of this code is equal to one for makefock()
+ * (see above). Moreover, this implementation of the Fock matrix
+ * construction is less memory demanding!
+ */
+void makefock_crit()
 {
 	//int m, n, p, q;
 	int m;
