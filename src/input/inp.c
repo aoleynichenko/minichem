@@ -155,6 +155,7 @@ void directive_nproc()
 	
 	match(TT_NUMBER);
 	nproc = (int) nval;
+	calc_info.nproc = nproc;
 	omp_set_num_threads(nproc);
 	
 	switch (_OPENMP) {
