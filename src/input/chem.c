@@ -94,7 +94,7 @@ void mol_summary(struct cart_mol *molecule)
 			struct elem_info *ei = &ptable[i];
 			mass += ei->m*el[i];
 			nelec += ei->Z*el[i];
-		}
+		}  // ???
 	printf("\n");
 	printf("Atoms:     %d\n", molecule->size);
 	printf("Electrons: %d\n", nelec);
