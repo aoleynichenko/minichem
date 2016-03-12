@@ -96,6 +96,7 @@ void diag_fock(double *F, double *X, double *C, double *en, int M);
 void orthobasis(double *S, double *X, int dim);
 double enuc(Molecule_t *geom);
 double rmsdens(double *P1, double *P2, int M);
+void print_matrix(char *annot, double *A, int dim);
 
 #define SCF_RHF  0
 #define SCF_UHF  1

@@ -304,7 +304,7 @@ void diag_fock(double *F, double *X, double *C, double *en, int M)
 	double beta = 0.0;
 	double *work, wkopt, t0 = MPI_Wtime();
 	
-	double *Temp = (double *) qalloc(M*M*sizeof(double));  // BAD!!! Alloc in critical block
+	double *Temp = (double *) qalloc(M*M*sizeof(double));
 	double *TempF = (double *) qalloc(M*M*sizeof(double));
 	memcpy(TempF, F, M*M*sizeof(double));
 	

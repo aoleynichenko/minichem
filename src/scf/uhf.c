@@ -21,10 +21,22 @@ void uhf_guess(double *Fa, double *Fb, double *H, double *Pa, double *Pb,
 double uhf_energy(double *Pa, double *Pb, double *Fa, double *Fb, double *H, int M);
 void uhf_makefock(double *Fa, double *Fb, double *H, double *Pa, double *Pb, BasisFunc_t *bfns, int M);
 void uhf_makedensity(double *P, double *C, int nelec, int dim);
+double exact_S2(int Nalpha, int Nbeta);
+double uhf_S2(int Nalpha, int Nbeta, double *Ca, double *Cb, double *S, int dim);
+
+double trace(double *A, double *B, int M)
+{
+	int i, j;
+	double trace = 0.0;
+	for (i = 0; i < M; i++)
+		for (j = 0; j < M; j++)
+			trace += A[i*M+j]*B[i*M+j];
+	return trace;
+}
 
 void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 {
-	int n;
+	int n, i;
 	int Nalpha, Nbeta;
 	double t0;
 	double hfe, olde, deltap_a, deltap_b;
@@ -68,6 +80,7 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	olde = uhf_energy(Pa, Pb, Fa, Fb, H, M) + Enuc;
 	
 	// scf loop
+	printf("Nalpha = %d\nNbeta = %d\n", Nalpha, Nbeta);
 	printf("#bfns = %d\n", M);
 	printf("#eris = %d\n\n", (M*M*M*M+2*M*M*M+3*M*M+2*M)/8);
 	printf(" iter.       Energy         Delta E       RMS-Dens       time\n");
@@ -102,6 +115,26 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	printf("---------------------------------------------------------------\n");
 	printf("          Total SCF energy =%15.8f\n", hfe);
 	printf("  Nuclear repulsion energy =%15.8f\n", Enuc);
+	printf("                 UHF <S^2> =%11.4f\n", uhf_S2(Nalpha, Nbeta, Ca, Cb, S, M));
+	printf("               Exact <S^2> =%11.4f\n", exact_S2(Nalpha, Nbeta));
+	
+	// MO analysis
+	printf("\n");
+	printf("      Alpha Molecular Orbitals Summary\n");
+	printf("  +-----+-----+----------------+----------+\n");
+	printf("  | No  | Occ |     Energy     | Symmetry |\n");
+	printf("  +-----+-----+----------------+----------+\n");
+	for (i = 0; i < M; i++)
+		printf("  | %-3d |  %1d  | %14.8f |     ?    |\n", i+1, (i < Nalpha) ? 1 : 0, Ea[i]);
+	printf("  +-----+-----+----------------+----------+\n");
+	printf("\n");
+	printf("       Beta Molecular Orbitals Summary\n");
+	printf("  +-----+-----+----------------+----------+\n");
+	printf("  | No  | Occ |     Energy     | Symmetry |\n");
+	printf("  +-----+-----+----------------+----------+\n");
+	for (i = 0; i < M; i++)
+		printf("  | %-3d |  %1d  | %14.8f |     ?    |\n", i+1, (i < Nbeta) ? 1 : 0, Eb[i]);
+	printf("  +-----+-----+----------------+----------+\n");
 	
 	
 	qfree(H, nbytes);
@@ -380,3 +413,30 @@ void uhf_makedensity(double *P, double *C, int nelec, int dim)
 	
 	scf_timing.time_dens += MPI_Wtime() - t0;
 }
+
+double exact_S2(int Nalpha, int Nbeta)
+{
+	return 0.5*(Nalpha - Nbeta)*(0.5*(Nalpha - Nbeta) + 1);
+}
+
+double uhf_S2(int Nalpha, int Nbeta, double *Ca, double *Cb, double *S, int M)
+{
+	int i, j, m, n;
+	double dS2 = 0.0;
+	
+	for (i = 0; i < Nalpha; i++)
+		for (j = 0; j < Nbeta; j++) {
+			double Sijab = 0.0;
+			for (m = 0; m < M; m++)
+				for (n = 0; n < M; n++)
+					Sijab += Ca[i*M+m]*Cb[j*M+n]*S[m*M+n];
+			dS2 += Sijab*Sijab;
+		}
+	
+	return exact_S2(Nalpha, Nbeta) + Nbeta - dS2;
+}
+
+
+
+
+
