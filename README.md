@@ -6,7 +6,7 @@ For details, see A. Szabo, N. Ostlund, "Modern Quantim Chemistry", and T. Helgak
 
 Features:
  - Single-point energy calculation;
- - Restricted Hartree-Fock method;
+ - RHF and UHF methods;
  - DIIS convergence acceleration algorithm;
  - OpenMP parallelization;
  - Available elements: H-Ne;
@@ -14,9 +14,9 @@ Features:
  - NWChem input file format.
  
 Possibilities to be implemented in the future:
+ - DIIS implementation for UHF;
  - More scalable OpenMP parallelization;
  - Analytic gradients and geometry optimization;
- - Unrestricted Hartree-Fock method;
  - I want to try to implement four-index transformation, MP2, CCSD and CCSD(T) energies.
  
 How to compile: <br>
