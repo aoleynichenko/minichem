@@ -115,7 +115,6 @@ void scf_energy(struct cart_mol *molecule)
 		scf_options.wavefuntype = SCF_RHF;
 	else
 		scf_options.wavefuntype = SCF_UHF;
-	printf("Wavefunction type: %s\n", scf_options.wavefuntype == SCF_RHF ? "RHF" : "UHF");
 	
 	print_scf_options(&scf_options);
 	mol_summary(&calc_info.molecule);
