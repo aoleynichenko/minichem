@@ -3,7 +3,7 @@
 CC=mpicc
 CCFLAGS=-Wall -O3 -fopenmp -Werror=return-type -Werror=implicit-function-declaration
 CLEAN=rm -rf *.o *.a
-OBJ=scf.o 1e.o 2e.o boys.o ints_print.o scf_input.o molden.o eht.o analysis.o diis.o
+OBJ=scf.o 1e.o 2e.o boys.o ints_print.o scf_input.o molden.o eht.o analysis.o diis.o rhf.o uhf.o
 
 #all:
 #	$(CC) $(CCFLAGS) scf.c -o scf -llapack -lscalapack -lblas
@@ -31,6 +31,12 @@ molden.o: molden.c
 
 eht.o: eht.c
 	$(CC) $(CCFLAGS) -c eht.c -o eht.o
+	
+uhf.o: uhf.c
+	$(CC) $(CCFLAGS) -c uhf.c -o uhf.o
+	
+rhf.o: rhf.c
+	$(CC) $(CCFLAGS) -c rhf.c -o rhf.o
 	
 diis.o: diis.c
 	$(CC) $(CCFLAGS) -c diis.c -o diis.o

@@ -4,6 +4,7 @@
 
 #include "../input/lexer.h"
 #include "../util/util.h"
+#include "../input/input.h"
 #include "scf.h"
 
 void scf_print_opts(int doprint);
@@ -30,6 +31,18 @@ void directive_scf()
 				scf_options.wavefuntype = SCF_UHF;
 			else if (!strcmp(sval, "rohf"))
 				scf_options.wavefuntype = SCF_ROHF;
+			// set multiplicity, NWChem compatible notation
+			else if (!strcmp(sval, "singlet"))
+				calc_info.molecule.mult = 1;
+			else if (!strcmp(sval, "doublet"))
+				calc_info.molecule.mult = 2;
+			else if (!strcmp(sval, "triplet"))
+				calc_info.molecule.mult = 3;
+			else if (!strcmp(sval, "quartet"))
+				calc_info.molecule.mult = 4;
+			else if (!strcmp(sval, "quintet"))
+				calc_info.molecule.mult = 5;
+			// convergence options
 			else if (!strcmp(sval, "maxiter")) {
 				match(TT_NUMBER);
 				if (fabs(nval - (int)nval) < 1e-10)

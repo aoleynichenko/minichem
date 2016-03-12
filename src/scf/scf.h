@@ -56,16 +56,6 @@ extern void   dsyev_( char* jobz, char* uplo, int* n, double* a, int* lda,
 extern void dgesv_( int* n, int* nrhs, double* a, int* lda, int* ipiv,
                 double* b, int* ldb, int* info );
 
-void directive_scf();
-void scf_init();
-
-#define SCF_RHF  0
-#define SCF_UHF  1
-#define SCF_ROHF 2
-
-#define GUESS_BARE 0
-#define GUESS_EHT  1
-
 struct scf_opt {
 	int wavefuntype;
 	int guess;
@@ -83,7 +73,38 @@ struct scf_opt {
 	double conv_en;
 };
 
+struct scf_timing_t {
+	double time_diag;
+	double time_fock;
+	double time_ortho;
+	double time_guess;
+	double time_dens;
+};
+
+extern struct scf_timing_t scf_timing;
 extern struct scf_opt scf_options;
+
+typedef struct basis_function BasisFunc_t;
+typedef struct cart_mol       Molecule_t;
+
+void directive_scf();
+void scf_init();
+void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M);
+void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M);
+void compute_1e(double *Hcore, double *S, struct basis_function *bfns, int dim);
+void diag_fock(double *F, double *X, double *C, double *en, int M);
+void orthobasis(double *S, double *X, int dim);
+double enuc(Molecule_t *geom);
+double rmsdens(double *P1, double *P2, int M);
+
+#define SCF_RHF  0
+#define SCF_UHF  1
+#define SCF_ROHF 2
+
+#define GUESS_BARE 0
+#define GUESS_EHT  1
+
+
 
 void print_scf_options(struct scf_opt *opt);
 
@@ -111,6 +132,7 @@ int diis_length(DIISList_t *p);
 DIISList_t *diis_store(DIISList_t *head, double *errm, double *fock, int dim, int diisbas);
 DIISList_t *newDIISList(double *errm, double *fock, int dim);
 void removeDIISList(DIISList_t *prev);
+double maxerr(double *errmatrix, int n);
 
 
 
