@@ -29,3 +29,4 @@ struct elem_info *searchBySym(char *s);
 struct elem_info *searchByZ(int z);
 void append_atom(struct cart_mol *m, int Z, double x, double y, double z);
 int nelec(struct cart_mol *mol);
+int nalphabeta(struct cart_mol *mol, int *Nalpha, int *Nbeta);

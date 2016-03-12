@@ -103,8 +103,8 @@ void mol_summary(struct cart_mol *molecule)
 	printf("Spin mult: %d\n", molecule->mult);
 	printf("Units:     %s\n", calc_info.geom_units == UNITS_ANGSTROMS ? "angstroms" : "atomic");
 	/* verify charge & mult */
-	if (!((nelec % 2 == 0) && (molecule->mult % 2 == 1)))
-		errquit("illegal charge/multiplicity");
+	//if (!((nelec % 2 == 0) && (molecule->mult % 2 == 1)))
+		//errquit("illegal charge/multiplicity");
 }
 
 int nelec(struct cart_mol *mol)
@@ -114,6 +114,23 @@ int nelec(struct cart_mol *mol)
 	for (i = 0; i < mol->size; i++)
 		N += mol->atoms[i].Z;
 	N -= mol->charge;
+	return N;
+}
+
+int nalphabeta(struct cart_mol *mol, int *Nalpha, int *Nbeta)
+{
+	int N = nelec(mol);
+	int unpaired = mol->mult - 1;
+	*Nbeta  = (N-unpaired)/2;
+	*Nalpha = *Nbeta + unpaired;
+	if (*Nalpha + *Nbeta != N) {
+		printf("Nelec  = %d\n", N);
+		printf("Nalpha = %d\n", *Nalpha);
+		printf("Nbeta  = %d\n", *Nbeta);
+		printf("Charge = %d\n", mol->charge);
+		printf("Mult   = %d\n", mol->mult);
+		errquit("uhf: illegal charge/multiplicity");
+	}
 	return N;
 }
 
