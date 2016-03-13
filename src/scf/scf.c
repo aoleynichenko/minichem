@@ -97,7 +97,7 @@ void scf_energy(struct cart_mol *molecule)
 
 	if (mpi_size != 1)
 		errquit("Sorry! Parallel SCF module hasn't implemented yet. Please, run minichem on one node!");
-
+    printf("Using GitHub\n");
 	printf("          ********************************\n");
 	printf("          *      Parallel SCF Module     *\n");
 	printf("          ********************************\n\n");
