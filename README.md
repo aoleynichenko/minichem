@@ -17,7 +17,7 @@ Possibilities to be implemented in the future:
  - DIIS implementation for UHF;
  - More scalable OpenMP parallelization;
  - Analytic gradients and geometry optimization;
- - I want to try to implement four-index transformation, MP2, CCSD and CCSD(T) energies.
+ - I want to try to implement four-index transformation, MP2, CISD, CCSD and CCSD(T) energies, CISD transition dipole moments, EOM-CCSD.
  
 How to compile: <br>
  $ cd src <br>
