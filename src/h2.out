@@ -1,0 +1,142 @@
+Minichem 0.0
+By Alexander Oleynichenko, 2016
+Build:      1395
+Build date: Mar 17 2016 18:59:52
+Compiler:   gcc 5.2.0
+Date:       Thu May  5 12:19:03 2016
+Cores:      1
+Arguments:  ./minichem ../test/h2.nw 
+------------------------------------------------------------
+>>> ../test/h2.nw
+# Hartree-Fock calculation
+
+start H2
+#memory 10 kb
+echo
+
+geometry units angstroms
+  H 0 0 0
+  H 1.0 0 0
+end
+
+basis
+H    S
+      3.42525091             0.15432897       
+      0.62391373             0.53532814       
+      0.16885540             0.44463454 
+end
+
+scf
+  maxiter 20
+end
+
+task scf
+
+
+
+
+------------------------------------------------------------
+                    Basis information
+   H
+  ----
+  1   1S     3.42525091     0.15432897
+             0.62391373     0.53532814
+             0.16885540     0.44463454
+
+
+Cartesian basis set summary:
+*---------*-----------------*--------*------------*
+| Element |   Description   | Shells | Primitives |
+*---------*-----------------*--------*------------*
+|   H     | user defined    |   1    |     3      |
+*---------*-----------------*--------*------------*
+
+------------------------------------------------------------
+          ********************************
+          *      Parallel SCF Module     *
+          ********************************
+
+                    SCF Parameters
+                    --------------
+               Wavefunction : RHF
+             Max iterations : 20
+               Density conv : 1e-06
+                Energy conv : 1e-07
+                       DIIS : on
+                    diisbas : 5
+
+Formula:   
+Atoms:     2
+Electrons: 2
+Mol mass:  2.016
+Charge:    0
+Spin mult: 1
+Units:     angstroms
+One-electron integrals evaluation algorithm: Obara-Saika
+Two-electron integrals evaluation algorithm: Obara-Saika
+One-electron integrals done in 0.000000 sec
+Basis orthogonalization algorithm: canonical
+Basis functions elimination threshold: 1e-08
+Overlap matrix lowest eigenvalue = 0.50351526
+AO basis orthogonalization done in 0.000051 sec
+
+Initial guess: extended Huckel theory
+Initial energy = -1.73525696
+Initial guess done in 0.000019 sec
+
+#bfns = 2
+#eris = 6
+
+ iter.       Energy         Delta E       RMS-Dens       DIIS-Err     time
+----------------------------------------------------------------------------
+   1      -1.06610867     0.13997105     0.00000000     0.00000000    0.00
+----------------------------------------------------------------------------
+          Total SCF energy =    -1.06610867
+  Nuclear repulsion energy =     0.52917725
+
+
+      Time for:           sec
+---------------------------------
+  Orthogonalization      0.000
+  Initial guess          0.000
+  Density matrix         0.000
+  Fock matrix            0.000
+  Diagonalization        0.000
+---------------------------------
+
+
+         Molecular Orbitals Summary
+  +-----+-----+----------------+----------+
+  | No  | Occ |     Energy     | Symmetry |
+  +-----+-----+----------------+----------+
+  | 1   |  2  |    -0.48444170 |     ?    |
+  | 2   |  0  |     0.45750199 |     ?    |
+  +-----+-----+----------------+----------+
+
+        Mulliken population analysis
+        ----------------------------
+
+      Atom     Population     Charge
+      1  H     1.00000000  -0.00000000
+      2  H     1.00000000   0.00000000
+
+
+        Loewdin population analysis
+        ---------------------------
+
+      Atom     Population     Charge
+      1  H     1.00000000   0.00000000
+      2  H     1.00000000   0.00000000
+
+               Multipole moments
+               -----------------
+  D       x            y            z
+     0.00000000   0.00000000   0.00000000
+
+  |D| = 0.00000000 a.u. = 0.00000000 Debye
+
+
+Allocated: 2936 bytes
+Freed:     2936 bytes
+Max usage: 944 bytes
+Total time: 0.00 sec
