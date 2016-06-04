@@ -16,15 +16,15 @@ struct cgtf {  /* Contracted Gaussian-type function */
 	int n;     /* principal quantum number */
 	int L;     /* angular momentum */
 	int nprim;
-	double c[5];
-	double exp[5];
+	double c[10];
+	double exp[10];
 };
 
 struct basis_set {
 	char name[30];
 	int type;      /* spherical or cartesian */
 	int size;      /* number of contracted GTO's */
-	struct cgtf cgtfs[5];
+	struct cgtf cgtfs[10];
 };
 
 /* atom-centered basis-function */

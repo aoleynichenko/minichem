@@ -155,6 +155,8 @@ void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	loewdin (molecule, bfns, P, S, M);
 	// Расчет мультипольных моментов
 	multipole_moments(molecule, bfns, P, M);
+	// Расчет эффективных конфигураций атомов
+	effconf(molecule, bfns, P, S, M);
 	
 	qfree(H, nbytes);
 	qfree(S, nbytes);

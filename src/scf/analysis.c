@@ -161,6 +161,64 @@ void multipole_moments(struct cart_mol *geom, struct basis_function *bfns, doubl
 	printf("\n");
 }
 
+void effconf(struct cart_mol *geom, struct basis_function *bfns, double *P, double *S, int dim)
+{
+	int i, j;
+	double tr = 0.0;
+	int bytes = dim * dim * sizeof(double);
+	double alpha = 1.0, beta  = 0.0;
+	double *PS = NULL;
+	
+	if (!scf_options.effconf)
+		return;
+	
+	PS = (double *) qalloc(bytes);
+	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, dim, dim, dim, alpha, P, dim, S, dim, beta, PS, dim);
+	
+	printf("\n");
+	printf("        Effective atomic configurations\n");
+	printf("        -------------------------------\n\n");
+	/*printf("PS matrix:\n");
+	for (i = 0; i < dim; i++) {
+		for (j = 0; j < dim; j++) {
+			printf("%8.2f", PS[i*dim+j]);
+			if (i == j)
+				tr += PS[i*dim+j];
+		}
+		printf("\n");
+	}
+	printf("\ntrace = %.2f\n", tr);*/
+	
+	j = 0;
+	int count = 0;
+	for (i = 0; i < geom->size; i++) {
+		double pop, pop_s = 0.0, pop_p = 0.0;
+		int Z = geom->atoms[i].Z;
+		while (atoms_are_equal(bfns[j].a, &geom->atoms[i])) {
+			pop = PS[j*dim+j];
+			if (bfns[j].f->L == 0)
+				pop_s += pop;
+			else if (bfns[j].f->L == 1)
+				pop_p += pop;
+			if (++j == dim)
+				break;
+		}
+		
+		printf("        %-3d%-3s", count++, searchByZ(Z)->sym);
+		if (Z > 2) {
+			printf("  [He]");
+			pop_s -= 2;
+		}
+		printf("  s{%.2f}", pop_s);
+		if (pop_p > 1e-14)
+			printf("  p{%.2f}", pop_p);
+		printf("\n");
+	}
+	
+	qfree(PS, bytes);
+}
+
+
 
 
 

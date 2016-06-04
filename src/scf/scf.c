@@ -165,6 +165,7 @@ void orthobasis(double *S, double *X, int dim)
 	lwork = (int) wkopt;
     work = (double*) qalloc(lwork * sizeof(double));
     dsyev_("V", "U", &dim, X, &lda, val, work, &lwork, &info);
+    //print_matrix("Overlap matrix S", S, dim);
     
     if(info > 0)   // Check for convergence
 		errquit("LAPACK failed to orthogonalize overlap matrix");
@@ -201,6 +202,8 @@ void scf_init()
 	scf_options.diisbas = 5;
 	scf_options.conv_dens = 1e-6;
 	scf_options.conv_en = 1e-7;
+	// properties
+	scf_options.effconf = 0;
 }
 
 

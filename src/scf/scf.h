@@ -71,6 +71,8 @@ struct scf_opt {
 	int diisbas;
 	double conv_dens;
 	double conv_en;
+	// properties
+	int effconf;
 };
 
 struct scf_timing_t {
@@ -116,7 +118,7 @@ void guess_F_eht(double *F, double *S, struct basis_function *bfn, int n);
 void mulliken(struct cart_mol *geom, struct basis_function *bfns, double *P, double *S, int dim);
 void loewdin(struct cart_mol *geom, struct basis_function *bfns, double *P, double *S, int dim);
 void multipole_moments(struct cart_mol *geom, struct basis_function *bfns, double *P, int dim);
-
+void effconf(struct cart_mol *geom, struct basis_function *bfns, double *P, double *S, int dim);
 
 // DIIS API
 typedef struct diislist_t {
