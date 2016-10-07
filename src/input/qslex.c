@@ -12,7 +12,28 @@ bool inBuf = false;
 int  buf_ttype;
 char buf_sval[MAX_IDENTIFIER];
 
-void qs_
+char *buffer = NULL;
+char *buf_ptr = NULL;
+
+int getsym()
+{
+	buf_ptr++;
+	return *(buf_ptr-1);
+}
+
+void putsym()
+{
+	buf_ptr--;
+}
+
+void qs_lex(char *s)
+{
+	//if (buffer)
+	//	free(buffer);
+	buffer = s;  // very bad!!!
+	buf_ptr = buffer;
+	inBuf = false;
+}
 
 // case sensitive!
 int classifyWord(char* s)
@@ -47,30 +68,46 @@ int lx_nextToken()
 	}
 
 	char* p = lx_sval;
-	char c = getchar();
-	while (isspace(c))
-		c = getchar();
+	char c = getsym();
+	while (isspace(c) && (c != '\n'))
+		c = getsym();
 
 	if (isalpha(c)) {
 		*p++ = c;
-		c = getchar();
+		c = getsym();
 		while (isalpha(c)) {
 			if ((p - lx_sval) >= sizeof(char)*MAX_IDENTIFIER)
 				errquit("> max identifier");
 			*p++ = c;
-			c = getchar();
+			c = getsym();
 		}
-		ungetc(c, stdin);
+		putsym();
+		//ungetc(c, stdin);
 		*p++ = '\0';
 		return lx_ttype = classifyWord(lx_sval);
+	}
+	else if (c == '\'') {    // string in 'apostrofs'
+		c = getsym();
+		while (c != '\'') {
+			if ((p - lx_sval) >= sizeof(char)*MAX_IDENTIFIER)
+				errquit("> max identifier - quote");
+			*p++ = c;
+			c = getsym();
+		}
+		if (c != '\'')
+			errquit("quote not closed!");
+		*p++ = '\0';
+		return lx_ttype = QS_QUOTE;
 	}
 	else if (c == '(' || c == ')' || c == ';')
 		return lx_ttype = c;
 	else if (c == '=')
 		return lx_ttype = QS_ASSIGN;
-	else if (c == EOF)
+	else if (c == '\n')
+		return lx_ttype = QS_EOL;
+	else if (c == EOF || c == '\0')
 		return lx_ttype = QS_EOF;
-
+	printf("c = %d(%c)\n", c, c);
 	errquit("bad token");   // wrong token
 	return 0;  // dummy for compiler :)
 }
@@ -87,7 +124,7 @@ bool stringToBool(char* s)
 
 void lx_match(int t)
 {
-	nextToken();
+	lx_nextToken();
 	if (t != lx_ttype)
 		errquit("match error");
 }

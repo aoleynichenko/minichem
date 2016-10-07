@@ -2,6 +2,7 @@
 
 #include "input.h"
 #include "lexer.h"
+#include "qslex.h"
 #include "../scf/scf.h"
 #include "../util/util.h"
 
@@ -26,6 +27,34 @@ int getcmd(char *to, int max)
 	n;
 }
 
+void qs_instruction()
+{
+	lx_nextToken();
+	if (lx_ttype == QS_STRING) {
+		if (strcmp(lx_sval, "q") == 0 || strcmp(lx_sval, "exit") == 0) {
+			exit(0);
+		}
+		else if (strcmp(lx_sval, "credits") == 0) {
+			printf("Alexander Oleynichenko, ao2310@yandex.ru\n");
+		}
+		else if (strcmp(lx_sval, "help") == 0) {
+			printf("\n");
+		}
+		else if (strcmp(lx_sval, "nw") == 0) {
+			lx_match(QS_QUOTE);
+			printf("File name: %s\n", lx_sval);
+			FILE *nwf = fopen(lx_sval, "r");
+			printf("File: %s\n", lx_sval);
+			if (!nwf)
+				errquit("file in nw format not found");
+			close(nwf);
+			compute(lx_sval);
+		}
+	}
+	else
+		return;
+}
+
 void interactive_mode()
 {
 	extern char *source; // see lexer.c
@@ -42,9 +71,7 @@ void interactive_mode()
 		prompt();
 		if (getcmd(input, MAX_INPUT) == -1)
 			errquit("while reading input line in the interactive mode");
-		printf("%s\n", input);
-		source = input;
-		printf("Source = >>>%s<<<\n", input);
-		print_tokens();
+		qs_lex(input);
+		qs_instruction();
 	}
 }
