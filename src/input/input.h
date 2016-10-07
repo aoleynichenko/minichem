@@ -3,6 +3,7 @@
 
 void calc_info_defaults();
 void compute(char *filename);
+void interactive_mode();
 
 #define UNITS_ANGSTROMS 0
 #define UNITS_ATOMIC    1

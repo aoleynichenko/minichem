@@ -24,8 +24,5 @@ Li    SP
       0.0480887              0.70011547             0.39195739       
 end
 
-scf
-  effconf
-end
-
 task scf
+

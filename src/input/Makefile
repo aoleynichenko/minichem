@@ -3,10 +3,16 @@
 CC=gcc
 CCFLAGS=-Wall
 CLEAN=rm -rf *.o
-OBJ=lexer.o inp.o chem.o basis.o
+OBJ=lexer.o inp.o chem.o basis.o interactive.o qslex.o
 
 lexer.o: lexer.c
 	$(CC) $(CCFLAGS) -c lexer.c -o lexer.o
+
+qslex.o: qslex.c
+	$(CC) $(CCFLAGS) -c qslex.c -o qslex.o
+
+interactive.o: interactive.c
+	$(CC) $(CCFLAGS) -c interactive.c -o interactive.o
 
 inp.o: inp.c
 	$(CC) $(CCFLAGS) -fopenmp -c inp.c -o inp.o

@@ -439,6 +439,7 @@ int checkForKeyword(const char *s)
 
 void print_tokens()
 {
+    printf("%s\n", source);
 	nextToken();
 	while (ttype != TT_EOF) {
 		switch (ttype) {

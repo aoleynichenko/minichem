@@ -49,6 +49,11 @@ int main(int argc, char **argv)
 				MPI_Finalize();
 				return 0;
 			}
+			else if (!strcmp(*argvp, "-i")) {
+				interactive_mode();
+				MPI_Finalize();
+				return 0;
+			}
 			else if (!strcmp(*argvp, "-noecho")) {
 				noecho = 1;
 			}

@@ -11,6 +11,7 @@ void help()
 	printf("where options include:\n");
 	printf("    -h              print this help message\n");
 	printf("    -v              print version and quit\n");
+	printf("    -i              run in interactive mode\n");
 	printf("    -o <file-name>  specify output file\n");
 	printf("    -noecho         do not print input files\n");
 	printf("for questions, ao2310@yandex.ru\n");
