@@ -85,6 +85,44 @@ struct shell *shells;
 
 struct scf_timing_t scf_timing;
 
+// M - number of basis functions
+// N - number of MOs
+void write_coefs_rhf(char *fname, double *C, int M, int N, int Na, int Nb)
+{
+	double header[4];
+	char *name = (char *) malloc(strlen(fname)+4);
+	strcpy(name, fname);
+	strcat(name, ".mo");
+	
+	header[0] = M;
+	header[1] = N;
+	header[2] = Na;
+	header[3] = Nb;
+	FILE *mo = fopen(name, "w");
+	fwrite(header, sizeof(double), 4, mo);
+	fwrite(C, sizeof(double), M*N, mo);
+	fclose(mo);
+	free(name);
+}
+
+void read_coefs_rhf(char *fname, double **C, int *M, int *N, int *Na, int *Nb)
+{
+	char *name = (char *) malloc(strlen(fname)+4);
+	strcpy(name, fname);
+	strcat(name, ".mo");
+	FILE *mo = fopen(name, "r");
+	if (mo == NULL)
+		errquit("file .mo not found!");
+	
+	fread(M,  sizeof(double), 1, mo);
+	fread(N,  sizeof(double), 1, mo);
+	fread(Na, sizeof(double), 1, mo);
+	fread(Nb, sizeof(double), 1, mo);
+	*C = (double *) qalloc((*M)*(*N)*sizeof(double));
+	fread(C, sizeof(double), (*M)*(*N), mo);
+	fclose(mo);
+	free(name);
+}
 
 void scf_energy(struct cart_mol *molecule)
 {
@@ -110,6 +148,8 @@ void scf_energy(struct cart_mol *molecule)
 	omp_set_num_threads(calc_info.nproc);
 		
 	Nelecs = nalphabeta(molecule, &Nalpha, &Nbeta);
+	calc_info.wf.nalpha = Nalpha;
+	calc_info.wf.nalpha = Nbeta;
 	// automatically set wavefunction type
 	if (Nalpha == Nbeta)
 		scf_options.wavefuntype = SCF_RHF;

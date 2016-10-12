@@ -1,10 +1,10 @@
-# Minichem top-level makefile
+# Minichem's top-level makefile
 
 CC=mpicc
 FC=mpif90
 CCFLAGS=-Wall
 SRC=main.c
-OBJS=util/util.o input/input.o scf/libscf.a main.o
+OBJS=util/util.o input/input.o scf/libscf.a corr/corr.o main.o
 TARGET=minichem
 CLEAN=rm -rf *.o
 
@@ -16,13 +16,14 @@ clean:
 	$(MAKE) -C util clean
 	$(MAKE) -C input clean
 	$(MAKE) -C scf clean
+	$(MAKE) -C corr clean
 install:
 	mkdir ../bin ../lib
 	cp $(TARGET) ../bin
 uninstall:
 	rm -r ../bin ../lib
 
-$(TARGET): make-util make-input make-scf main.o
+$(TARGET): make-util make-input make-scf make-corr main.o
 	chmod u+x buildno.sh
 	./buildno.sh
 	$(CC) $(CCFLAGS) -lm -fopenmp -o $(TARGET) $(OBJS) -llapack -lscalapack -lblas -lcblas -llapacke
@@ -35,6 +36,9 @@ make-util:
 
 make-input:
 	$(MAKE) -C input input.o CC=$(CC)
+	
+make-corr:
+	$(MAKE) -C corr corr.o CC=$(CC)
 
 make-scf:
 	$(MAKE) -C scf libscf.a CC=$(CC)

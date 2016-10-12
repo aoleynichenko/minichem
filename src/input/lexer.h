@@ -33,6 +33,7 @@ extern double nval;
 #define TT_KW_CHARGE -13
 #define TT_KW_OUT -14
 #define TT_KW_NPROC -15
+#define TT_KW_MP2 -16
 
 void load(FILE *f, char *filename);
 

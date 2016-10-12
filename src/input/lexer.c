@@ -419,6 +419,7 @@ static struct kw_mapping {
 	{"end", TT_KW_END},
 	{"geometry", TT_KW_GEOMETRY},
 	{"scf", TT_KW_SCF},
+    {"mp2", TT_KW_MP2},
 	{"out", TT_KW_OUT},
 	{"task", TT_KW_TASK},
 	{"basis", TT_KW_BASIS},

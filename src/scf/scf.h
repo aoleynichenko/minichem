@@ -107,7 +107,11 @@ void print_matrix(char *annot, double *A, int dim);
 #define GUESS_BARE 0
 #define GUESS_EHT  1
 
-
+typedef struct {
+	double *C;
+	double *e;	// orbital energies
+	int M;	// basis set size
+} RhfData_t;
 
 void print_scf_options(struct scf_opt *opt);
 
@@ -137,6 +141,9 @@ DIISList_t *newDIISList(double *errm, double *fock, int dim);
 void removeDIISList(DIISList_t *prev);
 double maxerr(double *errmatrix, int n);
 
+// IO
+void write_coefs_rhf(char *fname, double *C, int M, int N, int Na, int Nb);
+void read_coefs_rhf(char *fname, double **C, int *M, int *N, int *Na, int *Nb);
 
 
 

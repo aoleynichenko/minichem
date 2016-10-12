@@ -75,7 +75,7 @@ int lx_nextToken()
 	if (isalpha(c)) {
 		*p++ = c;
 		c = getsym();
-		while (isalpha(c)) {
+		while (isalnum(c) || c == '_') {
 			if ((p - lx_sval) >= sizeof(char)*MAX_IDENTIFIER)
 				errquit("> max identifier");
 			*p++ = c;

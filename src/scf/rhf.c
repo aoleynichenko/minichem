@@ -157,6 +157,10 @@ void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	multipole_moments(molecule, bfns, P, M);
 	// Расчет эффективных конфигураций атомов
 	effconf(molecule, bfns, P, S, M);
+	// Сливаем коэффициенты МО в файл
+	int na = calc_info.wf.nalpha;
+	int nb = calc_info.wf.nbeta;
+	write_coefs_rhf(calc_info.name, C, M, M, na, nb);
 	
 	qfree(H, nbytes);
 	qfree(S, nbytes);

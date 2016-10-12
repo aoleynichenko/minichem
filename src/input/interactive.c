@@ -38,7 +38,31 @@ void qs_instruction()
 			printf("Alexander Oleynichenko, ao2310@yandex.ru\n");
 		}
 		else if (strcmp(lx_sval, "help") == 0) {
+			printf("Available options:\n");
+			printf("nw <file-name>\n");
+			printf("wfinfo\n");
+			printf("credits\n");
+			printf("exit\n");
 			printf("\n");
+		}
+		else if (strcmp(lx_sval, "wfinfo") == 0) {
+			calc_info.wf.type = WF_NOTHING;
+	calc_info.wf.nalpha = 0;
+	calc_info.wf.nbeta  = 0;
+	calc_info.wf.data = NULL;
+			printf("Nalpha = %d\n", calc_info.wf.nalpha);
+			printf("Nbeta = %d\n", calc_info.wf.nbeta);
+			printf("Type: ");
+			switch (calc_info.wf.type) {
+			case WF_RHF:
+				printf("RHF\n");
+				break;
+			case WF_UHF:
+				printf("UHF\n");
+				break;
+			default:
+				printf("NOTHING\n");
+			}
 		}
 		else if (strcmp(lx_sval, "nw") == 0) {
 			lx_match(QS_QUOTE);
