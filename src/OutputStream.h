@@ -1,3 +1,6 @@
+#ifndef _OUTPUT_STREAM_H_INCLUDED
+#define _OUTPUT_STREAM_H_INCLUDED
+
 #include <cstdio>
 #include <string>
 
@@ -34,3 +37,5 @@ private:
 };
 
 } // namespace minichem
+
+#endif // _OUTPUT_STREAM_H_INCLUDED
