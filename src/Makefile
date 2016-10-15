@@ -1,10 +1,13 @@
 # Minichem's top-level makefile
+# C++ version
 
 CC=mpicc
+CXX=g++
 FC=mpif90
 CCFLAGS=-Wall
+CXXFLAGS=-Wall
 SRC=main.c
-OBJS=util/util.o input/input.o scf/libscf.a corr/corr.o main.o
+OBJS=main.o OutputStream.o
 TARGET=minichem
 CLEAN=rm -rf *.o
 
@@ -13,37 +16,19 @@ CLEAN=rm -rf *.o
 all: $(TARGET)
 clean:
 	$(CLEAN)
-	$(MAKE) -C util clean
-	$(MAKE) -C input clean
-	$(MAKE) -C scf clean
-	$(MAKE) -C corr clean
 install:
 	mkdir ../bin ../lib
 	cp $(TARGET) ../bin
 uninstall:
 	rm -r ../bin ../lib
 
-$(TARGET): make-util make-input make-scf make-corr main.o
-	chmod u+x buildno.sh
-	./buildno.sh
-	$(CC) $(CCFLAGS) -lm -fopenmp -o $(TARGET) $(OBJS) -llapack -lscalapack -lblas -lcblas -llapacke
+$(TARGET): main.o OutputStream.o
+	$(CXX) $(CXXFLAGS) -lm -fopenmp -o $(TARGET) $(OBJS) -llapack -lblas -lcblas -llapacke
 		
-main.o: main.c
-	$(CC) $(CCFLAGS) -c -I util -I input -o main.o main.c
+main.o: main.cc
+	$(CXX) $(CXXFLAGS) -c -o main.o main.cc
 
-make-util:
-	$(MAKE) -C util util.o CC=$(CC)
-
-make-input:
-	$(MAKE) -C input input.o CC=$(CC)
-	
-make-corr:
-	$(MAKE) -C corr corr.o CC=$(CC)
-
-make-scf:
-	$(MAKE) -C scf libscf.a CC=$(CC)
-
-
-
+OutputStream.o: OutputStream.cc
+	$(CXX) $(CXXFLAGS) -c -o OutputStream.o OutputStream.cc
 
 

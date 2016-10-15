@@ -1,4 +1,5 @@
 #pragma once
+
 #include "chem.h"
 
 void calc_info_defaults();
@@ -34,3 +35,5 @@ typedef struct {
 #define WF_UHF     2
 
 extern calc_information calc_info;
+
+
