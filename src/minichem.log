@@ -1,0 +1,5 @@
+[2016-10-18 18:26:04] Log created
+[2016-10-18 18:26:04] Kernel started!
+[2016-10-18 18:27:50] Log created
+[2016-10-18 18:27:50] Kernel::Kernel(int argc, char **argv) invoked
+[2016-10-18 18:27:50] Starting kernel (Kernel::start())

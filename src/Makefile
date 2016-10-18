@@ -7,7 +7,7 @@ FC=mpif90
 CCFLAGS=-Wall
 CXXFLAGS=-Wall
 SRC=main.c
-OBJS=lib/auxlib.o main.o
+OBJS=lib/auxlib.o Kernel.o main.o
 TARGET=minichem
 CLEAN=rm -rf *.o
 
@@ -23,11 +23,14 @@ install:
 uninstall:
 	rm -r ../bin ../lib
 
-$(TARGET): make-lib main.o
+$(TARGET): make-lib Kernel.o main.o
 	$(CXX) $(CXXFLAGS) -lm -fopenmp -o $(TARGET) $(OBJS) -llapack -lblas -lcblas -llapacke
 		
 main.o: main.cc
 	$(CXX) $(CXXFLAGS) -c -o main.o main.cc
+
+Kernel.o: Kernel.cc
+	$(CXX) $(CXXFLAGS) -c -o Kernel.o Kernel.cc
 
 make-lib:
 	$(MAKE) -C lib auxlib.o CXX=$(CXX)

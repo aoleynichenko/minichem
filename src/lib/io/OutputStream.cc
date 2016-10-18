@@ -70,6 +70,7 @@ void OutputStream::close()
 // Object-oriented wrapper for fprintf()
 // %b - print boolean
 // others - see K&R 7.2
+// C++ std::strings are not yet allowed
 int OutputStream::printf(string format, ...)
 {
   va_list ap;

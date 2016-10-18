@@ -9,10 +9,25 @@
  *  Invokes all another modules: input, hf, mp2, cc, geom, etc.
  */
 
+#include <chrono>
 #include <ctime>
+#include <stdexcept>
+#include <string>
 
+#include "Kernel.h"
 #include "minichem.h"
 #include "lib/io/OutputStream.h"
+
+using std::exception;
+using std::string;
+
+namespace minichem {
+
+// GLOBAL DECLARATIONS
+Log* mainlog = NULL;
+std::chrono::high_resolution_clock::time_point startTimePoint;
+
+} // namespace minichem
 
 using namespace minichem;
 
@@ -46,10 +61,23 @@ written in educational purposes\n");
 
 int main(int argc, char **argv)
 {
+	// init
+	startTimePoint = std::chrono::high_resolution_clock::now();
+	mainlog = new Log("minichem.log");
+
+	// run minichem's kernel with command-line parameters
 	outputHeader();
+	Kernel kernel(argc, argv);
+	try {
+		kernel.start();
+	} catch (exception& e) {
+		OutputStream::getStderr()->printf("Fatal error in minichem kernel: %s\n", e.what());
+	}
+
+	delete mainlog;
+
 	return 0;
 }
-
 
 
 
