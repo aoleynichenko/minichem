@@ -13,8 +13,11 @@
 #define _KERNEL_H_INCLUDED
 
 #include <chrono>
+#include <string>
+#include <vector>
 
 #include "./lib/io/Log.h"
+#include "./lib/io/OutputStream.h"
 
 namespace minichem {
 
@@ -26,6 +29,11 @@ public:
 	~Kernel();
 
 	static double secondsFromStart();
+private:
+	OutputStream* out;
+	std::vector<std::string> inputFiles_m;
+
+	void hline();
 };
 
 // Main log. It is separated from kernel variables to be stable wrt kernel crash.

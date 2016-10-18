@@ -74,6 +74,7 @@ int main(int argc, char **argv)
 		OutputStream::getStderr()->printf("Fatal error in minichem kernel: %s\n", e.what());
 	}
 
+	mainlog->log("Exit");
 	delete mainlog;
 
 	return 0;

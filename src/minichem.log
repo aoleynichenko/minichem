@@ -1,5 +1,75 @@
-[2016-10-18 18:26:04] Log created
-[2016-10-18 18:26:04] Kernel started!
-[2016-10-18 18:27:50] Log created
-[2016-10-18 18:27:50] Kernel::Kernel(int argc, char **argv) invoked
-[2016-10-18 18:27:50] Starting kernel (Kernel::start())
+[2016-10-18 19:04:14] Log created
+[2016-10-18 19:04:14] Kernel::Kernel(int argc, char **argv) invoked, argc == 3
+[2016-10-18 19:04:14] Running on avo (Linux x86_64)
+[2016-10-18 19:04:14] Kernel arguments: "./minichem LiH.nw H2O.nw "
+[2016-10-18 19:04:14] Input files: 2 ( LiH.nw H2O.nw )
+[2016-10-18 19:04:14] Starting kernel (Kernel::start())
+[2016-10-18 19:04:14] Exit
+[2016-10-18 19:11:56] Log created
+[2016-10-18 19:11:56] Kernel::Kernel(int argc, char **argv) invoked, argc == 3
+[2016-10-18 19:11:56] Running on avo (Linux x86_64)
+[2016-10-18 19:11:56] Kernel arguments: "./minichem LiH.nw H2O2.nw "
+[2016-10-18 19:11:56] WARNING: File "H2O2.nw" doesn't exists!
+[2016-10-18 19:11:56] Input files: 2 ( LiH.nw H2O2.nw )
+[2016-10-18 19:11:56] Starting kernel (Kernel::start())
+[2016-10-18 19:11:56] Exit
+[2016-10-18 19:18:57] Log created
+[2016-10-18 19:18:57] Kernel::Kernel(int argc, char **argv) invoked, argc == 3
+[2016-10-18 19:18:57] Running on avo (Linux x86_64)
+[2016-10-18 19:18:57] Kernel arguments: "./minichem LiH.nw H2O2.nw "
+[2016-10-18 19:18:57] [WARNING] File "H2O2.nw" doesn't exists!
+[2016-10-18 19:18:57] Input files: 2 ( LiH.nw H2O2.nw )
+[2016-10-18 19:18:57] Starting kernel (Kernel::start())
+[2016-10-18 19:18:57] New input file: "LiH.nw"
+[2016-10-18 19:18:57] [ERROR] File "H2O2.nw" doesn't exists, will be ignored
+[2016-10-18 19:18:57] Exit
+[2016-10-18 19:19:55] Log created
+[2016-10-18 19:19:55] Kernel::Kernel(int argc, char **argv) invoked, argc == 3
+[2016-10-18 19:19:55] Running on avo (Linux x86_64)
+[2016-10-18 19:19:55] Kernel arguments: "./minichem LiH.nw H2O2.nw "
+[2016-10-18 19:19:55] [WARNING] File "H2O2.nw" doesn't exists!
+[2016-10-18 19:19:55] Input files: 2 ( LiH.nw H2O2.nw )
+[2016-10-18 19:19:55] Starting kernel (Kernel::start())
+[2016-10-18 19:19:55] New input file: "LiH.nw"
+[2016-10-18 19:19:55] [ERROR] File "H2O2.nw" doesn't exists, will be ignored
+[2016-10-18 19:19:55] Exit
+[2016-10-18 19:20:08] Log created
+[2016-10-18 19:20:08] Kernel::Kernel(int argc, char **argv) invoked, argc == 3
+[2016-10-18 19:20:08] Running on avo (Linux x86_64)
+[2016-10-18 19:20:08] Kernel arguments: "./minichem LiH.nw H2O2.nw "
+[2016-10-18 19:20:08] [WARNING] File "H2O2.nw" doesn't exists!
+[2016-10-18 19:20:08] Input files: 2 ( LiH.nw H2O2.nw )
+[2016-10-18 19:20:08] Starting kernel (Kernel::start())
+[2016-10-18 19:20:08] New input file: "LiH.nw"
+[2016-10-18 19:20:08] [ERROR] File "H2O2.nw" doesn't exists, will be ignored
+[2016-10-18 19:20:08] Exit
+[2016-10-18 19:20:43] Log created
+[2016-10-18 19:20:43] Kernel::Kernel(int argc, char **argv) invoked, argc == 3
+[2016-10-18 19:20:43] Running on avo (Linux)
+[2016-10-18 19:20:43] Kernel arguments: "./minichem LiH.nw H2O2.nw "
+[2016-10-18 19:20:43] [WARNING] File "H2O2.nw" doesn't exists!
+[2016-10-18 19:20:43] Input files: 2 ( LiH.nw H2O2.nw )
+[2016-10-18 19:20:43] Starting kernel (Kernel::start())
+[2016-10-18 19:20:43] New input file: "LiH.nw"
+[2016-10-18 19:20:43] [ERROR] File "H2O2.nw" doesn't exists, will be ignored
+[2016-10-18 19:20:43] Exit
+[2016-10-18 19:20:53] Log created
+[2016-10-18 19:20:53] Kernel::Kernel(int argc, char **argv) invoked, argc == 3
+[2016-10-18 19:20:53] Running on avo (Linux)
+[2016-10-18 19:20:53] Kernel arguments: "./minichem LiH.nw H2O2.nw "
+[2016-10-18 19:20:53] [WARNING] File "H2O2.nw" doesn't exists!
+[2016-10-18 19:20:53] Input files: 2 ( LiH.nw H2O2.nw )
+[2016-10-18 19:20:53] Starting kernel (Kernel::start())
+[2016-10-18 19:20:53] New input file: "LiH.nw"
+[2016-10-18 19:20:53] [ERROR] File "H2O2.nw" doesn't exists, will be ignored
+[2016-10-18 19:20:53] Exit
+[2016-10-18 19:21:05] Log created
+[2016-10-18 19:21:05] Kernel::Kernel(int argc, char **argv) invoked, argc == 3
+[2016-10-18 19:21:05] Running on avo (Linux)
+[2016-10-18 19:21:05] Kernel arguments: "./minichem LiH.nw H2O2.nw "
+[2016-10-18 19:21:05] [WARNING] File "H2O2.nw" doesn't exists!
+[2016-10-18 19:21:05] Input files: 2 ( LiH.nw H2O2.nw )
+[2016-10-18 19:21:05] Starting kernel (Kernel::start())
+[2016-10-18 19:21:05] New input file: "LiH.nw"
+[2016-10-18 19:21:05] [ERROR] File "H2O2.nw" doesn't exists, will be ignored
+[2016-10-18 19:21:05] Exit
