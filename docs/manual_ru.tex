@@ -1,0 +1,114 @@
+\documentclass[a4paper]{book}
+
+\usepackage[utf8x]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{indentfirst}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage[pdftex]{graphicx}
+\usepackage[14pt]{extsizes}
+\usepackage[left=2cm,right=2cm,top=3cm,bottom=3cm]{geometry}
+\usepackage{hyperref}
+
+\usepackage{titling}
+\newcommand{\subtitle}[1]{%
+  \posttitle{%
+    \par\end{center}
+    \begin{center}\large#1\end{center}
+    \vskip0.5em}%
+}
+
+% programming languages highlighting
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\definecolor{lightlightgray}{gray}{0.9}
+\lstset{
+	backgroundcolor = \color{lightlightgray},
+	basicstyle=\footnotesize\ttfamily
+}
+
+\title{Minichem 0.1}
+\subtitle{\textit{Руководство пользователя}}
+\author{А.\,В. Олейниченко}
+\date{18 октября 2016 года}
+
+\begin{document}
+
+\maketitle
+
+\chapter{Общие сведения}
+Данный документ является подробным руководством пользователя к квантовохимической программе Minichem версии 0.1.
+Программа является учебной, поэтому может содержать ошибки и работать продолжительное время даже на небольших задачах.
+
+\section{Возможности программы}
+Доступен расчет энергии в точке методами RHF и UHF.
+
+\chapter{Установка и запуск}
+\section{Установка}
+Программа Minichem устанавливается из исходных кодов, доступных на GitHub по адресу \url{https://github.com/aoleynichenko/minichem}.
+Для сборки требуются установленные библиотеки LAPACK, BLAS, OpenMP. Детали их установки зависят от дистрибутива и здесь не приводятся.
+На текущий момент мейкфайлы написаны с учетом специфики ОС Linux.
+%\lstset{language=bash}
+Команды для сборки Minichem:
+
+\begin{lstlisting}
+cd \$MINICHEM_HOME/src
+make
+make install
+\end{lstlisting}
+Исполняемый файл Minichem появится в \texttt{\$MINICHEM\_HOME/bin}.
+
+\section{Запуск}
+Minichem -- консольное приложение. Формат команды запуска:
+\begin{lstlisting}
+minichem <options> <input-files>
+\end{lstlisting}
+Удобно добавить директорию \texttt{\$MINICHEM\_HOME/bin} в \texttt{\$PATH}.
+
+По умолчанию вывод результатов осуществляется в стандартный поток вывода stdout.
+
+\section{Диагностика ошибок. Лог}
+Кроме основного вывода, Minichem также ведет лог
+(по умолчанию -- minichem.log), в который записываются сообщения о ходе исполнения программы. Лог содержит развернутые сообщения о произошедших
+ошибках и предупреждениях и может оказаться полезным при отладке как самого Minichem, так и input-скриптов.
+
+\chapter{Описание формата входных файлов}
+\section{Язык Minichem}
+Для входных файлов Minichem разрабатывается специальный скриптовый язык программирования, ориентированный на применение в вычислительной химии
+и наследующий черты языков Psithon, NWChem и JavaScript.
+
+Язык Minichem чувствителен к регистру (кроме названий базисных наборов и символов химических элементов). Символы конца строки и лишние пробельные символы
+игрнорируются, что в принципе позволяет записать весь входной файл в одну строчку. Это возможно благодаря тому, что каждый оператор языка <<знает>>, сколько
+аргументов должен принять.
+
+\section{Типы данных}
+\textbf{Molecule.} Объекты типа Molecule содержат информацию о заряде молекулы, мультиплетности основного состояния и координатах атомов.
+Для создания объекта Molecule используется ключевое слово \texttt{mol}:
+\begin{lstlisting}
+mol LiH {
+  mult=1
+  charge=0
+  units=atomic
+  H    0.0000   0.0000   0.0000
+  Li   1.4632   0.0000   0.0000
+}
+\end{lstlisting}
+Обязательными в определении молекулы являются только ключевое слово \texttt{mol} и координаты атомов в формате xyz.
+Параметры, указываемые через знак равенства (mult, charge, units...) необязательны.
+После ключевого слова \texttt{mol} опционально указывается имя молекулы; если оно не указано, объявленная
+молекула становится текущей (доступной для квантовохимических подпрограмм). Пример объявления безымянной молекулы:
+\begin{lstlisting}
+mol {
+  C    0.0000   0.0000   0.0000
+  H    0.6281   0.6281  -0.6281
+  H   -0.6281  -0.6281  -0.6281
+  H    0.6281  -0.6281   0.6281
+  H   -0.6281   0.6281   0.6281
+}
+\end{lstlisting}
+
+\end{document}
+
+
+
