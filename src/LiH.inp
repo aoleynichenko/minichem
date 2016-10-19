@@ -1,0 +1,7 @@
+mol LiH {
+  mult 1
+  charge 0
+  units atomic
+  H   0.0000  0.0000  0.0000
+  Li  1.4632  0.0000  0.0000
+}

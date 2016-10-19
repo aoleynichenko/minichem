@@ -8,16 +8,18 @@ namespace minichem {
 class Lexer
 {
 public:
-  Lexer();
+	Lexer();
 
-  Token get();
-  void putback(Token t);
-  void ignore(char c);
-  void setInput(std::istream* input);
+	Token get();
+	Token match(Token t, int type);
+	int  getint();
+	void putback(Token t);
+	void ignore(char c);
+	void setInput(std::istream* input);
 private:
-  bool full_;
-  Token buffer_;
-  std::istream* inp_;
+	bool full_;
+	Token buffer_;
+	std::istream* inp_;
 };
 
 } // namespace minichem

@@ -17,6 +17,7 @@
 #include <vector>
 
 #include "./lib/io/Log.h"
+#include "./lib/io/Lexer.h"
 #include "./lib/io/OutputStream.h"
 
 namespace minichem {
@@ -33,7 +34,12 @@ private:
 	OutputStream* out;
 	std::vector<std::string> inputFiles_m;
 
+	Lexer lex;
+
 	void hline();
+	// parser
+	void execScript();
+	void declMolecule();
 };
 
 // Main log. It is separated from kernel variables to be stable wrt kernel crash.

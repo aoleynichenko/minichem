@@ -8,3 +8,28 @@
 [2016-10-18 19:23:12] New input file: "LiH.nw"
 [2016-10-18 19:23:12] [ERROR] File "H2O2.nw" doesn't exists, will be ignored
 [2016-10-18 19:23:12] Exit
+[2016-10-19 11:37:21] Log created
+[2016-10-19 11:37:21] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-19 11:37:21] Running on avo (Linux)
+[2016-10-19 11:37:21] Kernel arguments: "./minichem LiH.nw "
+[2016-10-19 11:37:21] Input files: 1 ( LiH.nw )
+[2016-10-19 11:37:21] Starting kernel (Kernel::start())
+[2016-10-19 11:37:21] New input file: "LiH.nw"
+[2016-10-19 11:37:21] Exit
+[2016-10-19 11:57:32] Log created
+[2016-10-19 11:57:32] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-19 11:57:32] Running on avo (Linux)
+[2016-10-19 11:57:32] Kernel arguments: "./minichem LiH.inp "
+[2016-10-19 11:57:32] Input files: 1 ( LiH.inp )
+[2016-10-19 11:57:32] Starting kernel (Kernel::start())
+[2016-10-19 11:57:32] New input file: "LiH.inp"
+[2016-10-19 11:57:32] Exit
+[2016-10-19 11:57:40] Log created
+[2016-10-19 11:57:40] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-19 11:57:40] Running on avo (Linux)
+[2016-10-19 11:57:40] Kernel arguments: "./minichem LiH.nw "
+[2016-10-19 11:57:40] Input files: 1 ( LiH.nw )
+[2016-10-19 11:57:40] Starting kernel (Kernel::start())
+[2016-10-19 11:57:40] New input file: "LiH.nw"
+[2016-10-19 11:57:40] [ERROR] Unknown token in Kernel::execScript(): [#]
+[2016-10-19 11:57:40] Exit

@@ -16,7 +16,8 @@ const int Token::TT_NUMBER  = -3;
 const int Token::TT_WORD    = -4;
 
 const int Token::TT_KW_FUN  = -10;
-const int Token::TT_KW_VAR  = -11;
+const int Token::TT_KW_MOL  = -11;
+const int Token::TT_KW_VAR  = -12;
 
 Token::Token(int toktype)
   : ttype(toktype), sval(""), dval(0.0)
@@ -55,7 +56,9 @@ int Token::lookupKeyword(string word)
 {
   if (word == "var")
     return TT_KW_VAR;
-  else if (word == "fun")
+  else if (word == "mol")
+    return TT_KW_MOL;
+  else if (word == "mol")
     return TT_KW_FUN;
   else
     return TT_WORD;

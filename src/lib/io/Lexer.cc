@@ -1,15 +1,19 @@
 #include <cctype>
+#include <cmath>
 #include <iostream>
+#include <sstream>
 #include <string>
 
 #include "Lexer.h"
 #include "Token.h"
+#include "../except/SyntaxError.h"
 
 namespace minichem {
 
 using std::cin;
 using std::cout;
 using std::endl;
+using std::ostringstream;
 using std::string;
 
 Lexer::Lexer()
@@ -45,6 +49,28 @@ Token Lexer::get()
   }
   else
     return Token(ch);
+}
+
+Token Lexer::match(Token t, int type)
+{
+  if (t.ttype != type) {
+    ostringstream errmsg;
+    errmsg << "expected token type: {int: " << type << ", char: " << (char) type << "}, "
+      << "but found " << t.toString();
+    throw SyntaxError(errmsg.str());
+  }
+  return get();
+}
+
+int Lexer::getint()
+{
+  Token t = get();
+  if (t.ttype != Token::TT_NUMBER)
+    throw SyntaxError("expected integer number, but found " + t.toString());
+  // is t.dval integer?
+  if (fabs(t.dval) != fabs((int) t.dval))
+    throw SyntaxError("expected integer number, but found double");
+  return (int) t.dval;
 }
 
 void Lexer::putback(Token t)
