@@ -78,8 +78,11 @@ int Kernel::start()
 		try {
 			execScript();
 		} catch (SyntaxError& se) {
-			mainlog->log("[ERROR] Syntax error in file %s: %s\n", inp->c_str(), se.what());
+			mainlog->log("[ERROR] Syntax error in file %s: %s", inp->c_str(), se.what());
 			out->printf ("[ERROR] Syntax error in file %s: %s\n", inp->c_str(), se.what());
+		} catch (runtime_error& re) {
+			mainlog->log("[ERROR] Runtime error in file %s: %s", inp->c_str(), re.what());
+			out->printf ("[ERROR] Runtime error in file %s: %s\n", inp->c_str(), re.what());
 		}
 	}
 
@@ -143,8 +146,11 @@ void Kernel::declMolecule()
 	while (t.ttype == Token::TT_WORD) {
 		if (isElementSymbol(t.sval))
 			break;
-		if (t.sval == "mult")
+		if (t.sval == "mult") {
 			mult = lex.getint();
+			if (mult <= 0)
+				throw SyntaxError("multiplicity should be strictly positive");
+		}
 		else if (t.sval == "charge")
 			charge = lex.getint();
 		else if (t.sval == "units") {
@@ -183,13 +189,18 @@ void Kernel::declMolecule()
 		mol.addAtom(Z, c*x, c*y, c*z);
 		t = lex.get();
 	}
-	mol.setMult(charge);
-	mol.setCharge(mult);
+
+	mol.setMult(mult);
+	mol.setCharge(charge);
 
 	if (t.ttype != '}') {
 		mainlog->log("[ERROR] In Kernel::declMolecule(): '}' expected");
 		throw SyntaxError("expected '}' in molecule declaration");
 	}
+	mol.check();  // check nelec, charge and multiplicity
+	// all is OK!
+	mainlog->log("Molecule specification was succesfully read, charge = %d, \
+mult = %d, nelec = %d", mol.getCharge(), mol.getMult(), mol.nelec());
 }
 
 

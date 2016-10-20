@@ -45,7 +45,7 @@ Token Lexer::get()
     inp_->putback(ch);
     double val;
     *inp_ >> val;
-    return Token(Token::TT_NUMBER, val);
+    return Token(Token::TT_NUMBER, sign*val);
   }
   else if (isalpha(ch)) {
     string word;

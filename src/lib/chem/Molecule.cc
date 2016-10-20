@@ -5,11 +5,13 @@
 #include <vector>
 
 #include "Molecule.h"
+#include "../io/OutputStream.h"
 
 namespace minichem {
 
 using std::invalid_argument;
 using std::ostringstream;
+using std::runtime_error;
 using std::string;
 using std::vector;
 
@@ -84,7 +86,13 @@ double Molecule::mass() const
 // to be implemented!
 //int Molecule::nalpha() const;
 //int Molecule::nbeta()  const;
-//int Molecule::nelec()  const;
+int Molecule::nelec() const
+{
+	int ne = 0;
+	for (auto a = atoms.begin(); a != atoms.end(); a++)
+		ne += a->charge;
+	return ne - this->charge;
+}
 
 string Molecule::toString()
 {
@@ -93,7 +101,14 @@ string Molecule::toString()
 
 void Molecule::check() const
 {
-
+	int ne = nelec();
+	int nonpaired = mult-1;
+	if ((ne - nonpaired) % 2 != 0) {
+		ostringstream errmsg;
+		errmsg << "illegal charge/multiplicity: nelec = "
+			<< ne << ", non-paired = " << nonpaired;
+		throw runtime_error(errmsg.str());
+	}
 }
 
 // private class Molecule::Element

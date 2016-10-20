@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Arch Linux) (preloaded format=pdflatex 2016.9.11)  19 OCT 2016 11:20
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Arch Linux) (preloaded format=pdflatex 2016.9.11)  20 OCT 2016 15:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -653,23 +653,23 @@ Package babel Info: Redefining russian shorthand "~
 [7
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 114.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 116.
 Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 114.
+(babel)             in language  on input line 116.
 Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 114.
+(babel)             in language  on input line 116.
 Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 114.
+(babel)             in language  on input line 116.
 Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 114.
+(babel)             in language  on input line 116.
  [8]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 114.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 116.
  (./manual_ru.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 114.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 114.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 116.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 116.
 Package rerunfilecheck Info: File `manual_ru.out' has not changed.
 (rerunfilecheck)             Checksum: FF5EEEC7D537A3C5352728F6FFA4DAB9;1594.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 114.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 116.
  ) 
 Here is how much of TeX's memory you used:
  13437 strings out of 493013
@@ -689,7 +689,7 @@ fonts/type1/public/cm-super/sfrm2488.pfb></usr/share/texmf-dist/fonts/type1/pub
 lic/cm-super/sfsl1440.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sf
 ti1728.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb></us
 r/share/texmf-dist/fonts/type1/public/cm-super/sftt1440.pfb>
-Output written on manual_ru.pdf (8 pages, 193882 bytes).
+Output written on manual_ru.pdf (8 pages, 194224 bytes).
 PDF statistics:
  159 PDF objects out of 1000 (max. 8388607)
  136 compressed objects within 2 object streams
