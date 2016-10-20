@@ -32,7 +32,16 @@ Token Lexer::get()
   *inp_ >> ch;
   if (!*inp_)
     return Token(Token::TT_EOF);
-  if (isdigit(ch)) {
+  if (isdigit(ch) || ch == '-') {
+    int sign = 1;
+    if (ch == '-') {  // is negative number?
+      sign = -1;
+      *inp_ >> ch;
+      if (!isdigit(ch)) {
+        inp_->putback(ch);
+        return Token('-');
+      }
+    }
     inp_->putback(ch);
     double val;
     *inp_ >> val;
@@ -71,6 +80,14 @@ int Lexer::getint()
   if (fabs(t.dval) != fabs((int) t.dval))
     throw SyntaxError("expected integer number, but found double");
   return (int) t.dval;
+}
+
+double Lexer::getdouble()
+{
+  Token t = get();
+  if (t.ttype != Token::TT_NUMBER)
+    throw SyntaxError("expected float, but found " + t.toString());
+  return t.dval;
 }
 
 void Lexer::putback(Token t)

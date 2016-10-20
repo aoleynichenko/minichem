@@ -12,7 +12,8 @@ public:
 
 	Token get();
 	Token match(Token t, int type);
-	int  getint();
+	int   getint();
+	double getdouble();
 	void putback(Token t);
 	void ignore(char c);
 	void setInput(std::istream* input);

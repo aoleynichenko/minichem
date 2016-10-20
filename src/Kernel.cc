@@ -1,5 +1,6 @@
 #include <cctype>
 #include <chrono>
+#include <cmath>
 #include <cstdio>
 #include <fstream>
 #include <sstream>
@@ -9,6 +10,7 @@
 #include <vector>
 
 #include "Kernel.h"
+#include "./lib/chem/Molecule.h"
 #include "./lib/except/SyntaxError.h"
 #include "./lib/io/Lexer.h"
 #include "./lib/io/OutputStream.h"
@@ -24,7 +26,8 @@ namespace minichem {
 
 std::string getOsName();
 bool fileExists(const std::string& name);
-bool isElementSymbol(string s);
+int  isElementSymbol(string s);
+bool isint(double d);
 
 Kernel::Kernel(int argc, char **argv)
 {
@@ -125,7 +128,7 @@ void Kernel::declMolecule()
 	string molname = "default";
 	if (t.ttype == Token::TT_WORD) {
 		molname = t.sval;
-		lex.get();
+		t = lex.get();
 	}
 	if (t.ttype != '{') {
 		mainlog->log("[ERROR] In Kernel::declMolecule(): '{' expected");
@@ -146,17 +149,47 @@ void Kernel::declMolecule()
 			charge = lex.getint();
 		else if (t.sval == "units") {
 			t = lex.get();
-			if (t.ttype != Token::TT_WORD || t.sval != "atomic" || t.sval != "angstroms")
-				throw SyntaxError("after 'units' keyword: 'atomic' or 'angstroms'");
+			if (t.ttype != Token::TT_WORD || (t.sval != "atomic" && t.sval != "angstroms"))
+				throw SyntaxError("after 'units' keyword: 'atomic' or 'angstroms', found: "
+					+ t.toString());
 			if (t.sval == "angstroms")
 				bohrs = 0;
 		}
-
+		else
+			throw SyntaxError("unknown keyword in molecule declaration: \'" + t.sval + "\'");
 		t = lex.get();
 	}
 
-	// read xyz
+	// read xyz and create new Molecule
 	// now we have Symbol or integer Z
+	Molecule mol;
+	while (t.ttype == Token::TT_WORD || t.ttype == Token::TT_NUMBER) {
+		int Z = 0;
+		if (t.ttype == Token::TT_WORD) {  // sym  x  y  z
+			if (!(Z = isElementSymbol(t.sval)))
+				throw SyntaxError("is not a symbol of chemical element: \'" + t.sval + "\'");
+		}
+		else if (t.ttype == Token::TT_NUMBER) {  // Z  x  y  z
+			if (!isint(t.dval))
+				throw SyntaxError("charge of atom should be integer");
+			Z = (int) t.dval;
+			if (Z <= 0 || Z > 18)
+				throw SyntaxError("wrong atomic charge, should be 0 < Z < 18 (H ... Ar)");
+		}
+		double x = lex.getdouble();
+		double y = lex.getdouble();
+		double z = lex.getdouble();
+		double c = bohrs ? 1.0 : 1.889725989;  // convert A to a.u.
+		mol.addAtom(Z, c*x, c*y, c*z);
+		t = lex.get();
+	}
+	mol.setMult(charge);
+	mol.setCharge(mult);
+
+	if (t.ttype != '}') {
+		mainlog->log("[ERROR] In Kernel::declMolecule(): '}' expected");
+		throw SyntaxError("expected '}' in molecule declaration");
+	}
 }
 
 
@@ -205,7 +238,14 @@ string str_tolower(string s)
 	return t;
 }
 
-bool isElementSymbol(string s)
+bool isint(double d)
+{
+  if (fabs(d) != fabs((int) d))
+    return false;
+  return true;
+}
+
+int isElementSymbol(string s)
 {
 	static const int lensym = 18;
 	static string symbols[] = {
@@ -216,8 +256,8 @@ bool isElementSymbol(string s)
 	s = str_tolower(s);
 	for (size_t i = 0; i < lensym; i++)
 		if (s == symbols[i])
-			return true;
-	return false;
+			return i + 1;
+	return 0;  // symbol not found
 }
 
 } // namespace minichem

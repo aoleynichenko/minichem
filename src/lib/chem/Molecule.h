@@ -17,6 +17,7 @@ public:
 	Molecule();
 	std::vector<Atom>* getAtoms();
 	void addAtom(int Z, double x, double y, double z);
+	void addAtom(std::string symbol, double x, double y, double z);
 	void addAtom(Atom a);
 	void setMult(int mult);
 	int  getMult() const;

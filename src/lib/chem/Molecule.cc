@@ -35,6 +35,12 @@ void Molecule::addAtom(int Z, double x, double y, double z)
 	atoms.push_back(Atom(Z, x, y, z));
 }
 
+void Molecule::addAtom(std::string symbol, double x, double y, double z)
+{
+	int Z = Molecule::perTable.getElementBySym(symbol).Z;  // atomic charge
+	addAtom(Z, x, y, z);
+}
+
 vector<Atom>* Molecule::getAtoms()
 {
 	return &atoms;
