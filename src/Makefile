@@ -5,7 +5,7 @@ CC=mpicc
 CXX=g++
 FC=mpif90
 CCFLAGS=-Wall
-CXXFLAGS=-Wall
+CXXFLAGS=-Wall -std=c++11
 SRC=main.c
 OBJS=lib/auxlib.o Kernel.o main.o
 TARGET=minichem
@@ -24,7 +24,7 @@ uninstall:
 	rm -r ../bin ../lib
 
 $(TARGET): make-lib Kernel.o main.o
-	$(CXX) $(CXXFLAGS) -lm -fopenmp -o $(TARGET) $(OBJS) -llapack -lblas -lcblas -llapacke
+	$(CXX) $(CXXFLAGS) -lm -fopenmp -o $(TARGET) $(OBJS) -llapack -lblas -llapacke
 		
 main.o: main.cc
 	$(CXX) $(CXXFLAGS) -c -o main.o main.cc

@@ -4,7 +4,7 @@ CC=gcc
 CXX=g++
 FC=gfortran
 CCFLAGS=-Wall
-CXXFLAGS=-Wall
+CXXFLAGS=-Wall -std=c++11
 CLEAN=rm -rf *.o
 OBJ=Molecule.o
 HEADERS=
