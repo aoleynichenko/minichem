@@ -31,3 +31,7 @@ How to uninstall: <br>
  $ make uninstall <br>
 
 For suggestions and questions, ao2310@yandex.ru, I look forward to any comments!
+
+# Citations
+[1] LIBINT: A library for the evaluation of molecular integrals of many-body operators over Gaussian functions, Version 2.1.0 (beta)
+Edward F. Valeev, http://libint.valeyev.net/ .
