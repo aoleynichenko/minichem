@@ -40,6 +40,7 @@ private:
 	// parser
 	void execScript();
 	void declMolecule();
+	void declBasisSet();
 };
 
 // Main log. It is separated from kernel variables to be stable wrt kernel crash.

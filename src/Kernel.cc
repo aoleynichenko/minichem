@@ -27,6 +27,7 @@ namespace minichem {
 std::string getOsName();
 bool fileExists(const std::string& name);
 int  isElementSymbol(string s);
+int parseAngularMomentum(string ams);
 bool isint(double d);
 
 Kernel::Kernel(int argc, char **argv)
@@ -117,6 +118,8 @@ void Kernel::execScript()
 	Token t = lex.get();
 	if (t.ttype == Token::TT_KW_MOL)
 		declMolecule();
+	else if (t.ttype == Token::TT_KW_BASIS)
+		declBasisSet();
 	else {
 		mainlog->log("[ERROR] Unknown token in Kernel::execScript(): " + t.toString());
 		throw SyntaxError("unknown token: " + t.toString());
@@ -128,7 +131,7 @@ void Kernel::declMolecule()
 	mainlog->log("Molecule declaration started");
 
 	Token t = lex.get();
-	string molname = "default";
+	string molname = "unnamed";
 	if (t.ttype == Token::TT_WORD) {
 		molname = t.sval;
 		t = lex.get();
@@ -203,6 +206,64 @@ void Kernel::declMolecule()
 mult = %d, nelec = %d", mol.getCharge(), mol.getMult(), mol.nelec());
 }
 
+void Kernel::declBasisSet()
+{
+	mainlog->log("Basis set declaration started");
+
+	Token t = lex.get();
+	string setname = "unnamed";
+	if (t.ttype == Token::TT_WORD) {
+		setname = t.sval;
+		t = lex.get();
+	}
+	if (t.ttype != '{') {
+		if (setname != "unnamed") {  // basis cc-pvtz
+			mainlog->log("In Kernel::declBasisSet(): basis set '%s' declared in short notation", setname.c_str());
+			// load basis from file/library or make it current if it is already loaded
+			// 1. search in our variables
+			// 2. search in current directory
+			// 3. search in minichem's basis library
+			return;
+		}
+		else {
+			mainlog->log("[ERROR] In Kernel::declBasisSet(): '{' expected");
+			throw SyntaxError("expected '{' in basis set declaration");
+		}
+	}
+
+	// loop over keywords and element symbols
+	// * -> invoke library
+	// Sym -> invoke library OR read L-block (block with definite angular momentum)
+	// Keyword: one of:
+	//  cartesian
+	//  spherical
+	bool cartesian = false; // by default, spherical basis sets
+	t = lex.get();
+	while (t.ttype == Token::TT_WORD) {
+		if (t.sval == "cartesian")
+			cartesian = true;
+		else if (t.sval == "spherical")
+			cartesian = false;
+		else if (isElementSymbol(t.sval)) {  // read L-block
+			Token am = lex.get();
+			if (am.ttype != Token::TT_WORD)
+				throw SyntaxError("wrong angular momentum should be string, but found " + am.toString());
+			int L = parseAngularMomentum(am.sval);
+			if (L < 0)
+				throw SyntaxError("wrong angular momentum: " + am.sval + " (expected S, P, D, F ot G)");
+			// read block!
+		}
+		else {
+			mainlog->log("[ERROR] In Kernel::declBasisSet(): is not an element symbol: '%s'", t.sval.c_str());
+			throw SyntaxError("in basis set declaration: is not an element symbol: " + t.sval);
+		}
+		t = lex.get();
+	}
+	if (t.ttype != '}') {
+		mainlog->log("[ERROR] In Kernel::declBasisSet(): '}' expected");
+		throw SyntaxError("expected '}' in basis set declaration");
+	}
+}
 
 // helper functions
 std::string getOsName()
@@ -269,6 +330,17 @@ int isElementSymbol(string s)
 		if (s == symbols[i])
 			return i + 1;
 	return 0;  // symbol not found
+}
+
+int parseAngularMomentum(string ams)
+{
+	ams = str_tolower(ams);
+	string momlabels[] = {"s", "p", "d", "f", "g"};
+	int maxmom = 4;
+	for (size_t i = 0; i < maxmom; i++)
+		if (momlabels[i] == ams)
+			return i;
+	return -1;
 }
 
 } // namespace minichem

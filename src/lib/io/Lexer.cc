@@ -90,6 +90,20 @@ double Lexer::getdouble()
   return t.dval;
 }
 
+Token Lexer::getRawString()
+{
+  string rawstr = "";
+  char ch;
+  *inp_ >> ch;
+  if (!*inp_)
+    return Token(Token::TT_EOF);
+  while (*inp_ && !isspace(ch)) {
+    rawstr += ch;
+    ch = inp_->get();
+  }
+  return Token(Token::TT_WORD, rawstr);
+}
+
 void Lexer::putback(Token t)
 {
   full_ = true;

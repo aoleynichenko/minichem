@@ -18,3 +18,81 @@
 [2016-10-20 22:42:54] Molecule declaration started
 [2016-10-20 22:42:54] Molecule specification was succesfully read, charge = 0, mult = 1, nelec = 4
 [2016-10-20 22:42:54] Exit
+[2016-10-22 18:54:59] Log created
+[2016-10-22 18:54:59] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-22 18:54:59] Running on avo (Linux)
+[2016-10-22 18:54:59] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-22 18:54:59] Input files: 1 ( LiH_bas.inp )
+[2016-10-22 18:54:59] Starting kernel (Kernel::start())
+[2016-10-22 18:54:59] New input file: "LiH_bas.inp"
+[2016-10-22 18:54:59] Exit
+[2016-10-22 18:55:25] Log created
+[2016-10-22 18:55:25] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-22 18:55:25] Running on avo (Linux)
+[2016-10-22 18:55:25] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-22 18:55:25] Input files: 1 ( LiH_bas.inp )
+[2016-10-22 18:55:25] Starting kernel (Kernel::start())
+[2016-10-22 18:55:25] New input file: "LiH_bas.inp"
+[2016-10-22 18:55:25] Exit
+[2016-10-22 18:56:45] Log created
+[2016-10-22 18:56:45] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-22 18:56:45] Running on avo (Linux)
+[2016-10-22 18:56:45] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-22 18:56:45] Input files: 1 ( LiH_bas.inp )
+[2016-10-22 18:56:45] Starting kernel (Kernel::start())
+[2016-10-22 18:56:45] New input file: "LiH_bas.inp"
+[2016-10-22 18:56:45] Exit
+[2016-10-22 18:56:59] Log created
+[2016-10-22 18:56:59] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-22 18:56:59] Running on avo (Linux)
+[2016-10-22 18:56:59] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-22 18:56:59] Input files: 1 ( LiH_bas.inp )
+[2016-10-22 18:56:59] Starting kernel (Kernel::start())
+[2016-10-22 18:56:59] New input file: "LiH_bas.inp"
+[2016-10-22 18:56:59] Exit
+[2016-10-22 19:06:52] Log created
+[2016-10-22 19:06:52] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-22 19:06:52] Running on avo (Linux)
+[2016-10-22 19:06:52] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-22 19:06:52] Input files: 1 ( LiH_bas.inp )
+[2016-10-22 19:06:52] Starting kernel (Kernel::start())
+[2016-10-22 19:06:52] New input file: "LiH_bas.inp"
+[2016-10-22 19:06:52] [ERROR] In Kernel::declBasisSet(): '{' expected
+[2016-10-22 19:06:52] [ERROR] Syntax error in file LiH_bas.inp: expected '{' in basis set declaration
+[2016-10-22 19:06:52] Exit
+[2016-10-22 19:07:18] Log created
+[2016-10-22 19:07:18] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-22 19:07:18] Running on avo (Linux)
+[2016-10-22 19:07:18] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-22 19:07:18] Input files: 1 ( LiH_bas.inp )
+[2016-10-22 19:07:18] Starting kernel (Kernel::start())
+[2016-10-22 19:07:18] New input file: "LiH_bas.inp"
+[2016-10-22 19:07:18] Exit
+[2016-10-22 19:07:27] Log created
+[2016-10-22 19:07:27] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-22 19:07:27] Running on avo (Linux)
+[2016-10-22 19:07:27] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-22 19:07:27] Input files: 1 ( LiH_bas.inp )
+[2016-10-22 19:07:27] Starting kernel (Kernel::start())
+[2016-10-22 19:07:27] New input file: "LiH_bas.inp"
+[2016-10-22 19:07:27] In Kernel::declBasisSet(): basis set 'custom_basis' declared in short notation
+[2016-10-22 19:07:27] Exit
+[2016-10-22 19:23:16] Log created
+[2016-10-22 19:23:16] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-22 19:23:16] Running on avo (Linux)
+[2016-10-22 19:23:16] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-22 19:23:16] Input files: 1 ( LiH_bas.inp )
+[2016-10-22 19:23:16] Starting kernel (Kernel::start())
+[2016-10-22 19:23:16] New input file: "LiH_bas.inp"
+[2016-10-22 19:23:16] Exit
+[2016-10-22 19:58:47] Log created
+[2016-10-22 19:58:47] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-22 19:58:47] Running on avo (Linux)
+[2016-10-22 19:58:47] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-22 19:58:47] Input files: 1 ( LiH_bas.inp )
+[2016-10-22 19:58:47] Starting kernel (Kernel::start())
+[2016-10-22 19:58:47] New input file: "LiH_bas.inp"
+[2016-10-22 19:58:47] Basis set declaration started
+[2016-10-22 19:58:47] [ERROR] In Kernel::declBasisSet(): '}' expected
+[2016-10-22 19:58:47] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
+[2016-10-22 19:58:47] Exit

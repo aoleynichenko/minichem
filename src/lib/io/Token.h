@@ -16,6 +16,7 @@ public:
 
   static const int TT_KW_FUN;
   static const int TT_KW_MOL;
+  static const int TT_KW_BASIS;
   static const int TT_KW_VAR;
 
   Token(int toktype);

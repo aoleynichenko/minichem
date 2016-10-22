@@ -14,6 +14,7 @@ public:
 	Token match(Token t, int type);
 	int   getint();
 	double getdouble();
+	Token  getRawString();
 	void putback(Token t);
 	void ignore(char c);
 	void setInput(std::istream* input);
