@@ -28,6 +28,7 @@ public:
 	int  nalpha() const;
 	int  nbeta()  const;
 	int  nelec()  const;
+	double enuc() const;
 	std::string toString();
 	void check() const;
 private:

@@ -16,6 +16,7 @@ CLEAN=rm -rf *.o
 all: $(TARGET)
 clean:
 	$(CLEAN)
+	rm minichem
 	$(MAKE) -C lib clean
 install:
 	mkdir ../bin ../lib

@@ -1,4 +1,5 @@
 #include <cctype>
+#include <cmath>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -92,6 +93,20 @@ int Molecule::nelec() const
 	for (auto a = atoms.begin(); a != atoms.end(); a++)
 		ne += a->charge;
 	return ne - this->charge;
+}
+
+double Molecule::enuc() const
+{
+	double en = 0.0;
+	for (size_t i = 0; i < atoms.size(); i++)
+		for (size_t j = i + 1; j < atoms.size(); j++) {
+			double dx = atoms[i].x - atoms[j].x;
+			double dy = atoms[i].y - atoms[j].y;
+			double dz = atoms[i].z - atoms[j].z;
+			double r = sqrt(dx*dx + dy*dy + dz*dz);
+			en += atoms[i].charge * atoms[j].charge / r;
+		}
+	return en;
 }
 
 string Molecule::toString()
