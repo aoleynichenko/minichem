@@ -43,6 +43,8 @@ string Token::toString() const
   s << "[";
   if (ttype == TT_EOF)
     s << "END OF FILE]";
+  else if (ttype == TT_EOL)
+    s << "END OF LINE]";
   else if (ttype == TT_NUMBER)
     s << "NUMBER  | " << dval << "]";
   else if (ttype == TT_WORD)

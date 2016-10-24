@@ -32,7 +32,8 @@ Token Lexer::get()
 //  *inp_ >> ch;
   ch = inp_->get();
   while (isspace(ch)) {
-    if (ch)
+    if (ch == '\n' && eol_enabled_)
+      return Token(Token::TT_EOF);
     ch = inp_->get();
   }
 
@@ -111,7 +112,7 @@ Token Lexer::getRawString()
   return Token(Token::TT_WORD, rawstr);
 }
 
-void setEolEnabled(bool enabled)
+void Lexer::setEolEnabled(bool enabled)
 {
   eol_enabled_ = enabled;
 }

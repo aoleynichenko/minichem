@@ -20,3 +20,45 @@
 [2016-10-24 10:46:31] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [NUMBER  | 3.42525]
 [2016-10-24 10:46:31] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
 [2016-10-24 10:46:31] Exit
+[2016-10-24 19:57:42] Log created
+[2016-10-24 19:57:42] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-24 19:57:42] Running on Alexander (Linux)
+[2016-10-24 19:57:42] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-24 19:57:42] Input files: 1 ( LiH_bas.inp )
+[2016-10-24 19:57:42] Starting kernel (Kernel::start())
+[2016-10-24 19:57:42] New input file: "LiH_bas.inp"
+[2016-10-24 19:57:42] Basis set declaration started
+[2016-10-24 19:57:42] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [NUMBER  | 3.42525]
+[2016-10-24 19:57:42] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
+[2016-10-24 19:57:42] Exit
+[2016-10-24 19:57:57] Log created
+[2016-10-24 19:57:57] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-24 19:57:57] Running on Alexander (Linux)
+[2016-10-24 19:57:57] Kernel arguments: "./minichem LiH.inp "
+[2016-10-24 19:57:57] Input files: 1 ( LiH.inp )
+[2016-10-24 19:57:57] Starting kernel (Kernel::start())
+[2016-10-24 19:57:57] New input file: "LiH.inp"
+[2016-10-24 19:57:57] Molecule declaration started
+[2016-10-24 19:57:57] Molecule specification was succesfully read, charge = 0, mult = 1, nelec = 4
+[2016-10-24 19:57:57] Exit
+[2016-10-24 23:58:18] Log created
+[2016-10-24 23:58:18] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-24 23:58:18] Running on Alexander (Linux)
+[2016-10-24 23:58:18] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-24 23:58:18] Input files: 1 ( LiH_bas.inp )
+[2016-10-24 23:58:18] Starting kernel (Kernel::start())
+[2016-10-24 23:58:18] New input file: "LiH_bas.inp"
+[2016-10-24 23:58:18] Basis set declaration started
+[2016-10-24 23:58:18] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [NUMBER  | 3.42525]
+[2016-10-24 23:58:18] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
+[2016-10-24 23:58:18] Exit
+[2016-10-24 23:58:27] Log created
+[2016-10-24 23:58:27] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-24 23:58:27] Running on Alexander (Linux)
+[2016-10-24 23:58:27] Kernel arguments: "./minichem CH4.inp "
+[2016-10-24 23:58:27] Input files: 1 ( CH4.inp )
+[2016-10-24 23:58:27] Starting kernel (Kernel::start())
+[2016-10-24 23:58:27] New input file: "CH4.inp"
+[2016-10-24 23:58:27] Molecule declaration started
+[2016-10-24 23:58:27] Molecule specification was succesfully read, charge = 0, mult = 1, nelec = 10
+[2016-10-24 23:58:27] Exit
