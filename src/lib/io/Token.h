@@ -10,6 +10,7 @@ class Token
 {
 public:
   static const int TT_EOF;
+  static const int TT_EOL;
   static const int TT_NOTHING;
   static const int TT_NUMBER;
   static const int TT_WORD;

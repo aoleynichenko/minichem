@@ -17,7 +17,7 @@ using std::ostringstream;
 using std::string;
 
 Lexer::Lexer()
-  : full_(false), buffer_('\0'), inp_(&cin)
+  : full_(false), eol_enabled_(false), buffer_('\0'), inp_(&cin)
 {
 }
 
@@ -29,9 +29,16 @@ Token Lexer::get()
   }
 
   char ch;
-  *inp_ >> ch;
-  if (!*inp_)
+//  *inp_ >> ch;
+  ch = inp_->get();
+  while (isspace(ch)) {
+    if (ch)
+    ch = inp_->get();
+  }
+
+  if (!*inp_ || ch == Token::TT_EOL)  // TODO!
     return Token(Token::TT_EOF);
+
   if (isdigit(ch) || ch == '-') {
     int sign = 1;
     if (ch == '-') {  // is negative number?
@@ -102,6 +109,11 @@ Token Lexer::getRawString()
     ch = inp_->get();
   }
   return Token(Token::TT_WORD, rawstr);
+}
+
+void setEolEnabled(bool enabled)
+{
+  eol_enabled_ = enabled;
 }
 
 void Lexer::putback(Token t)

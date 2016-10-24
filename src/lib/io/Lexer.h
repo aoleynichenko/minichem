@@ -15,11 +15,13 @@ public:
 	int   getint();
 	double getdouble();
 	Token  getRawString();
+	void setEolEnabled(bool enabled);
 	void putback(Token t);
 	void ignore(char c);
 	void setInput(std::istream* input);
 private:
 	bool full_;
+	bool eol_enabled_;
 	Token buffer_;
 	std::istream* inp_;
 };

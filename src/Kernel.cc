@@ -260,7 +260,7 @@ void Kernel::declBasisSet()
 		t = lex.get();
 	}
 	if (t.ttype != '}') {
-		mainlog->log("[ERROR] In Kernel::declBasisSet(): '}' expected");
+		mainlog->log("[ERROR] In Kernel::declBasisSet(): '}' expected, but found " + t.toString());
 		throw SyntaxError("expected '}' in basis set declaration");
 	}
 }
@@ -291,7 +291,7 @@ std::string getOsName()
     #else
     return "Other";
     #endif
-} 
+}
 
 inline bool fileExists(const std::string& name) {
     if (FILE* file = fopen(name.c_str(), "r")) {
@@ -299,7 +299,7 @@ inline bool fileExists(const std::string& name) {
         return true;
     } else {
         return false;
-    }   
+    }
 }
 
 string str_tolower(string s)
