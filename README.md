@@ -12,19 +12,19 @@ Features:
  - Available elements: H-Ne;
  - Available basis sets: any basis sets with only s and p functions;
  - NWChem input file format.
- 
+
 Possibilities to be implemented in the future:
  - DIIS implementation for UHF;
  - More scalable OpenMP parallelization;
  - Analytic gradients and geometry optimization;
  - I want to try to implement four-index transformation, MP2, CISD, CCSD and CCSD(T) energies, CISD transition dipole moments, EOM-CCSD.
- 
+
 How to compile: <br>
  $ cd src <br>
  $ make <br>
  $ make install <br>
-To compile project, you must have any MPI implementation (I use openmpi on my laptop) and gcc compiler.
-In addition, you must have any implementation of LAPACK on your computer, see src/Makefile for details.
+To compile minichem, you need LIBINT and Eigen libraries installed on your machine and any C++ compiler (I use g++ on my laptop).
+For more details about installation of external libraries, see src/Makefile and docs/manual_ru.pdf (in Russian) for details.
 
 How to uninstall: <br>
  $ cd src <br>
