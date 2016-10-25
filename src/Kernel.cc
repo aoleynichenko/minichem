@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "Kernel.h"
+#include "./lib/basis/BasisSet.h"
 #include "./lib/chem/Molecule.h"
 #include "./lib/except/SyntaxError.h"
 #include "./lib/io/Lexer.h"
