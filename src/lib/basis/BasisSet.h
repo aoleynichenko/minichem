@@ -1,5 +1,5 @@
 /* Note: this class should be independent on LIBINT to provide compatibility
- * with minichem's native integration engine.
+ * with minichem's native AO integrals engine.
  */
 
 #ifndef _BASIS_SET_H_INCLUDED

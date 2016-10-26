@@ -62,3 +62,158 @@
 [2016-10-24 23:58:27] Molecule declaration started
 [2016-10-24 23:58:27] Molecule specification was succesfully read, charge = 0, mult = 1, nelec = 10
 [2016-10-24 23:58:27] Exit
+[2016-10-26 10:32:32] Log created
+[2016-10-26 10:32:32] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 10:32:32] Running on avo (Linux)
+[2016-10-26 10:32:32] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-26 10:32:32] Input files: 1 ( LiH_bas.inp )
+[2016-10-26 10:32:32] Starting kernel (Kernel::start())
+[2016-10-26 10:32:32] New input file: "LiH_bas.inp"
+[2016-10-26 10:32:32] Basis set declaration started
+[2016-10-26 10:32:32] Read new L-block for element H: {L=0, alpha=[], Ncontracted=0}
+[2016-10-26 10:32:32] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [END OF FILE]
+[2016-10-26 10:32:32] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
+[2016-10-26 10:32:32] Exit
+[2016-10-26 10:37:49] Log created
+[2016-10-26 10:37:49] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 10:37:49] Running on avo (Linux)
+[2016-10-26 10:37:49] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-26 10:37:49] Input files: 1 ( LiH_bas.inp )
+[2016-10-26 10:37:49] Starting kernel (Kernel::start())
+[2016-10-26 10:37:49] New input file: "LiH_bas.inp"
+[2016-10-26 10:37:49] Basis set declaration started
+[2016-10-26 10:37:49] Succesfully read new L-block for element H: {L=0, alpha=[], Ncontracted=0}
+[2016-10-26 10:37:49] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [END OF FILE]
+[2016-10-26 10:37:49] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
+[2016-10-26 10:37:49] Exit
+[2016-10-26 10:45:20] Log created
+[2016-10-26 10:45:20] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 10:45:20] Running on avo (Linux)
+[2016-10-26 10:45:20] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-26 10:45:20] Input files: 1 ( LiH_bas.inp )
+[2016-10-26 10:45:20] Starting kernel (Kernel::start())
+[2016-10-26 10:45:20] New input file: "LiH_bas.inp"
+[2016-10-26 10:45:20] Basis set declaration started
+[2016-10-26 10:45:20] Succesfully read new L-block for element H: {L=0, alpha=[], Ncontracted=0}
+[2016-10-26 10:45:20] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [END OF FILE]
+[2016-10-26 10:45:20] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
+[2016-10-26 10:45:20] Exit
+[2016-10-26 10:45:51] Log created
+[2016-10-26 10:45:51] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 10:45:51] Running on avo (Linux)
+[2016-10-26 10:45:51] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-26 10:45:51] Input files: 1 ( LiH_bas.inp )
+[2016-10-26 10:45:51] Starting kernel (Kernel::start())
+[2016-10-26 10:45:51] New input file: "LiH_bas.inp"
+[2016-10-26 10:45:51] Basis set declaration started
+[2016-10-26 10:45:51] Succesfully read new L-block for element H: {L=0, alpha=[], Ncontracted=0}
+[2016-10-26 10:45:51] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [END OF FILE]
+[2016-10-26 10:45:51] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
+[2016-10-26 10:45:51] Exit
+[2016-10-26 10:46:33] Log created
+[2016-10-26 10:46:33] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 10:46:33] Running on avo (Linux)
+[2016-10-26 10:46:33] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-26 10:46:33] Input files: 1 ( LiH_bas.inp )
+[2016-10-26 10:46:33] Starting kernel (Kernel::start())
+[2016-10-26 10:46:33] New input file: "LiH_bas.inp"
+[2016-10-26 10:46:33] Basis set declaration started
+[2016-10-26 10:46:33] Succesfully read new L-block for element H: {L=0, alpha=[], Ncontracted=0}
+[2016-10-26 10:46:33] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [END OF FILE]
+[2016-10-26 10:46:33] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
+[2016-10-26 10:46:33] Exit
+[2016-10-26 10:47:32] Log created
+[2016-10-26 10:47:32] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 10:47:32] Running on avo (Linux)
+[2016-10-26 10:47:32] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-26 10:47:32] Input files: 1 ( LiH_bas.inp )
+[2016-10-26 10:47:32] Starting kernel (Kernel::start())
+[2016-10-26 10:47:32] New input file: "LiH_bas.inp"
+[2016-10-26 10:47:32] Basis set declaration started
+[2016-10-26 10:47:32] Succesfully read new L-block for element H: {L=0, alpha=[], Ncontracted=0}
+[2016-10-26 10:47:32] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [END OF FILE]
+[2016-10-26 10:47:32] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
+[2016-10-26 10:47:32] Exit
+[2016-10-26 10:48:01] Log created
+[2016-10-26 10:48:01] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 10:48:01] Running on avo (Linux)
+[2016-10-26 10:48:01] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-26 10:48:01] Input files: 1 ( LiH_bas.inp )
+[2016-10-26 10:48:01] Starting kernel (Kernel::start())
+[2016-10-26 10:48:01] New input file: "LiH_bas.inp"
+[2016-10-26 10:48:01] Basis set declaration started
+[2016-10-26 10:48:01] [ERROR] Syntax error in file LiH_bas.inp: in basis set declaration: variables are not allowed yet, contraction coefficient should be a number, but found [WORD    | Li]
+[2016-10-26 10:48:01] Exit
+[2016-10-26 10:49:49] Log created
+[2016-10-26 10:49:49] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 10:49:49] Running on avo (Linux)
+[2016-10-26 10:49:49] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-26 10:49:49] Input files: 1 ( LiH_bas.inp )
+[2016-10-26 10:49:49] Starting kernel (Kernel::start())
+[2016-10-26 10:49:49] New input file: "LiH_bas.inp"
+[2016-10-26 10:49:49] Basis set declaration started
+[2016-10-26 10:49:49] Succesfully read new L-block for element H: {L=0, alpha=[], Ncontracted=0}
+[2016-10-26 10:49:49] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [END OF LINE]
+[2016-10-26 10:49:49] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
+[2016-10-26 10:49:49] Exit
+[2016-10-26 10:51:26] Log created
+[2016-10-26 10:51:26] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 10:51:26] Running on avo (Linux)
+[2016-10-26 10:51:26] Kernel arguments: "./minichem LiH_bas.inp "
+[2016-10-26 10:51:26] Input files: 1 ( LiH_bas.inp )
+[2016-10-26 10:51:26] Starting kernel (Kernel::start())
+[2016-10-26 10:51:26] New input file: "LiH_bas.inp"
+[2016-10-26 10:51:26] Basis set declaration started
+[2016-10-26 10:51:26] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-10-26 10:51:26] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
+[2016-10-26 10:51:26] Succesfully read new L-block for element Li: {L=0, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 10:51:26] Succesfully read new L-block for element Li: {L=1, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 10:51:26] Exit
+[2016-10-26 10:52:11] Log created
+[2016-10-26 10:52:11] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 10:52:11] Running on avo (Linux)
+[2016-10-26 10:52:11] Kernel arguments: "./minichem LiH_bas0.inp "
+[2016-10-26 10:52:11] Input files: 1 ( LiH_bas0.inp )
+[2016-10-26 10:52:11] Starting kernel (Kernel::start())
+[2016-10-26 10:52:11] New input file: "LiH_bas0.inp"
+[2016-10-26 10:52:11] Basis set declaration started
+[2016-10-26 10:52:11] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-10-26 10:52:11] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
+[2016-10-26 10:52:11] Succesfully read new L-block for element Li: {L=0, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 10:52:11] Succesfully read new L-block for element Li: {L=1, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 10:52:11] Exit
+[2016-10-26 10:52:39] Log created
+[2016-10-26 10:52:39] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 10:52:39] Running on avo (Linux)
+[2016-10-26 10:52:39] Kernel arguments: "./minichem LiH_bas0.inp "
+[2016-10-26 10:52:39] Input files: 1 ( LiH_bas0.inp )
+[2016-10-26 10:52:39] Starting kernel (Kernel::start())
+[2016-10-26 10:52:39] New input file: "LiH_bas0.inp"
+[2016-10-26 10:52:39] Basis set declaration started
+[2016-10-26 10:52:39] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-10-26 10:52:39] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
+[2016-10-26 10:52:39] [ERROR] Syntax error in file LiH_bas0.inp: in basis set declaration: expected rectangular matrix of contraction coefficients
+[2016-10-26 10:52:39] Exit
+[2016-10-26 10:54:56] Log created
+[2016-10-26 10:54:56] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 10:54:56] Running on avo (Linux)
+[2016-10-26 10:54:56] Kernel arguments: "./minichem LiH_bas1.inp "
+[2016-10-26 10:54:56] Input files: 1 ( LiH_bas1.inp )
+[2016-10-26 10:54:56] Starting kernel (Kernel::start())
+[2016-10-26 10:54:56] New input file: "LiH_bas1.inp"
+[2016-10-26 10:54:56] Basis set declaration started
+[2016-10-26 10:54:56] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-10-26 10:54:56] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
+[2016-10-26 10:54:56] [ERROR] Syntax error in file LiH_bas1.inp: in basis set declaration: variables are not allowedyet, alpha should be a number, but found [WORD    | t]
+[2016-10-26 10:54:56] Exit
+[2016-10-26 10:55:39] Log created
+[2016-10-26 10:55:39] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 10:55:39] Running on avo (Linux)
+[2016-10-26 10:55:39] Kernel arguments: "./minichem LiH_bas2.inp "
+[2016-10-26 10:55:39] Input files: 1 ( LiH_bas2.inp )
+[2016-10-26 10:55:39] Starting kernel (Kernel::start())
+[2016-10-26 10:55:39] New input file: "LiH_bas2.inp"
+[2016-10-26 10:55:39] Basis set declaration started
+[2016-10-26 10:55:39] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-10-26 10:55:39] [ERROR] Syntax error in file LiH_bas2.inp: in basis set declaration: variables are not allowed yet, contraction coefficient should be a number, but found [WORD    | t]
+[2016-10-26 10:55:39] Exit

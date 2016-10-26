@@ -33,11 +33,11 @@ Token Lexer::get()
   ch = inp_->get();
   while (isspace(ch)) {
     if (ch == '\n' && eol_enabled_)
-      return Token(Token::TT_EOF);
+      return Token(Token::TT_EOL);
     ch = inp_->get();
   }
 
-  if (!*inp_ || ch == Token::TT_EOL)  // TODO!
+  if (!*inp_) // || ch == Token::TT_EOL)  // TODO!
     return Token(Token::TT_EOF);
 
   if (isdigit(ch) || ch == '-') {

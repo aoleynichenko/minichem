@@ -246,13 +246,81 @@ void Kernel::declBasisSet()
 		else if (t.sval == "spherical")
 			cartesian = false;
 		else if (isElementSymbol(t.sval)) {  // read L-block
+			string sym = t.sval;  // save element symbol
+			out->printf("Element symbol: %s\n", sym.c_str());
 			Token am = lex.get();
 			if (am.ttype != Token::TT_WORD)
 				throw SyntaxError("wrong angular momentum should be string, but found " + am.toString());
 			int L = parseAngularMomentum(am.sval);
 			if (L < 0)
 				throw SyntaxError("wrong angular momentum: " + am.sval + " (expected S, P, D, F ot G)");
+			out->printf("L = %d\n", L);
 			// read block!
+			lex.setEolEnabled(true);
+			BasisSet::LBlock block;
+			block.l_ = L;
+			int line_n = 1;
+			int ncontr = 0;  // number of contraction coeffs in line, should be the same for all lines
+			t = lex.get();
+			t = lex.match(t, Token::TT_EOL);  // End-Of-Line after angular momentum symbol!
+			// block ending conditions:
+			//   '{'
+			//   Sym
+			// alpha may be a string (if variable)
+			out->printf("start block, next token = %s\n", t.toString().c_str());
+			while (t.ttype == Token::TT_NUMBER ||
+				(t.ttype == Token::TT_WORD && !isElementSymbol(t.sval))) {
+				// token == alpha
+				// no variables in minichem 0.1
+				// parse ONE string: <alpha> <c1> <c2> ... <cN>
+				if (t.ttype == Token::TT_NUMBER) {
+					block.alpha_.push_back(t.dval);
+					out->printf("a = %f\n", t.dval);
+				}
+				else {
+					throw SyntaxError("in basis set declaration: variables are not allowed\
+yet, alpha should be a number, but found " + t.toString());
+				}
+				vector<double> coeffs;
+				t = lex.get();
+				while (t.ttype != Token::TT_EOL && t.ttype != Token::TT_EOF) {
+					if (t.ttype != Token::TT_NUMBER)
+						throw SyntaxError("in basis set declaration: variables are not allowed \
+yet, contraction coefficient should be a number, but found " + t.toString());
+					coeffs.push_back(t.dval);
+					t = lex.get();
+				}
+				if (t.ttype == Token::TT_EOF)
+					throw SyntaxError("in basis set declaration: unexpected end of file");
+
+				// verify line of contraction coefficient
+				if (line_n == 1 && coeffs.size() == 0)
+					throw SyntaxError("in basis set declaration: the number of contraction\
+ coefficients should be non-zero");
+ 				if (line_n == 1)
+					ncontr = coeffs.size();
+				else  // line_n > 1
+					if (ncontr != coeffs.size())
+						throw SyntaxError("in basis set declaration: expected rectangular \
+matrix of contraction coefficients");
+				// all is OK
+				block.contr_.push_back(coeffs);
+				line_n++;
+				// get next alpha, right curly bracket or Sym
+				t = lex.get();
+			}
+			lex.putback(t);
+			lex.setEolEnabled(false);
+			// now we have valid block ("template") of contracted GTOs
+			// write info to log for debugging and add this block to BasisSet object
+			ostringstream alphas;  // too complicated:) C++, where is join()?
+			for (size_t i = 0; i < block.alpha_.size(); i++) {
+				alphas << block.alpha_[i];
+				if (i != block.alpha_.size()-1)
+					alphas << ",";
+			}
+			mainlog->log("Succesfully read new L-block for element %s: {L=%d, alpha=[%s], \
+Ncontracted=%d}", sym.c_str(), block.l_, alphas.str().c_str(), ncontr);
 		}
 		else {
 			mainlog->log("[ERROR] In Kernel::declBasisSet(): is not an element symbol: '%s'", t.sval.c_str());
@@ -338,7 +406,7 @@ int parseAngularMomentum(string ams)
 	ams = str_tolower(ams);
 	string momlabels[] = {"s", "p", "d", "f", "g"};
 	int maxmom = 4;
-	for (size_t i = 0; i < maxmom; i++)
+	for (int i = 0; i < maxmom; i++)
 		if (momlabels[i] == ams)
 			return i;
 	return -1;
