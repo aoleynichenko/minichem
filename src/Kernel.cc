@@ -88,7 +88,6 @@ int Kernel::start()
 		}
 	}
 
-
 	return 0; // OK!
 }
 
@@ -119,8 +118,11 @@ void Kernel::execScript()
 	Token t = lex.get();
 	if (t.ttype == Token::TT_KW_MOL)
 		declMolecule();
-	else if (t.ttype == Token::TT_KW_BASIS)
-		declBasisSet();
+	else if (t.ttype == Token::TT_KW_BASIS) {
+		BasisSet bs;
+		lex.putback(t);  // we will start basis set declaration from [basis] token
+		declBasisSet(&bs, &lex);
+	}
 	else {
 		mainlog->log("[ERROR] Unknown token in Kernel::execScript(): " + t.toString());
 		throw SyntaxError("unknown token: " + t.toString());
@@ -207,15 +209,18 @@ void Kernel::declMolecule()
 mult = %d, nelec = %d", mol.getCharge(), mol.getMult(), mol.nelec());
 }
 
-void Kernel::declBasisSet()
+// this function is designed to be very flexible and recursive in order to read
+// basis sets from nested 'basis' instructions
+void Kernel::declBasisSet(BasisSet* bs, Lexer* lexer)
 {
 	mainlog->log("Basis set declaration started");
 
-	Token t = lex.get();
+	Token t = lexer->get(); // skip [KEYWORD|basis] token
+	t = lexer->get();
 	string setname = "unnamed";
 	if (t.ttype == Token::TT_WORD) {
 		setname = t.sval;
-		t = lex.get();
+		t = lexer->get();
 	}
 	if (t.ttype != '{') {
 		if (setname != "unnamed") {  // basis cc-pvtz
@@ -223,12 +228,23 @@ void Kernel::declBasisSet()
 			// load basis from file/library or make it current if it is already loaded
 			// 1. search in our variables
 			// 2. search in current directory
-			// 3. search in minichem's basis library
+			if (fileExists(setname)) {
+				ifstream subbas(setname);
+				Lexer sublex;
+				sublex.setInput(&subbas);
+				mainlog->log("File '%s' exists, invoke recursive", setname.c_str());
+				declBasisSet(bs, &sublex);
+			}
+			else {
+				// 3. search in minichem's basis library
+				mainlog->log("Search basis set '%s' in minichem's library", setname.c_str());
+				throw SyntaxError("basis set '" + setname + "' not found");
+			}
 			return;
 		}
 		else {
-			mainlog->log("[ERROR] In Kernel::declBasisSet(): '{' expected");
-			throw SyntaxError("expected '{' in basis set declaration");
+			mainlog->log("[ERROR] In Kernel::declBasisSet(): '{' expected, but found " + t.toString());
+			throw SyntaxError("expected '{' in basis set declaration, but found " + t.toString());
 		}
 	}
 
@@ -239,7 +255,7 @@ void Kernel::declBasisSet()
 	//  cartesian
 	//  spherical
 	bool cartesian = false; // by default, spherical basis sets
-	t = lex.get();
+	t = lexer->get();
 	while (t.ttype == Token::TT_WORD) {
 		if (t.sval == "cartesian")
 			cartesian = true;
@@ -247,27 +263,24 @@ void Kernel::declBasisSet()
 			cartesian = false;
 		else if (isElementSymbol(t.sval)) {  // read L-block
 			string sym = t.sval;  // save element symbol
-			out->printf("Element symbol: %s\n", sym.c_str());
-			Token am = lex.get();
+			Token am = lexer->get();
 			if (am.ttype != Token::TT_WORD)
 				throw SyntaxError("wrong angular momentum should be string, but found " + am.toString());
 			int L = parseAngularMomentum(am.sval);
 			if (L < 0)
 				throw SyntaxError("wrong angular momentum: " + am.sval + " (expected S, P, D, F ot G)");
-			out->printf("L = %d\n", L);
 			// read block!
-			lex.setEolEnabled(true);
+			lexer->setEolEnabled(true);
 			BasisSet::LBlock block;
 			block.l_ = L;
 			int line_n = 1;
 			int ncontr = 0;  // number of contraction coeffs in line, should be the same for all lines
-			t = lex.get();
-			t = lex.match(t, Token::TT_EOL);  // End-Of-Line after angular momentum symbol!
+			t = lexer->get();
+			t = lexer->match(t, Token::TT_EOL);  // End-Of-Line after angular momentum symbol!
 			// block ending conditions:
 			//   '{'
 			//   Sym
 			// alpha may be a string (if variable)
-			out->printf("start block, next token = %s\n", t.toString().c_str());
 			while (t.ttype == Token::TT_NUMBER ||
 				(t.ttype == Token::TT_WORD && !isElementSymbol(t.sval))) {
 				// token == alpha
@@ -275,23 +288,25 @@ void Kernel::declBasisSet()
 				// parse ONE string: <alpha> <c1> <c2> ... <cN>
 				if (t.ttype == Token::TT_NUMBER) {
 					block.alpha_.push_back(t.dval);
-					out->printf("a = %f\n", t.dval);
 				}
 				else {
 					throw SyntaxError("in basis set declaration: variables are not allowed\
 yet, alpha should be a number, but found " + t.toString());
 				}
 				vector<double> coeffs;
-				t = lex.get();
+				t = lexer->get();
 				while (t.ttype != Token::TT_EOL && t.ttype != Token::TT_EOF) {
 					if (t.ttype != Token::TT_NUMBER)
 						throw SyntaxError("in basis set declaration: variables are not allowed \
 yet, contraction coefficient should be a number, but found " + t.toString());
 					coeffs.push_back(t.dval);
-					t = lex.get();
+					t = lexer->get();
 				}
+				while (t.ttype == Token::TT_EOL) // skip white space between lines in block
+					t = lexer->get();
 				if (t.ttype == Token::TT_EOF)
 					throw SyntaxError("in basis set declaration: unexpected end of file");
+				lexer->putback(t);  // return next token (!= EOF!), maybe it is alpha
 
 				// verify line of contraction coefficient
 				if (line_n == 1 && coeffs.size() == 0)
@@ -300,17 +315,17 @@ yet, contraction coefficient should be a number, but found " + t.toString());
  				if (line_n == 1)
 					ncontr = coeffs.size();
 				else  // line_n > 1
-					if (ncontr != coeffs.size())
+					if (ncontr != coeffs.size()) {
 						throw SyntaxError("in basis set declaration: expected rectangular \
-matrix of contraction coefficients");
+matrix of contraction coefficients");}
 				// all is OK
 				block.contr_.push_back(coeffs);
 				line_n++;
 				// get next alpha, right curly bracket or Sym
-				t = lex.get();
+				t = lexer->get();
 			}
-			lex.putback(t);
-			lex.setEolEnabled(false);
+			lexer->putback(t);
+			lexer->setEolEnabled(false);
 			// now we have valid block ("template") of contracted GTOs
 			// write info to log for debugging and add this block to BasisSet object
 			ostringstream alphas;  // too complicated:) C++, where is join()?
@@ -326,7 +341,7 @@ Ncontracted=%d}", sym.c_str(), block.l_, alphas.str().c_str(), ncontr);
 			mainlog->log("[ERROR] In Kernel::declBasisSet(): is not an element symbol: '%s'", t.sval.c_str());
 			throw SyntaxError("in basis set declaration: is not an element symbol: " + t.sval);
 		}
-		t = lex.get();
+		t = lexer->get();
 	}
 	if (t.ttype != '}') {
 		mainlog->log("[ERROR] In Kernel::declBasisSet(): '}' expected, but found " + t.toString());

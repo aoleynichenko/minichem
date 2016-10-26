@@ -1,6 +1,6 @@
 /* Kernel.h
  * This header contains definition of class Kernel - main class
- * of the Minichem program, which contains all runtime environment - 
+ * of the Minichem program, which contains all runtime environment -
  * variables, settings, results of previous calculations, memory pool.
  *
  * Note: maybe, the kernel can be stored as a file?
@@ -16,6 +16,7 @@
 #include <string>
 #include <vector>
 
+#include "./lib/basis/BasisSet.h"
 #include "./lib/io/Log.h"
 #include "./lib/io/Lexer.h"
 #include "./lib/io/OutputStream.h"
@@ -40,7 +41,7 @@ private:
 	// parser
 	void execScript();
 	void declMolecule();
-	void declBasisSet();
+	void declBasisSet(BasisSet* bs, Lexer* lexer);
 };
 
 // Main log. It is separated from kernel variables to be stable wrt kernel crash.

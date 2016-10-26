@@ -1,3 +1,6 @@
+# test
+basis sto3g
+
 mol LiH {
   mult 1
   charge 0

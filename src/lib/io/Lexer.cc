@@ -40,6 +40,12 @@ Token Lexer::get()
   if (!*inp_) // || ch == Token::TT_EOL)  // TODO!
     return Token(Token::TT_EOF);
 
+  if (ch == '#') { // skip comments
+    while ((ch = inp_->get()) != '\n');
+    inp_->putback(ch);
+    return this->get(); // recursive call
+  }
+
   if (isdigit(ch) || ch == '-') {
     int sign = 1;
     if (ch == '-') {  // is negative number?

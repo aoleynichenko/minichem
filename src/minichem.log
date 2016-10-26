@@ -1,219 +1,514 @@
-[2016-10-24 10:32:40] Log created
-[2016-10-24 10:32:40] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-24 10:32:40] Running on Alexander (Linux)
-[2016-10-24 10:32:40] Kernel arguments: "./minichem LiH_bas.inp "
-[2016-10-24 10:32:40] Input files: 1 ( LiH_bas.inp )
-[2016-10-24 10:32:40] Starting kernel (Kernel::start())
-[2016-10-24 10:32:40] New input file: "LiH_bas.inp"
-[2016-10-24 10:32:40] Basis set declaration started
-[2016-10-24 10:32:40] [ERROR] In Kernel::declBasisSet(): '}' expected
-[2016-10-24 10:32:40] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
-[2016-10-24 10:32:40] Exit
-[2016-10-24 10:46:31] Log created
-[2016-10-24 10:46:31] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-24 10:46:31] Running on Alexander (Linux)
-[2016-10-24 10:46:31] Kernel arguments: "./minichem LiH_bas.inp "
-[2016-10-24 10:46:31] Input files: 1 ( LiH_bas.inp )
-[2016-10-24 10:46:31] Starting kernel (Kernel::start())
-[2016-10-24 10:46:31] New input file: "LiH_bas.inp"
-[2016-10-24 10:46:31] Basis set declaration started
-[2016-10-24 10:46:31] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [NUMBER  | 3.42525]
-[2016-10-24 10:46:31] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
-[2016-10-24 10:46:31] Exit
-[2016-10-24 19:57:42] Log created
-[2016-10-24 19:57:42] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-24 19:57:42] Running on Alexander (Linux)
-[2016-10-24 19:57:42] Kernel arguments: "./minichem LiH_bas.inp "
-[2016-10-24 19:57:42] Input files: 1 ( LiH_bas.inp )
-[2016-10-24 19:57:42] Starting kernel (Kernel::start())
-[2016-10-24 19:57:42] New input file: "LiH_bas.inp"
-[2016-10-24 19:57:42] Basis set declaration started
-[2016-10-24 19:57:42] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [NUMBER  | 3.42525]
-[2016-10-24 19:57:42] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
-[2016-10-24 19:57:42] Exit
-[2016-10-24 19:57:57] Log created
-[2016-10-24 19:57:57] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-24 19:57:57] Running on Alexander (Linux)
-[2016-10-24 19:57:57] Kernel arguments: "./minichem LiH.inp "
-[2016-10-24 19:57:57] Input files: 1 ( LiH.inp )
-[2016-10-24 19:57:57] Starting kernel (Kernel::start())
-[2016-10-24 19:57:57] New input file: "LiH.inp"
-[2016-10-24 19:57:57] Molecule declaration started
-[2016-10-24 19:57:57] Molecule specification was succesfully read, charge = 0, mult = 1, nelec = 4
-[2016-10-24 19:57:57] Exit
-[2016-10-24 23:58:18] Log created
-[2016-10-24 23:58:18] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-24 23:58:18] Running on Alexander (Linux)
-[2016-10-24 23:58:18] Kernel arguments: "./minichem LiH_bas.inp "
-[2016-10-24 23:58:18] Input files: 1 ( LiH_bas.inp )
-[2016-10-24 23:58:18] Starting kernel (Kernel::start())
-[2016-10-24 23:58:18] New input file: "LiH_bas.inp"
-[2016-10-24 23:58:18] Basis set declaration started
-[2016-10-24 23:58:18] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [NUMBER  | 3.42525]
-[2016-10-24 23:58:18] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
-[2016-10-24 23:58:18] Exit
-[2016-10-24 23:58:27] Log created
-[2016-10-24 23:58:27] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-24 23:58:27] Running on Alexander (Linux)
-[2016-10-24 23:58:27] Kernel arguments: "./minichem CH4.inp "
-[2016-10-24 23:58:27] Input files: 1 ( CH4.inp )
-[2016-10-24 23:58:27] Starting kernel (Kernel::start())
-[2016-10-24 23:58:27] New input file: "CH4.inp"
-[2016-10-24 23:58:27] Molecule declaration started
-[2016-10-24 23:58:27] Molecule specification was succesfully read, charge = 0, mult = 1, nelec = 10
-[2016-10-24 23:58:27] Exit
-[2016-10-26 10:32:32] Log created
-[2016-10-26 10:32:32] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-26 10:32:32] Running on avo (Linux)
-[2016-10-26 10:32:32] Kernel arguments: "./minichem LiH_bas.inp "
-[2016-10-26 10:32:32] Input files: 1 ( LiH_bas.inp )
-[2016-10-26 10:32:32] Starting kernel (Kernel::start())
-[2016-10-26 10:32:32] New input file: "LiH_bas.inp"
-[2016-10-26 10:32:32] Basis set declaration started
-[2016-10-26 10:32:32] Read new L-block for element H: {L=0, alpha=[], Ncontracted=0}
-[2016-10-26 10:32:32] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [END OF FILE]
-[2016-10-26 10:32:32] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
-[2016-10-26 10:32:32] Exit
-[2016-10-26 10:37:49] Log created
-[2016-10-26 10:37:49] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-26 10:37:49] Running on avo (Linux)
-[2016-10-26 10:37:49] Kernel arguments: "./minichem LiH_bas.inp "
-[2016-10-26 10:37:49] Input files: 1 ( LiH_bas.inp )
-[2016-10-26 10:37:49] Starting kernel (Kernel::start())
-[2016-10-26 10:37:49] New input file: "LiH_bas.inp"
-[2016-10-26 10:37:49] Basis set declaration started
-[2016-10-26 10:37:49] Succesfully read new L-block for element H: {L=0, alpha=[], Ncontracted=0}
-[2016-10-26 10:37:49] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [END OF FILE]
-[2016-10-26 10:37:49] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
-[2016-10-26 10:37:49] Exit
-[2016-10-26 10:45:20] Log created
-[2016-10-26 10:45:20] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-26 10:45:20] Running on avo (Linux)
-[2016-10-26 10:45:20] Kernel arguments: "./minichem LiH_bas.inp "
-[2016-10-26 10:45:20] Input files: 1 ( LiH_bas.inp )
-[2016-10-26 10:45:20] Starting kernel (Kernel::start())
-[2016-10-26 10:45:20] New input file: "LiH_bas.inp"
-[2016-10-26 10:45:20] Basis set declaration started
-[2016-10-26 10:45:20] Succesfully read new L-block for element H: {L=0, alpha=[], Ncontracted=0}
-[2016-10-26 10:45:20] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [END OF FILE]
-[2016-10-26 10:45:20] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
-[2016-10-26 10:45:20] Exit
-[2016-10-26 10:45:51] Log created
-[2016-10-26 10:45:51] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-26 10:45:51] Running on avo (Linux)
-[2016-10-26 10:45:51] Kernel arguments: "./minichem LiH_bas.inp "
-[2016-10-26 10:45:51] Input files: 1 ( LiH_bas.inp )
-[2016-10-26 10:45:51] Starting kernel (Kernel::start())
-[2016-10-26 10:45:51] New input file: "LiH_bas.inp"
-[2016-10-26 10:45:51] Basis set declaration started
-[2016-10-26 10:45:51] Succesfully read new L-block for element H: {L=0, alpha=[], Ncontracted=0}
-[2016-10-26 10:45:51] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [END OF FILE]
-[2016-10-26 10:45:51] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
-[2016-10-26 10:45:51] Exit
-[2016-10-26 10:46:33] Log created
-[2016-10-26 10:46:33] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-26 10:46:33] Running on avo (Linux)
-[2016-10-26 10:46:33] Kernel arguments: "./minichem LiH_bas.inp "
-[2016-10-26 10:46:33] Input files: 1 ( LiH_bas.inp )
-[2016-10-26 10:46:33] Starting kernel (Kernel::start())
-[2016-10-26 10:46:33] New input file: "LiH_bas.inp"
-[2016-10-26 10:46:33] Basis set declaration started
-[2016-10-26 10:46:33] Succesfully read new L-block for element H: {L=0, alpha=[], Ncontracted=0}
-[2016-10-26 10:46:33] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [END OF FILE]
-[2016-10-26 10:46:33] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
-[2016-10-26 10:46:33] Exit
-[2016-10-26 10:47:32] Log created
-[2016-10-26 10:47:32] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-26 10:47:32] Running on avo (Linux)
-[2016-10-26 10:47:32] Kernel arguments: "./minichem LiH_bas.inp "
-[2016-10-26 10:47:32] Input files: 1 ( LiH_bas.inp )
-[2016-10-26 10:47:32] Starting kernel (Kernel::start())
-[2016-10-26 10:47:32] New input file: "LiH_bas.inp"
-[2016-10-26 10:47:32] Basis set declaration started
-[2016-10-26 10:47:32] Succesfully read new L-block for element H: {L=0, alpha=[], Ncontracted=0}
-[2016-10-26 10:47:32] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [END OF FILE]
-[2016-10-26 10:47:32] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
-[2016-10-26 10:47:32] Exit
-[2016-10-26 10:48:01] Log created
-[2016-10-26 10:48:01] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-26 10:48:01] Running on avo (Linux)
-[2016-10-26 10:48:01] Kernel arguments: "./minichem LiH_bas.inp "
-[2016-10-26 10:48:01] Input files: 1 ( LiH_bas.inp )
-[2016-10-26 10:48:01] Starting kernel (Kernel::start())
-[2016-10-26 10:48:01] New input file: "LiH_bas.inp"
-[2016-10-26 10:48:01] Basis set declaration started
-[2016-10-26 10:48:01] [ERROR] Syntax error in file LiH_bas.inp: in basis set declaration: variables are not allowed yet, contraction coefficient should be a number, but found [WORD    | Li]
-[2016-10-26 10:48:01] Exit
-[2016-10-26 10:49:49] Log created
-[2016-10-26 10:49:49] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-26 10:49:49] Running on avo (Linux)
-[2016-10-26 10:49:49] Kernel arguments: "./minichem LiH_bas.inp "
-[2016-10-26 10:49:49] Input files: 1 ( LiH_bas.inp )
-[2016-10-26 10:49:49] Starting kernel (Kernel::start())
-[2016-10-26 10:49:49] New input file: "LiH_bas.inp"
-[2016-10-26 10:49:49] Basis set declaration started
-[2016-10-26 10:49:49] Succesfully read new L-block for element H: {L=0, alpha=[], Ncontracted=0}
-[2016-10-26 10:49:49] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [END OF LINE]
-[2016-10-26 10:49:49] [ERROR] Syntax error in file LiH_bas.inp: expected '}' in basis set declaration
-[2016-10-26 10:49:49] Exit
-[2016-10-26 10:51:26] Log created
-[2016-10-26 10:51:26] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-26 10:51:26] Running on avo (Linux)
-[2016-10-26 10:51:26] Kernel arguments: "./minichem LiH_bas.inp "
-[2016-10-26 10:51:26] Input files: 1 ( LiH_bas.inp )
-[2016-10-26 10:51:26] Starting kernel (Kernel::start())
-[2016-10-26 10:51:26] New input file: "LiH_bas.inp"
-[2016-10-26 10:51:26] Basis set declaration started
-[2016-10-26 10:51:26] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
-[2016-10-26 10:51:26] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
-[2016-10-26 10:51:26] Succesfully read new L-block for element Li: {L=0, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
-[2016-10-26 10:51:26] Succesfully read new L-block for element Li: {L=1, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
-[2016-10-26 10:51:26] Exit
-[2016-10-26 10:52:11] Log created
-[2016-10-26 10:52:11] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-26 10:52:11] Running on avo (Linux)
-[2016-10-26 10:52:11] Kernel arguments: "./minichem LiH_bas0.inp "
-[2016-10-26 10:52:11] Input files: 1 ( LiH_bas0.inp )
-[2016-10-26 10:52:11] Starting kernel (Kernel::start())
-[2016-10-26 10:52:11] New input file: "LiH_bas0.inp"
-[2016-10-26 10:52:11] Basis set declaration started
-[2016-10-26 10:52:11] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
-[2016-10-26 10:52:11] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
-[2016-10-26 10:52:11] Succesfully read new L-block for element Li: {L=0, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
-[2016-10-26 10:52:11] Succesfully read new L-block for element Li: {L=1, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
-[2016-10-26 10:52:11] Exit
-[2016-10-26 10:52:39] Log created
-[2016-10-26 10:52:39] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-26 10:52:39] Running on avo (Linux)
-[2016-10-26 10:52:39] Kernel arguments: "./minichem LiH_bas0.inp "
-[2016-10-26 10:52:39] Input files: 1 ( LiH_bas0.inp )
-[2016-10-26 10:52:39] Starting kernel (Kernel::start())
-[2016-10-26 10:52:39] New input file: "LiH_bas0.inp"
-[2016-10-26 10:52:39] Basis set declaration started
-[2016-10-26 10:52:39] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
-[2016-10-26 10:52:39] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
-[2016-10-26 10:52:39] [ERROR] Syntax error in file LiH_bas0.inp: in basis set declaration: expected rectangular matrix of contraction coefficients
-[2016-10-26 10:52:39] Exit
-[2016-10-26 10:54:56] Log created
-[2016-10-26 10:54:56] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-26 10:54:56] Running on avo (Linux)
-[2016-10-26 10:54:56] Kernel arguments: "./minichem LiH_bas1.inp "
-[2016-10-26 10:54:56] Input files: 1 ( LiH_bas1.inp )
-[2016-10-26 10:54:56] Starting kernel (Kernel::start())
-[2016-10-26 10:54:56] New input file: "LiH_bas1.inp"
-[2016-10-26 10:54:56] Basis set declaration started
-[2016-10-26 10:54:56] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
-[2016-10-26 10:54:56] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
-[2016-10-26 10:54:56] [ERROR] Syntax error in file LiH_bas1.inp: in basis set declaration: variables are not allowedyet, alpha should be a number, but found [WORD    | t]
-[2016-10-26 10:54:56] Exit
-[2016-10-26 10:55:39] Log created
-[2016-10-26 10:55:39] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
-[2016-10-26 10:55:39] Running on avo (Linux)
-[2016-10-26 10:55:39] Kernel arguments: "./minichem LiH_bas2.inp "
-[2016-10-26 10:55:39] Input files: 1 ( LiH_bas2.inp )
-[2016-10-26 10:55:39] Starting kernel (Kernel::start())
-[2016-10-26 10:55:39] New input file: "LiH_bas2.inp"
-[2016-10-26 10:55:39] Basis set declaration started
-[2016-10-26 10:55:39] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
-[2016-10-26 10:55:39] [ERROR] Syntax error in file LiH_bas2.inp: in basis set declaration: variables are not allowed yet, contraction coefficient should be a number, but found [WORD    | t]
-[2016-10-26 10:55:39] Exit
+[2016-10-26 11:47:05] Log created
+[2016-10-26 11:47:05] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 11:47:05] Running on avo (Linux)
+[2016-10-26 11:47:05] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 11:47:05] Input files: 1 ( LiH.inp )
+[2016-10-26 11:47:05] Starting kernel (Kernel::start())
+[2016-10-26 11:47:05] New input file: "LiH.inp"
+[2016-10-26 11:47:05] Basis set declaration started
+[2016-10-26 11:47:05] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 11:47:05] search basis set 'sto3g' in minichem's library
+[2016-10-26 11:47:05] Exit
+[2016-10-26 11:48:28] Log created
+[2016-10-26 11:48:28] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 11:48:28] Running on avo (Linux)
+[2016-10-26 11:48:28] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 11:48:28] Input files: 1 ( LiH.inp )
+[2016-10-26 11:48:28] Starting kernel (Kernel::start())
+[2016-10-26 11:48:28] New input file: "LiH.inp"
+[2016-10-26 11:48:28] Basis set declaration started
+[2016-10-26 11:48:28] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 11:48:28] search basis set 'sto3g' in minichem's library
+[2016-10-26 11:48:28] [ERROR] Syntax error in file LiH.inp: basis set 'sto3g' not found
+[2016-10-26 11:48:28] Exit
+[2016-10-26 11:54:53] Log created
+[2016-10-26 11:54:53] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 11:54:53] Running on avo (Linux)
+[2016-10-26 11:54:53] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 11:54:53] Input files: 1 ( LiH.inp )
+[2016-10-26 11:54:53] Starting kernel (Kernel::start())
+[2016-10-26 11:54:53] New input file: "LiH.inp"
+[2016-10-26 11:54:53] Basis set declaration started
+[2016-10-26 11:54:53] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 11:54:53] file 'sto3g' exists, invoke recursive
+[2016-10-26 11:54:53] Basis set declaration started
+[2016-10-26 11:54:53] [ERROR] In Kernel::declBasisSet(): '{' expected
+[2016-10-26 11:54:53] [ERROR] Syntax error in file LiH.inp: expected '{' in basis set declaration
+[2016-10-26 11:54:53] Exit
+[2016-10-26 12:00:31] Log created
+[2016-10-26 12:00:31] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:00:31] Running on avo (Linux)
+[2016-10-26 12:00:31] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:00:31] Input files: 1 ( LiH.inp )
+[2016-10-26 12:00:31] Starting kernel (Kernel::start())
+[2016-10-26 12:00:31] New input file: "LiH.inp"
+[2016-10-26 12:00:31] Basis set declaration started
+[2016-10-26 12:00:31] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:00:31] file 'sto3g' exists, invoke recursive
+[2016-10-26 12:00:31] Basis set declaration started
+[2016-10-26 12:00:31] [ERROR] In Kernel::declBasisSet(): '{' expected
+[2016-10-26 12:00:31] [ERROR] Syntax error in file LiH.inp: expected '{' in basis set declaration
+[2016-10-26 12:00:31] Exit
+[2016-10-26 12:01:45] Log created
+[2016-10-26 12:01:45] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:01:45] Running on avo (Linux)
+[2016-10-26 12:01:45] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:01:45] Input files: 1 ( LiH.inp )
+[2016-10-26 12:01:45] Starting kernel (Kernel::start())
+[2016-10-26 12:01:45] New input file: "LiH.inp"
+[2016-10-26 12:01:45] Basis set declaration started
+[2016-10-26 12:01:45] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:01:45] file 'sto3g' exists, invoke recursive
+[2016-10-26 12:01:45] Basis set declaration started
+[2016-10-26 12:01:45] [ERROR] In Kernel::declBasisSet(): '{' expected
+[2016-10-26 12:01:45] [ERROR] Syntax error in file LiH.inp: expected '{' in basis set declaration
+[2016-10-26 12:01:45] Exit
+[2016-10-26 12:02:01] Log created
+[2016-10-26 12:02:01] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:02:01] Running on avo (Linux)
+[2016-10-26 12:02:01] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:02:01] Input files: 1 ( LiH.inp )
+[2016-10-26 12:02:01] Starting kernel (Kernel::start())
+[2016-10-26 12:02:01] New input file: "LiH.inp"
+[2016-10-26 12:02:01] Basis set declaration started
+[2016-10-26 12:02:01] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:02:01] file 'sto3g' exists, invoke recursive
+[2016-10-26 12:02:01] Basis set declaration started
+[2016-10-26 12:02:01] [ERROR] In Kernel::declBasisSet(): '{' expected
+[2016-10-26 12:02:01] [ERROR] Syntax error in file LiH.inp: expected '{' in basis set declaration
+[2016-10-26 12:02:01] Exit
+[2016-10-26 12:02:45] Log created
+[2016-10-26 12:02:45] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:02:45] Running on avo (Linux)
+[2016-10-26 12:02:45] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:02:45] Input files: 1 ( LiH.inp )
+[2016-10-26 12:02:45] Starting kernel (Kernel::start())
+[2016-10-26 12:02:45] New input file: "LiH.inp"
+[2016-10-26 12:02:45] Basis set declaration started
+[2016-10-26 12:02:45] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:02:45] file 'sto3g' exists, invoke recursive
+[2016-10-26 12:02:45] Basis set declaration started
+[2016-10-26 12:02:45] [ERROR] In Kernel::declBasisSet(): '{' expected
+[2016-10-26 12:02:45] [ERROR] Syntax error in file LiH.inp: expected '{' in basis set declaration
+[2016-10-26 12:02:45] Exit
+[2016-10-26 12:03:14] Log created
+[2016-10-26 12:03:14] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:03:14] Running on avo (Linux)
+[2016-10-26 12:03:14] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:03:14] Input files: 1 ( LiH.inp )
+[2016-10-26 12:03:14] Starting kernel (Kernel::start())
+[2016-10-26 12:03:14] New input file: "LiH.inp"
+[2016-10-26 12:03:14] Basis set declaration started
+[2016-10-26 12:03:14] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:03:14] file 'sto3g' exists, invoke recursive
+[2016-10-26 12:03:14] Basis set declaration started
+[2016-10-26 12:03:14] [ERROR] In Kernel::declBasisSet(): '{' expected
+[2016-10-26 12:03:14] [ERROR] Syntax error in file LiH.inp: expected '{' in basis set declaration!
+[2016-10-26 12:03:14] Exit
+[2016-10-26 12:03:25] Log created
+[2016-10-26 12:03:25] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:03:25] Running on avo (Linux)
+[2016-10-26 12:03:25] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:03:25] Input files: 1 ( LiH.inp )
+[2016-10-26 12:03:25] Starting kernel (Kernel::start())
+[2016-10-26 12:03:25] New input file: "LiH.inp"
+[2016-10-26 12:03:25] Basis set declaration started
+[2016-10-26 12:03:25] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:03:25] file 'sto3g' exists, invoke recursive
+[2016-10-26 12:03:25] Basis set declaration started
+[2016-10-26 12:03:25] [ERROR] In Kernel::declBasisSet(): '{' expected
+[2016-10-26 12:03:25] [ERROR] Syntax error in file LiH.inp: expected '{' in basis set declaration
+[2016-10-26 12:03:25] Exit
+[2016-10-26 12:04:21] Log created
+[2016-10-26 12:04:21] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:04:21] Running on avo (Linux)
+[2016-10-26 12:04:21] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:04:21] Input files: 1 ( LiH.inp )
+[2016-10-26 12:04:21] Starting kernel (Kernel::start())
+[2016-10-26 12:04:21] New input file: "LiH.inp"
+[2016-10-26 12:04:21] Basis set declaration started
+[2016-10-26 12:04:21] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:04:21] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:04:21] Basis set declaration started
+[2016-10-26 12:04:21] [ERROR] In Kernel::declBasisSet(): '{' expected
+[2016-10-26 12:04:21] [ERROR] Syntax error in file LiH.inp: expected '{' in basis set declaration
+[2016-10-26 12:04:21] Exit
+[2016-10-26 12:05:19] Log created
+[2016-10-26 12:05:19] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:05:19] Running on avo (Linux)
+[2016-10-26 12:05:19] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:05:19] Input files: 1 ( LiH.inp )
+[2016-10-26 12:05:19] Starting kernel (Kernel::start())
+[2016-10-26 12:05:19] New input file: "LiH.inp"
+[2016-10-26 12:05:19] Basis set declaration started
+[2016-10-26 12:05:19] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:05:19] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:05:19] Basis set declaration started
+[2016-10-26 12:05:19] [ERROR] In Kernel::declBasisSet(): '{' expected
+[2016-10-26 12:05:19] [ERROR] Syntax error in file LiH.inp: expected '{' in basis set declaration
+[2016-10-26 12:05:19] Exit
+[2016-10-26 12:06:59] Log created
+[2016-10-26 12:06:59] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:06:59] Running on avo (Linux)
+[2016-10-26 12:06:59] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:06:59] Input files: 1 ( LiH.inp )
+[2016-10-26 12:06:59] Starting kernel (Kernel::start())
+[2016-10-26 12:06:59] New input file: "LiH.inp"
+[2016-10-26 12:06:59] [ERROR] Unknown token in Kernel::execScript(): [#]
+[2016-10-26 12:06:59] [ERROR] Syntax error in file LiH.inp: unknown token: [#]
+[2016-10-26 12:06:59] Exit
+[2016-10-26 12:07:15] Log created
+[2016-10-26 12:07:15] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:07:15] Running on avo (Linux)
+[2016-10-26 12:07:15] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:07:15] Input files: 1 ( LiH.inp )
+[2016-10-26 12:07:15] Starting kernel (Kernel::start())
+[2016-10-26 12:07:15] New input file: "LiH.inp"
+[2016-10-26 12:07:15] Basis set declaration started
+[2016-10-26 12:07:15] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:07:15] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:07:15] Basis set declaration started
+[2016-10-26 12:07:15] [ERROR] In Kernel::declBasisSet(): '{' expected
+[2016-10-26 12:07:15] [ERROR] Syntax error in file LiH.inp: expected '{' in basis set declaration
+[2016-10-26 12:07:15] Exit
+[2016-10-26 12:09:01] Log created
+[2016-10-26 12:09:01] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:09:01] Running on avo (Linux)
+[2016-10-26 12:09:01] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:09:01] Input files: 1 ( LiH.inp )
+[2016-10-26 12:09:01] Starting kernel (Kernel::start())
+[2016-10-26 12:09:01] New input file: "LiH.inp"
+[2016-10-26 12:09:01] Basis set declaration started
+[2016-10-26 12:09:01] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:09:01] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:09:01] Basis set declaration started
+[2016-10-26 12:09:01] [ERROR] In Kernel::declBasisSet(): '{' expected, but found [KEYWORD | basis]
+[2016-10-26 12:09:01] [ERROR] Syntax error in file LiH.inp: expected '{' in basis set declaration
+[2016-10-26 12:09:01] Exit
+[2016-10-26 12:09:17] Log created
+[2016-10-26 12:09:17] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:09:17] Running on avo (Linux)
+[2016-10-26 12:09:17] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:09:17] Input files: 1 ( LiH.inp )
+[2016-10-26 12:09:17] Starting kernel (Kernel::start())
+[2016-10-26 12:09:17] New input file: "LiH.inp"
+[2016-10-26 12:09:17] Basis set declaration started
+[2016-10-26 12:09:17] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:09:17] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:09:17] Basis set declaration started
+[2016-10-26 12:09:17] [ERROR] In Kernel::declBasisSet(): '{' expected, but found [KEYWORD | basis]
+[2016-10-26 12:09:17] [ERROR] Syntax error in file LiH.inp: expected '{' in basis set declaration, but found [KEYWORD | basis]
+[2016-10-26 12:09:17] Exit
+[2016-10-26 12:16:22] Log created
+[2016-10-26 12:16:22] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:16:22] Running on avo (Linux)
+[2016-10-26 12:16:22] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:16:22] Input files: 1 ( LiH.inp )
+[2016-10-26 12:16:22] Starting kernel (Kernel::start())
+[2016-10-26 12:16:22] New input file: "LiH.inp"
+[2016-10-26 12:16:22] Basis set declaration started
+[2016-10-26 12:16:22] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:16:22] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:16:22] Basis set declaration started
+[2016-10-26 12:16:22] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-10-26 12:16:22] [ERROR] In Kernel::declBasisSet(): '}' expected, but found [END OF LINE]
+[2016-10-26 12:16:22] [ERROR] Syntax error in file LiH.inp: expected '}' in basis set declaration
+[2016-10-26 12:16:22] Exit
+[2016-10-26 12:22:06] Log created
+[2016-10-26 12:22:06] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:22:06] Running on avo (Linux)
+[2016-10-26 12:22:06] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:22:06] Input files: 1 ( LiH.inp )
+[2016-10-26 12:22:06] Starting kernel (Kernel::start())
+[2016-10-26 12:22:06] New input file: "LiH.inp"
+[2016-10-26 12:22:06] Basis set declaration started
+[2016-10-26 12:22:06] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:22:06] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:22:06] Basis set declaration started
+[2016-10-26 12:22:06] [ERROR] Syntax error in file LiH.inp: in basis set declaration: expected rectangular matrix of contraction coefficients
+[2016-10-26 12:22:06] Exit
+[2016-10-26 12:22:43] Log created
+[2016-10-26 12:22:43] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:22:43] Running on avo (Linux)
+[2016-10-26 12:22:43] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:22:43] Input files: 1 ( LiH.inp )
+[2016-10-26 12:22:43] Starting kernel (Kernel::start())
+[2016-10-26 12:22:43] New input file: "LiH.inp"
+[2016-10-26 12:22:43] Basis set declaration started
+[2016-10-26 12:22:43] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:22:43] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:22:43] Basis set declaration started
+[2016-10-26 12:22:43] [ERROR] Syntax error in file LiH.inp: in basis set declaration: expected rectangular matrix of contraction coefficients
+[2016-10-26 12:22:43] Exit
+[2016-10-26 12:27:00] Log created
+[2016-10-26 12:27:00] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:27:00] Running on avo (Linux)
+[2016-10-26 12:27:00] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:27:00] Input files: 1 ( LiH.inp )
+[2016-10-26 12:27:00] Starting kernel (Kernel::start())
+[2016-10-26 12:27:00] New input file: "LiH.inp"
+[2016-10-26 12:27:00] Basis set declaration started
+[2016-10-26 12:27:00] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:27:00] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:27:00] Basis set declaration started
+[2016-10-26 12:27:00] [ERROR] Syntax error in file LiH.inp: in basis set declaration: expected rectangular matrix of contraction coefficients
+[2016-10-26 12:27:00] Exit
+[2016-10-26 12:28:30] Log created
+[2016-10-26 12:28:30] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:28:30] Running on avo (Linux)
+[2016-10-26 12:28:30] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:28:30] Input files: 1 ( LiH.inp )
+[2016-10-26 12:28:30] Starting kernel (Kernel::start())
+[2016-10-26 12:28:30] New input file: "LiH.inp"
+[2016-10-26 12:28:30] Basis set declaration started
+[2016-10-26 12:28:30] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:28:30] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:28:30] Basis set declaration started
+[2016-10-26 12:28:30] [ERROR] Syntax error in file LiH.inp: in basis set declaration: expected rectangular matrix of contraction coefficients
+[2016-10-26 12:28:30] Exit
+[2016-10-26 12:30:19] Log created
+[2016-10-26 12:30:19] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:30:19] Running on avo (Linux)
+[2016-10-26 12:30:19] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:30:19] Input files: 1 ( LiH.inp )
+[2016-10-26 12:30:19] Starting kernel (Kernel::start())
+[2016-10-26 12:30:19] New input file: "LiH.inp"
+[2016-10-26 12:30:19] Basis set declaration started
+[2016-10-26 12:30:19] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:30:19] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:30:19] Basis set declaration started
+[2016-10-26 12:30:19] [ERROR] Syntax error in file LiH.inp: in basis set declaration: expected rectangular matrix of contraction coefficients
+[2016-10-26 12:30:19] Exit
+[2016-10-26 12:31:27] Log created
+[2016-10-26 12:31:27] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:31:27] Running on avo (Linux)
+[2016-10-26 12:31:27] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:31:27] Input files: 1 ( LiH.inp )
+[2016-10-26 12:31:27] Starting kernel (Kernel::start())
+[2016-10-26 12:31:27] New input file: "LiH.inp"
+[2016-10-26 12:31:27] Basis set declaration started
+[2016-10-26 12:31:27] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:31:27] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:31:27] Basis set declaration started
+[2016-10-26 12:31:27] [ERROR] Syntax error in file LiH.inp: in basis set declaration: expected rectangular matrix of contraction coefficients
+[2016-10-26 12:31:27] Exit
+[2016-10-26 12:31:44] Log created
+[2016-10-26 12:31:44] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:31:44] Running on avo (Linux)
+[2016-10-26 12:31:44] Kernel arguments: "./minichem sto3g "
+[2016-10-26 12:31:44] Input files: 1 ( sto3g )
+[2016-10-26 12:31:44] Starting kernel (Kernel::start())
+[2016-10-26 12:31:44] New input file: "sto3g"
+[2016-10-26 12:31:44] Basis set declaration started
+[2016-10-26 12:31:44] [ERROR] Syntax error in file sto3g: in basis set declaration: expected rectangular matrix of contraction coefficients
+[2016-10-26 12:31:44] Exit
+[2016-10-26 12:32:06] Log created
+[2016-10-26 12:32:06] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:32:06] Running on avo (Linux)
+[2016-10-26 12:32:06] Kernel arguments: "./minichem sto3g "
+[2016-10-26 12:32:06] Input files: 1 ( sto3g )
+[2016-10-26 12:32:06] Starting kernel (Kernel::start())
+[2016-10-26 12:32:06] New input file: "sto3g"
+[2016-10-26 12:32:06] Basis set declaration started
+[2016-10-26 12:32:06] [ERROR] Syntax error in file sto3g: in basis set declaration: expected rectangular matrix of contraction coefficients
+[2016-10-26 12:32:06] Exit
+[2016-10-26 12:32:51] Log created
+[2016-10-26 12:32:51] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:32:51] Running on avo (Linux)
+[2016-10-26 12:32:51] Kernel arguments: "./minichem sto3g "
+[2016-10-26 12:32:51] Input files: 1 ( sto3g )
+[2016-10-26 12:32:51] Starting kernel (Kernel::start())
+[2016-10-26 12:32:51] New input file: "sto3g"
+[2016-10-26 12:32:51] Basis set declaration started
+[2016-10-26 12:32:51] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-10-26 12:32:51] Exit
+[2016-10-26 12:35:08] Log created
+[2016-10-26 12:35:08] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:35:08] Running on avo (Linux)
+[2016-10-26 12:35:08] Kernel arguments: "./minichem sto3g "
+[2016-10-26 12:35:08] Input files: 1 ( sto3g )
+[2016-10-26 12:35:08] Starting kernel (Kernel::start())
+[2016-10-26 12:35:08] New input file: "sto3g"
+[2016-10-26 12:35:08] Basis set declaration started
+[2016-10-26 12:35:08] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-10-26 12:35:08] Exit
+[2016-10-26 12:35:09] Log created
+[2016-10-26 12:35:09] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:35:09] Running on avo (Linux)
+[2016-10-26 12:35:09] Kernel arguments: "./minichem sto3g2 "
+[2016-10-26 12:35:09] Input files: 1 ( sto3g2 )
+[2016-10-26 12:35:09] Starting kernel (Kernel::start())
+[2016-10-26 12:35:09] New input file: "sto3g2"
+[2016-10-26 12:35:09] Basis set declaration started
+[2016-10-26 12:35:09] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-10-26 12:35:09] Succesfully read new L-block for element He: {L=0, alpha=[6.36242,1.15892,0.31365], Ncontracted=1}
+[2016-10-26 12:35:09] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
+[2016-10-26 12:35:09] Succesfully read new L-block for element Li: {L=0, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 12:35:09] Succesfully read new L-block for element Li: {L=1, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 12:35:09] Succesfully read new L-block for element O: {L=0, alpha=[130.709,23.8089,6.44361], Ncontracted=1}
+[2016-10-26 12:35:09] Succesfully read new L-block for element O: {L=0, alpha=[5.03315,1.1696,0.380389], Ncontracted=2}
+[2016-10-26 12:35:09] Succesfully read new L-block for element O: {L=1, alpha=[5.03315,1.1696,0.380389], Ncontracted=2}
+[2016-10-26 12:35:09] Exit
+[2016-10-26 12:35:27] Log created
+[2016-10-26 12:35:27] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:35:27] Running on avo (Linux)
+[2016-10-26 12:35:27] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:35:27] Input files: 1 ( LiH.inp )
+[2016-10-26 12:35:27] Starting kernel (Kernel::start())
+[2016-10-26 12:35:27] New input file: "LiH.inp"
+[2016-10-26 12:35:27] Basis set declaration started
+[2016-10-26 12:35:27] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:35:27] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:35:27] Basis set declaration started
+[2016-10-26 12:35:27] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-10-26 12:35:27] Succesfully read new L-block for element He: {L=0, alpha=[6.36242,1.15892,0.31365], Ncontracted=1}
+[2016-10-26 12:35:27] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
+[2016-10-26 12:35:27] Succesfully read new L-block for element Li: {L=0, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 12:35:27] Succesfully read new L-block for element Li: {L=1, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 12:35:27] Succesfully read new L-block for element O: {L=0, alpha=[130.709,23.8089,6.44361], Ncontracted=1}
+[2016-10-26 12:35:27] Succesfully read new L-block for element O: {L=0, alpha=[5.03315,1.1696,0.380389], Ncontracted=2}
+[2016-10-26 12:35:27] Succesfully read new L-block for element O: {L=1, alpha=[5.03315,1.1696,0.380389], Ncontracted=2}
+[2016-10-26 12:35:27] Search basis set 'sto3g' in minichem's library
+[2016-10-26 12:35:27] [ERROR] Syntax error in file LiH.inp: basis set 'sto3g' not found
+[2016-10-26 12:35:27] Exit
+[2016-10-26 12:35:59] Log created
+[2016-10-26 12:35:59] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:35:59] Running on avo (Linux)
+[2016-10-26 12:35:59] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:35:59] Input files: 1 ( LiH.inp )
+[2016-10-26 12:35:59] Starting kernel (Kernel::start())
+[2016-10-26 12:35:59] New input file: "LiH.inp"
+[2016-10-26 12:35:59] Basis set declaration started
+[2016-10-26 12:35:59] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:35:59] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:35:59] Basis set declaration started
+[2016-10-26 12:35:59] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-10-26 12:35:59] Succesfully read new L-block for element He: {L=0, alpha=[6.36242,1.15892,0.31365], Ncontracted=1}
+[2016-10-26 12:35:59] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
+[2016-10-26 12:35:59] Succesfully read new L-block for element Li: {L=0, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 12:35:59] Succesfully read new L-block for element Li: {L=1, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 12:35:59] Succesfully read new L-block for element O: {L=0, alpha=[130.709,23.8089,6.44361], Ncontracted=1}
+[2016-10-26 12:35:59] Succesfully read new L-block for element O: {L=0, alpha=[5.03315,1.1696,0.380389], Ncontracted=2}
+[2016-10-26 12:35:59] Succesfully read new L-block for element O: {L=1, alpha=[5.03315,1.1696,0.380389], Ncontracted=2}
+[2016-10-26 12:35:59] Search basis set 'sto3g' in minichem's library
+[2016-10-26 12:35:59] [ERROR] Syntax error in file LiH.inp: basis set 'sto3g' not found
+[2016-10-26 12:35:59] Exit
+[2016-10-26 12:36:32] Log created
+[2016-10-26 12:36:32] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:36:32] Running on avo (Linux)
+[2016-10-26 12:36:32] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:36:32] Input files: 1 ( LiH.inp )
+[2016-10-26 12:36:32] Starting kernel (Kernel::start())
+[2016-10-26 12:36:32] New input file: "LiH.inp"
+[2016-10-26 12:36:32] Basis set declaration started
+[2016-10-26 12:36:32] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:36:32] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:36:32] Basis set declaration started
+[2016-10-26 12:36:32] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-10-26 12:36:32] Succesfully read new L-block for element He: {L=0, alpha=[6.36242,1.15892,0.31365], Ncontracted=1}
+[2016-10-26 12:36:32] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
+[2016-10-26 12:36:32] Succesfully read new L-block for element Li: {L=0, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 12:36:32] Succesfully read new L-block for element Li: {L=1, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 12:36:32] Succesfully read new L-block for element O: {L=0, alpha=[130.709,23.8089,6.44361], Ncontracted=1}
+[2016-10-26 12:36:32] Succesfully read new L-block for element O: {L=0, alpha=[5.03315,1.1696,0.380389], Ncontracted=2}
+[2016-10-26 12:36:32] Succesfully read new L-block for element O: {L=1, alpha=[5.03315,1.1696,0.380389], Ncontracted=2}
+[2016-10-26 12:36:32] Search basis set 'sto3g' in minichem's library
+[2016-10-26 12:36:32] [ERROR] Syntax error in file LiH.inp: basis set 'sto3g' not found
+[2016-10-26 12:36:32] Exit
+[2016-10-26 12:37:28] Log created
+[2016-10-26 12:37:28] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:37:28] Running on avo (Linux)
+[2016-10-26 12:37:28] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:37:28] Input files: 1 ( LiH.inp )
+[2016-10-26 12:37:28] Starting kernel (Kernel::start())
+[2016-10-26 12:37:28] New input file: "LiH.inp"
+[2016-10-26 12:37:28] Basis set declaration started
+[2016-10-26 12:37:28] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:37:28] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:37:28] Basis set declaration started
+[2016-10-26 12:37:28] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-10-26 12:37:28] Succesfully read new L-block for element He: {L=0, alpha=[6.36242,1.15892,0.31365], Ncontracted=1}
+[2016-10-26 12:37:28] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
+[2016-10-26 12:37:28] Succesfully read new L-block for element Li: {L=0, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 12:37:28] Succesfully read new L-block for element Li: {L=1, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 12:37:28] Succesfully read new L-block for element O: {L=0, alpha=[130.709,23.8089,6.44361], Ncontracted=1}
+[2016-10-26 12:37:28] Succesfully read new L-block for element O: {L=0, alpha=[5.03315,1.1696,0.380389], Ncontracted=2}
+[2016-10-26 12:37:28] Succesfully read new L-block for element O: {L=1, alpha=[5.03315,1.1696,0.380389], Ncontracted=2}
+[2016-10-26 12:37:28] Exit
+[2016-10-26 12:38:02] Log created
+[2016-10-26 12:38:02] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:38:02] Running on avo (Linux)
+[2016-10-26 12:38:02] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:38:02] Input files: 1 ( LiH.inp )
+[2016-10-26 12:38:02] Starting kernel (Kernel::start())
+[2016-10-26 12:38:02] New input file: "LiH.inp"
+[2016-10-26 12:38:02] Basis set declaration started
+[2016-10-26 12:38:02] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:38:02] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:38:02] Basis set declaration started
+[2016-10-26 12:38:02] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-10-26 12:38:02] Succesfully read new L-block for element He: {L=0, alpha=[6.36242,1.15892,0.31365], Ncontracted=1}
+[2016-10-26 12:38:02] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
+[2016-10-26 12:38:02] Succesfully read new L-block for element Li: {L=0, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 12:38:02] Succesfully read new L-block for element Li: {L=1, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 12:38:02] Succesfully read new L-block for element O: {L=0, alpha=[130.709,23.8089,6.44361], Ncontracted=1}
+[2016-10-26 12:38:02] Succesfully read new L-block for element O: {L=0, alpha=[5.03315,1.1696,0.380389], Ncontracted=2}
+[2016-10-26 12:38:02] Succesfully read new L-block for element O: {L=1, alpha=[5.03315,1.1696,0.380389], Ncontracted=2}
+[2016-10-26 12:38:02] Exit
+[2016-10-26 12:38:32] Log created
+[2016-10-26 12:38:32] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:38:32] Running on avo (Linux)
+[2016-10-26 12:38:32] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:38:32] Input files: 1 ( LiH.inp )
+[2016-10-26 12:38:32] Starting kernel (Kernel::start())
+[2016-10-26 12:38:32] New input file: "LiH.inp"
+[2016-10-26 12:38:32] Basis set declaration started
+[2016-10-26 12:38:32] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:38:32] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:38:32] Basis set declaration started
+[2016-10-26 12:38:32] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-10-26 12:38:32] Succesfully read new L-block for element He: {L=0, alpha=[6.36242,1.15892,0.31365], Ncontracted=1}
+[2016-10-26 12:38:32] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
+[2016-10-26 12:38:32] Succesfully read new L-block for element Li: {L=0, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 12:38:32] Succesfully read new L-block for element Li: {L=1, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 12:38:32] Succesfully read new L-block for element O: {L=0, alpha=[130.709,23.8089,6.44361], Ncontracted=1}
+[2016-10-26 12:38:32] Succesfully read new L-block for element O: {L=0, alpha=[5.03315,1.1696,0.380389], Ncontracted=2}
+[2016-10-26 12:38:32] Succesfully read new L-block for element O: {L=1, alpha=[5.03315,1.1696,0.380389], Ncontracted=2}
+[2016-10-26 12:38:32] Exit
+[2016-10-26 12:40:57] Log created
+[2016-10-26 12:40:57] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:40:57] Running on avo (Linux)
+[2016-10-26 12:40:57] Kernel arguments: "./minichem LiH.inp "
+[2016-10-26 12:40:57] Input files: 1 ( LiH.inp )
+[2016-10-26 12:40:57] Starting kernel (Kernel::start())
+[2016-10-26 12:40:57] New input file: "LiH.inp"
+[2016-10-26 12:40:57] Basis set declaration started
+[2016-10-26 12:40:57] In Kernel::declBasisSet(): basis set 'sto3g' declared in short notation
+[2016-10-26 12:40:57] File 'sto3g' exists, invoke recursive
+[2016-10-26 12:40:57] Basis set declaration started
+[2016-10-26 12:40:57] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-10-26 12:40:57] Succesfully read new L-block for element He: {L=0, alpha=[6.36242,1.15892,0.31365], Ncontracted=1}
+[2016-10-26 12:40:57] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
+[2016-10-26 12:40:57] Succesfully read new L-block for element Li: {L=0, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 12:40:57] Succesfully read new L-block for element Li: {L=1, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 12:40:57] Succesfully read new L-block for element O: {L=0, alpha=[130.709,23.8089,6.44361], Ncontracted=1}
+[2016-10-26 12:40:57] Succesfully read new L-block for element O: {L=0, alpha=[5.03315,1.1696,0.380389], Ncontracted=2}
+[2016-10-26 12:40:57] Succesfully read new L-block for element O: {L=1, alpha=[5.03315,1.1696,0.380389], Ncontracted=2}
+[2016-10-26 12:40:57] Exit
+[2016-10-26 12:41:10] Log created
+[2016-10-26 12:41:10] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-10-26 12:41:10] Running on avo (Linux)
+[2016-10-26 12:41:10] Kernel arguments: "./minichem sto3g "
+[2016-10-26 12:41:10] Input files: 1 ( sto3g )
+[2016-10-26 12:41:10] Starting kernel (Kernel::start())
+[2016-10-26 12:41:10] New input file: "sto3g"
+[2016-10-26 12:41:10] Basis set declaration started
+[2016-10-26 12:41:10] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-10-26 12:41:10] Succesfully read new L-block for element He: {L=0, alpha=[6.36242,1.15892,0.31365], Ncontracted=1}
+[2016-10-26 12:41:10] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
+[2016-10-26 12:41:10] Succesfully read new L-block for element Li: {L=0, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 12:41:10] Succesfully read new L-block for element Li: {L=1, alpha=[0.63629,0.14786,0.0480887], Ncontracted=2}
+[2016-10-26 12:41:10] Succesfully read new L-block for element O: {L=0, alpha=[130.709,23.8089,6.44361], Ncontracted=1}
+[2016-10-26 12:41:10] Succesfully read new L-block for element O: {L=0, alpha=[5.03315,1.1696,0.380389], Ncontracted=2}
+[2016-10-26 12:41:10] Succesfully read new L-block for element O: {L=1, alpha=[5.03315,1.1696,0.380389], Ncontracted=2}
+[2016-10-26 12:41:10] Exit
