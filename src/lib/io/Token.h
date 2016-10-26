@@ -14,6 +14,7 @@ public:
   static const int TT_NOTHING;
   static const int TT_NUMBER;
   static const int TT_WORD;
+  static const int TT_QUOTE;
 
   static const int TT_KW_FUN;
   static const int TT_KW_MOL;

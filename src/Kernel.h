@@ -34,6 +34,7 @@ public:
 private:
 	OutputStream* out;
 	std::vector<std::string> inputFiles_m;
+	std::string libPath;  // path to basis set libraries
 
 	Lexer lex;
 

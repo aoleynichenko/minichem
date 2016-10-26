@@ -52,15 +52,20 @@ clean:
 	rm -f minichem
 	$(MAKE) -C lib clean
 install:
-	mkdir ../bin ../lib
-	cp $(TARGET) ../bin
+	@mkdir ../bin ../lib
+	@cp $(TARGET) ../bin
+	@mkdir ../lib/basissets
+	@cp basissets/* ../lib/basissets/
+	@echo Congratulations! Now you have minichem on your computer!
+	@echo Set MINICHEM_HOME variable to enable minichem\'s basis set library
+	@echo Proper MINICHEM_HOME = `pwd`/..
 uninstall:
-	rm -r ../bin ../lib
+	@rm -r ../bin ../lib
 
 $(TARGET): make-lib Kernel.o main.o
 	echo $(CXXFLAGS)
 	$(CXX) $(CXXFLAGS) -lm -fopenmp -o $(TARGET) $(OBJS) $(LINKFLAGS)
-		
+
 main.o: main.cc
 	$(CXX) $(CXXFLAGS) -c -o main.o main.cc
 
@@ -69,4 +74,3 @@ Kernel.o: Kernel.cc
 
 make-lib:
 	$(MAKE) -C lib auxlib.o -e CXX=$(CXX)
-

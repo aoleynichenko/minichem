@@ -2,6 +2,7 @@
 #include <chrono>
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
@@ -17,6 +18,7 @@
 #include "./lib/io/OutputStream.h"
 #include "./lib/io/Token.h"
 
+using std::exception;
 using std::ifstream;
 using std::ostringstream;
 using std::runtime_error;
@@ -45,6 +47,16 @@ Kernel::Kernel(int argc, char **argv)
 	// attach "standard" output
 	out = OutputStream::getStdout();
 
+	// find basis set libraries using environmental variable MINICHEM_HOME
+	char* homedir = getenv("MINICHEM_HOME");
+	if (homedir) {
+		libPath = string(homedir);
+		mainlog->log("MINICHEM_HOME = " + libPath);
+	}
+	else
+		mainlog->log("MINICHEM_HOME variable is void, you can set it to simplify \
+search and inclusion of basis sets");
+
 	// which input files should we process?
 	// inputFiles_m is implicitly initialized
 	for (int i = 1; i < argc; i++)
@@ -64,6 +76,23 @@ Kernel::Kernel(int argc, char **argv)
 int Kernel::start()
 {
 	mainlog->log("Starting kernel (Kernel::start())");
+
+	// firstly, read settings from ~/.minichemrc
+	// .minichemrc is an ordinary minichem script, user can write there,
+	// for example, path to basis libraries, scf options (bad style!!!), etc.
+	// TROUBLE WITH TILDA :(
+	/*
+	if (fileExists("~/.minichemrc")) {
+		mainlog->log(".minichemrc file found, trying to read settings");
+		ifstream rc("~/.minichemrc");
+		lex.setInput(&rc);
+		try {
+			execScript();
+		} catch (exception& e) {
+			mainlog->log("[ERROR] While reading ~/.minichemrc file: %s",   e.what());
+			out->printf ("[ERROR] While reading ~/.minichemrc file: %s\n", e.what());
+		}
+	}*/
 
 	for (auto inp = inputFiles_m.begin(); inp != inputFiles_m.end(); inp++) {
 		hline();
@@ -218,7 +247,7 @@ void Kernel::declBasisSet(BasisSet* bs, Lexer* lexer)
 	Token t = lexer->get(); // skip [KEYWORD|basis] token
 	t = lexer->get();
 	string setname = "unnamed";
-	if (t.ttype == Token::TT_WORD) {
+	if (t.ttype == Token::TT_WORD || t.ttype == Token::TT_QUOTE) {
 		setname = t.sval;
 		t = lexer->get();
 	}
@@ -235,11 +264,18 @@ void Kernel::declBasisSet(BasisSet* bs, Lexer* lexer)
 				mainlog->log("File '%s' exists, invoke recursive", setname.c_str());
 				declBasisSet(bs, &sublex);
 			}
-			else {
-				// 3. search in minichem's basis library
+			// 3. search in minichem's basis library
+			else if (fileExists(this->libPath + "/lib/basissets/" + setname)) {
 				mainlog->log("Search basis set '%s' in minichem's library", setname.c_str());
-				throw SyntaxError("basis set '" + setname + "' not found");
+				string path = this->libPath + "/lib/basissets/" + setname;
+				ifstream subbas(path);
+				Lexer sublex;
+				sublex.setInput(&subbas);
+				mainlog->log("File '%s' exists (in library directory), invoke recursive", setname.c_str());
+				declBasisSet(bs, &sublex);
 			}
+			else
+				throw SyntaxError("basis set '" + setname + "' not found");
 			return;
 		}
 		else {

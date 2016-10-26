@@ -15,6 +15,7 @@ const int Token::TT_EOL     = -2;
 const int Token::TT_NOTHING = -3;
 const int Token::TT_NUMBER  = -4;
 const int Token::TT_WORD    = -5;
+const int Token::TT_QUOTE    = -6;
 
 const int Token::TT_KW_FUN   = -10;
 const int Token::TT_KW_MOL   = -11;

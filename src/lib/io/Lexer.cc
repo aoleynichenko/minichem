@@ -70,6 +70,17 @@ Token Lexer::get()
     inp_->putback(ch);
     return Token(Token::TT_WORD, word);
   }
+  else if (ch == '"') {
+    string str;
+    ch = inp_->get();
+    while (ch != Token::TT_EOF && ch != '\n' && ch != '"') {
+      str += ch;
+      ch = inp_->get();
+    }
+    if (ch != '"')
+      throw SyntaxError("expected \" as the ending of string literal, but found " + ch);
+    return Token(Token::TT_QUOTE, str);
+  }
   else
     return Token(ch);
 }
