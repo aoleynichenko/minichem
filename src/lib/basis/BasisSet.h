@@ -17,6 +17,7 @@ public:
   // simplify generation of atom-centered basis set (== vector<Shell>)
   struct LBlock {
     int l_;
+    bool cart_;
     std::vector<double> alpha_;
     std::vector<std::vector<double>> contr_; // contractions
   };

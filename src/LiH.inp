@@ -1,5 +1,5 @@
 # test
-basis "sto-3g"
+basis "def2-SVP"
 
 mol LiH {
   mult 1

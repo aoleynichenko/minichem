@@ -309,6 +309,7 @@ void Kernel::declBasisSet(BasisSet* bs, Lexer* lexer)
 			lexer->setEolEnabled(true);
 			BasisSet::LBlock block;
 			block.l_ = L;
+			block.cart_ = cartesian;
 			int line_n = 1;
 			int ncontr = 0;  // number of contraction coeffs in line, should be the same for all lines
 			t = lexer->get();
