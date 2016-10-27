@@ -35,7 +35,7 @@ CXXFLAGS=-Wall -std=c++11 -I $(LIBINT_HOME)/include -I $(LIBINT_HOME)/include/li
 		 -I $(LIBEIGEN_INCLUDE)
 LINKFLAGS=-L $(LIBINT_HOME)/lib -lint2
 SRC=main.c
-OBJS=lib/auxlib.o Kernel.o main.o
+OBJS=lib/auxlib.o scf/libscf.o Kernel.o main.o
 TARGET=minichem
 CLEAN=rm -rf *.o
 INCLUDES=
@@ -51,6 +51,7 @@ clean:
 	$(CLEAN)
 	rm -f minichem
 	$(MAKE) -C lib clean
+	$(MAKE) -C scf clean
 install:
 	@mkdir ../bin ../lib
 	@cp $(TARGET) ../bin
@@ -62,7 +63,7 @@ install:
 uninstall:
 	@rm -r ../bin ../lib
 
-$(TARGET): make-lib Kernel.o main.o
+$(TARGET): make-lib make-scf Kernel.o main.o
 	echo $(CXXFLAGS)
 	$(CXX) $(CXXFLAGS) -lm -fopenmp -o $(TARGET) $(OBJS) $(LINKFLAGS)
 
@@ -73,4 +74,8 @@ Kernel.o: Kernel.cc
 	$(CXX) $(CXXFLAGS) -c -o Kernel.o Kernel.cc
 
 make-lib:
-	$(MAKE) -C lib auxlib.o -e CXX=$(CXX)
+	$(MAKE) -C lib auxlib.o CXX=$(CXX)
+
+make-scf:
+	$(MAKE) -C scf libscf.o CXX=$(CXX)
+

@@ -6,10 +6,10 @@ FC=gfortran
 CCFLAGS=-Wall
 CXXFLAGS=-Wall
 CLEAN=rm -rf *.o *.a
-OBJ=io/libio.o chem/libchem.o basis/libbasis.o
+OBJ=io/libio.o chem/libchem.o basis/libbasis.o wf/libwf.o
 HEADERS=
 
-auxlib.o: make-io make-chem make-basis
+auxlib.o: make-io make-chem make-basis make-wf
 	ld -r $(OBJ) -o auxlib.o
 
 make-io:
@@ -20,6 +20,9 @@ make-chem:
 
 make-basis:
 	$(MAKE) -C basis libbasis.o CXX=$(CXX)
+
+make-wf:
+	$(MAKE) -C wf libwf.o CXX=$(CXX)
 
 clean:
 	$(CLEAN)
