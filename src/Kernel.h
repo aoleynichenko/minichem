@@ -43,6 +43,7 @@ private:
 	void execScript();
 	void declMolecule();
 	void declBasisSet(BasisSet* bs, Lexer* lexer);
+	void runTask();
 };
 
 // Main log. It is separated from kernel variables to be stable wrt kernel crash.

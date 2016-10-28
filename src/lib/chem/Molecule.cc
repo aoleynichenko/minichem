@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "Elements.h"
 #include "Molecule.h"
 #include "../io/OutputStream.h"
 
@@ -16,7 +17,7 @@ using std::runtime_error;
 using std::string;
 using std::vector;
 
-Molecule::PeriodicTable Molecule::perTable = Molecule::PeriodicTable();
+//Molecule::PeriodicTable Molecule::perTable = Molecule::PeriodicTable();
 
 Molecule::Atom::Atom(int Z, double _x, double _y, double _z)
 	:	x(_x), y(_y), z(_z), charge(Z)
@@ -40,7 +41,7 @@ void Molecule::addAtom(int Z, double x, double y, double z)
 
 void Molecule::addAtom(std::string symbol, double x, double y, double z)
 {
-	int Z = Molecule::perTable.getElementBySym(symbol).Z;  // atomic charge
+	int Z = Elements::getElementBySym(symbol).Z;  // atomic charge
 	addAtom(Z, x, y, z);
 }
 
@@ -78,7 +79,7 @@ double Molecule::mass() const
 {
 	double mass = 0.0;
 	for (auto a = atoms.begin(); a != atoms.end(); a++) {
-		Element e = perTable.getElementByZ(a->charge);
+		Element e = Elements::getElementByZ(a->charge);
 		mass += e.mass;
 	}
 	return mass;
@@ -124,65 +125,6 @@ void Molecule::check() const
 			<< ne << ", non-paired = " << nonpaired;
 		throw runtime_error(errmsg.str());
 	}
-}
-
-// private class Molecule::Element
-Molecule::Element::Element(int z, string s, double m)
-	:	 sym(s), Z(z), mass(m)
-{
-}
-
-
-// private class Molecule::PeriodicTable
-Molecule::PeriodicTable::PeriodicTable()
-	:	elements(vector<Molecule::Element>())
-{
-	addElement(Element(1,  "H",  1));
-	addElement(Element(2,  "He", 4));
-	addElement(Element(3,  "Li", 7));
-	addElement(Element(4,  "Be", 9));
-	addElement(Element(5,  "B",  11));
-	addElement(Element(6,  "C",  12));
-	addElement(Element(7,  "N",  14));
-	addElement(Element(8,  "O",  16));
-	addElement(Element(9,  "F",  19));
-	addElement(Element(10, "Ne", 20));
-}
-
-void Molecule::PeriodicTable::addElement(Element el)
-{
-	elements.push_back(el);
-}
-
-Molecule::Element& Molecule::PeriodicTable::getElementByZ(int z)
-{
-	for (auto p = elements.begin(); p != elements.end(); p++)
-		if (p->Z == z)
-			return *p;
-
-	std::ostringstream errmsg;
-	errmsg << "wrong atomic charge: " << z << " (not found in Mendeleev's table)";
-	throw invalid_argument(errmsg.str());
-}
-
-string stolower(string s)
-{
-	string t = s;
-	for (unsigned int i = 0; i < s.length(); i++)
-		t[i] = tolower(s[i]);
-	return t;
-}
-
-Molecule::Element& Molecule::PeriodicTable::getElementBySym(string sym)
-{
-	string s = stolower(sym);
-	for (auto p = elements.begin(); p != elements.end(); p++)
-		if (stolower(p->sym) == s)
-			return *p;
-
-	std::ostringstream errmsg;
-	errmsg << "wrong symbol of element: " << sym << " (not found in Mendeleev's table)";
-	throw invalid_argument(errmsg.str());
 }
 
 } //namespace minichem

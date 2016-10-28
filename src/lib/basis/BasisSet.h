@@ -6,6 +6,7 @@
 #define _BASIS_SET_H_INCLUDED
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -23,11 +24,16 @@ public:
   };
 
   typedef std::vector<LBlock> BasisTemplate_t; // basis set template for one element
+  static std::string am2string(int L);  // L -> {S, P, D, F...}
+  static int parseAngmom(std::string am);  // {S, P, D, F... -> L}
 
   void addLBlock(std::string elemSym, LBlock block);
+  std::string toString() const;
 private:
-  std::map<std::string, BasisTemplate_t> set_;
+  std::map<int, BasisTemplate_t> set_;
 };
+
+typedef std::shared_ptr<BasisSet> BasisSet_ptr;
 
 } // namespace minichem
 

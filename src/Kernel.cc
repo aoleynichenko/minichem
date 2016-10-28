@@ -18,6 +18,9 @@
 #include "./lib/io/OutputStream.h"
 #include "./lib/io/Token.h"
 
+// Quantum-chemical subroutines
+#include "./scf/scf.h"
+
 using std::exception;
 using std::ifstream;
 using std::ostringstream;
@@ -151,7 +154,10 @@ void Kernel::execScript()
 		BasisSet bs;
 		lex.putback(t);  // we will start basis set declaration from [basis] token
 		declBasisSet(&bs, &lex);
+		out->printf("%s\n", bs.toString().c_str());
 	}
+	else if (t.ttype == Token::TT_KW_MOL)
+		runTask();
 	else {
 		mainlog->log("[ERROR] Unknown token in Kernel::execScript(): " + t.toString());
 		throw SyntaxError("unknown token: " + t.toString());
@@ -330,7 +336,7 @@ void Kernel::declBasisSet(BasisSet* bs, Lexer* lexer)
 					throw SyntaxError("in basis set declaration: variables are not allowed\
 yet, alpha should be a number, but found " + t.toString());
 				}
-				vector<double> coeffs;
+				vector<double> coeffs;  // one HORIZONTAL line with coefficients
 				t = lexer->get();
 				while (t.ttype != Token::TT_EOL && t.ttype != Token::TT_EOF) {
 					if (t.ttype != Token::TT_NUMBER)
@@ -349,14 +355,18 @@ yet, contraction coefficient should be a number, but found " + t.toString());
 				if (line_n == 1 && coeffs.size() == 0)
 					throw SyntaxError("in basis set declaration: the number of contraction\
  coefficients should be non-zero");
- 				if (line_n == 1)
+ 				if (line_n == 1) {
 					ncontr = coeffs.size();
+					for (int i = 0; i < ncontr; i++)
+						block.contr_.push_back(vector<double>()); // create NCONTR contracted functions
+				}
 				else  // line_n > 1
 					if (ncontr != coeffs.size()) {
 						throw SyntaxError("in basis set declaration: expected rectangular \
 matrix of contraction coefficients");}
 				// all is OK
-				block.contr_.push_back(coeffs);
+				for (int i = 0; i < ncontr; i++)
+					block.contr_[i].push_back(coeffs[i]);  // horizontal vector -> vectical vectors
 				line_n++;
 				// get next alpha, right curly bracket or Sym
 				t = lexer->get();
@@ -373,6 +383,7 @@ matrix of contraction coefficients");}
 			}
 			mainlog->log("Succesfully read new L-block for element %s: {L=%d, alpha=[%s], \
 Ncontracted=%d}", sym.c_str(), block.l_, alphas.str().c_str(), ncontr);
+			bs->addLBlock(sym, block);
 		}
 		else {
 			mainlog->log("[ERROR] In Kernel::declBasisSet(): is not an element symbol: '%s'", t.sval.c_str());
@@ -384,6 +395,18 @@ Ncontracted=%d}", sym.c_str(), block.l_, alphas.str().c_str(), ncontr);
 		mainlog->log("[ERROR] In Kernel::declBasisSet(): '}' expected, but found " + t.toString());
 		throw SyntaxError("expected '}' in basis set declaration");
 	}
+}
+
+void Kernel::runTask()
+{
+	Token t = lex.get();
+	if (t.ttype != Token::TT_WORD)
+		throw SyntaxError("in task directive: expected one of [scf], but found " + t.toString());
+	if (t.sval == "scf") {  // run Hartree-Fock calculation
+
+	}
+	else
+		throw SyntaxError("in task directive: " + t.sval + " method is not yet implemented'");
 }
 
 // helper functions
@@ -423,7 +446,7 @@ inline bool fileExists(const std::string& name) {
     }
 }
 
-string str_tolower(string s)
+static string str_tolower(string s)
 {
 	string t = s;
 	for (unsigned int i = 0; i < s.length(); i++)

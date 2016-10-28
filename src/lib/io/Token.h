@@ -20,6 +20,7 @@ public:
   static const int TT_KW_MOL;
   static const int TT_KW_BASIS;
   static const int TT_KW_VAR;
+  static const int TT_KW_TASK;
 
   Token(int toktype);
   Token(int toktype, double val);

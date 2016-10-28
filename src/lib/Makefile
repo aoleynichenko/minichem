@@ -29,3 +29,5 @@ clean:
 	$(MAKE) -C io clean
 	$(MAKE) -C chem clean
 	$(MAKE) -C basis clean
+	$(MAKE) -C wf clean
+

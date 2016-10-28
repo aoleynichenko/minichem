@@ -1,6 +1,7 @@
 #ifndef _MOLECULE_H_INCLUDED
 #define _MOLECULE_H_INCLUDED
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -35,24 +36,10 @@ private:
 	int mult;
 	int charge;
 	std::vector<Atom> atoms;
-
-	struct Element {
-		std::string sym;
-		int Z;
-		double mass;
-		Element(int z, std::string s, double m);
-	};
-	struct PeriodicTable {
-		std::vector<Element> elements;
-		PeriodicTable();
-		void addElement(Element el);
-		Element& getElementByZ(int z);
-		Element& getElementBySym(std::string sym);
-	};
-	static PeriodicTable perTable;
 };
 
 typedef Molecule::Atom Atom;
+typedef std::shared_ptr<Molecule> Mol_ptr;
 
 } // namespace minichem
 

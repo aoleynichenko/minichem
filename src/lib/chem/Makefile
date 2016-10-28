@@ -6,7 +6,7 @@ FC=gfortran
 CCFLAGS=-Wall
 CXXFLAGS=-Wall -std=c++11
 CLEAN=rm -rf *.o
-OBJ=Molecule.o
+OBJ=Molecule.o Elements.o
 HEADERS=
 
 libchem.o: $(OBJ)
@@ -14,6 +14,9 @@ libchem.o: $(OBJ)
 
 Molecule.o: Molecule.cc
 	$(CXX) $(CXXFLAGS) -c -o Molecule.o Molecule.cc
+
+Elements.o: Elements.cc
+	$(CXX) $(CXXFLAGS) -c -o Elements.o Elements.cc
 
 clean:
 	$(CLEAN)
