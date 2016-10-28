@@ -9,15 +9,16 @@ Features:
  - RHF and UHF methods;
  - DIIS convergence acceleration algorithm;
  - OpenMP parallelization;
- - Available elements: H-Ne;
- - Available basis sets: any basis sets with only s and p functions;
- - Own input file format - in fact, minichem has his own scripting language;
+ - Available elements: all periodic table (but only non-relativistic treatment is available!);
+ - Available basis sets: cartesian and spherical with L up to g-functions;
+ - Own scripting language QuantumScript, which is used in input files;
  - Tiny basis set library (adopted from EMSL [2,3]).
 
 Possibilities to be implemented in the future:
  - DIIS implementation for UHF;
  - More scalable OpenMP parallelization;
  - Analytic gradients and geometry optimization;
+ - Projection population analysis;
  - I want to try to implement four-index transformation, MP2, CISD, CCSD and CCSD(T) energies, CISD transition dipole moments, EOM-CCSD.
 
 How to compile: <br>

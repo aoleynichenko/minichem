@@ -10,9 +10,11 @@
 #include <string>
 #include <vector>
 
+#include "../qscript/QS_Object.h"
+
 namespace minichem {
 
-class BasisSet {
+class BasisSet : public qscript::QS_Object {
 public:
   // LBlock struct designed to be as close as possible to libint2::Shell to
   // simplify generation of atom-centered basis set (== vector<Shell>)

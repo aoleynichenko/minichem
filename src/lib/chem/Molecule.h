@@ -5,9 +5,11 @@
 #include <string>
 #include <vector>
 
+#include "../qscript/QS_Object.h"
+
 namespace minichem {
 
-class Molecule {
+class Molecule : public qscript::QS_Object {
 public:
 	struct Atom {
 		double x, y, z;
