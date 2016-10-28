@@ -10,5 +10,6 @@ mol LiH {
 }
 
 print LiH
-#task scf
+curr LiH, bs
+task scf
 

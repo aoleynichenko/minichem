@@ -23,6 +23,7 @@ public:
   static const int TT_KW_TASK;
   static const int TT_KW_TYPEOF;
   static const int TT_KW_PRINT;
+  static const int TT_KW_CURR;
 
   Token(int toktype);
   Token(int toktype, double val);

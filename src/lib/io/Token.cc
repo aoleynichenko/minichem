@@ -24,6 +24,7 @@ const int Token::TT_KW_VAR   = -13;
 const int Token::TT_KW_TASK  = -14;
 const int Token::TT_KW_TYPEOF= -15;
 const int Token::TT_KW_PRINT = -16;
+const int Token::TT_KW_CURR  = -17;
 
 Token::Token(int toktype)
   : ttype(toktype), sval(""), dval(0.0)
@@ -76,6 +77,8 @@ int Token::lookupKeyword(string word)
     return TT_KW_TYPEOF;
   else if (word == "print")
     return TT_KW_PRINT;
+  else if (word == "curr")
+    return TT_KW_CURR;
   else
     return TT_WORD;
 }

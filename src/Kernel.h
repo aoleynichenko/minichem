@@ -17,6 +17,7 @@
 #include <vector>
 
 #include "./lib/basis/BasisSet.h"
+#include "./lib/chem/Molecule.h"
 #include "./lib/io/Log.h"
 #include "./lib/io/Lexer.h"
 #include "./lib/io/OutputStream.h"
@@ -32,6 +33,7 @@ class Kernel {
 public:
 	Kernel(int argc, char **argv);
 	int start();
+	OutputStream* getOutput();
 
 	~Kernel();
 
@@ -44,6 +46,8 @@ private:
 	// QuantumScript engine variables
 	Lexer lex;
 	qscript::QS_Scope scope_m;
+	BasisSet* currBasis;
+	Molecule* currMolecule;
 
 	void hline();
 	// parser
@@ -53,6 +57,7 @@ private:
 	void runTask();
 	void doTypeof();
 	void doPrint();
+	void doCurr();
 };
 
 // Main log. It is separated from kernel variables to be stable wrt kernel crash.

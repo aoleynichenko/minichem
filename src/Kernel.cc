@@ -67,6 +67,10 @@ Kernel::Kernel(int argc, char **argv)
 		mainlog->log("MINICHEM_HOME variable is void, you can set it to simplify \
 search and inclusion of basis sets");
 
+	// init QuantumScript engine
+	currBasis = nullptr;
+	currMolecule = nullptr;
+
 	// which input files should we process?
 	// inputFiles_m is implicitly initialized
 	for (int i = 1; i < argc; i++)
@@ -142,6 +146,11 @@ double Kernel::secondsFromStart()
 	//cout << chrono::duration_cast<chrono::microseconds>(end_time - start_time).count() << ":";
 }
 
+OutputStream* Kernel::getOutput()
+{
+	return out;
+}
+
 inline void Kernel::hline()
 {
 	out->printf("---------------------------------------------------\
@@ -170,6 +179,8 @@ void Kernel::execScript()
 			doTypeof();
 		else if (t.ttype == Token::TT_KW_PRINT)
 			doPrint();
+		else if (t.ttype == Token::TT_KW_CURR)
+			doCurr();
 		else {
 			mainlog->log("[ERROR] Unknown token in Kernel::execScript(): " + t.toString());
 			throw SyntaxError("unknown token: " + t.toString());
@@ -456,13 +467,42 @@ void Kernel::doPrint()
 		out->printf("%s\n", scope_m.get(name)->toString().c_str());
 }
 
+void Kernel::doCurr()
+{
+	using namespace qscript;
+	vector<string> names;
+
+	lex.setEolEnabled(true);
+	Token t(Token::TT_EOF);
+	do {
+		t = lex.get();
+		if (t.ttype != Token::TT_WORD)
+			throw SyntaxError("in 'curr' operator: expected word, but found " + t.toString());
+		names.push_back(t.sval);
+		t = lex.get();
+	} while (t.ttype == ',');
+	if (t.ttype != Token::TT_EOL && t.ttype != Token::TT_EOF)
+		throw SyntaxError("expected end-of-line after 'print' statement");
+	lex.setEolEnabled(false);
+
+	for (auto name : names) {
+		QS_Object* obj = scope_m.get(name);
+		if (obj->type == QS_Object::TYPE_BAS)
+			currBasis = (BasisSet*) obj;
+		else if (obj->type == QS_Object::TYPE_MOL)
+			currMolecule = (Molecule*) obj;
+	}
+}
+
 void Kernel::runTask()
 {
 	Token t = lex.get();
 	if (t.ttype != Token::TT_WORD)
 		throw SyntaxError("in task directive: expected one of [scf], but found " + t.toString());
 	if (t.sval == "scf") {  // run Hartree-Fock calculation
-
+		if (!currMolecule || !currBasis)
+			throw runtime_error("please, specify current molecule and basis set");
+		rhf(this, currBasis, currMolecule);
 	}
 	else
 		throw SyntaxError("in task directive: " + t.sval + " method is not yet implemented'");

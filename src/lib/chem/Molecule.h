@@ -2,6 +2,7 @@
 #define _MOLECULE_H_INCLUDED
 
 #include <memory>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -36,6 +37,7 @@ public:
 	std::string toString() const;
 	std::string getTypeString() const;
 	void check() const;
+	std::set<int> uniqueElems() const;
 private:
 	int mult;
 	int charge;

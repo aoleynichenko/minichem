@@ -1,12 +1,14 @@
 #include <cctype>
 #include <iomanip>
 #include <iostream>
+#include <set>
 #include <sstream>
 #include <stdexcept>
 #include <string>
 
 #include "BasisSet.h"
 #include "../chem/Elements.h"
+#include "../chem/Molecule.h"
 #include "../qscript/QS_Object.h"
 
 namespace minichem {
@@ -16,6 +18,7 @@ using std::fixed;
 using std::invalid_argument;
 using std::ostringstream;
 using std::setprecision;
+using std::set;
 using std::setw;
 using std::string;
 
@@ -34,6 +37,16 @@ void BasisSet::addLBlock(std::string elemSym, LBlock block)
   // add new block
   int Z = Elements::sym2charge(elemSym);
   set_[Z].push_back(block);
+}
+
+BasisSet BasisSet::filter(Molecule* mol) const
+{
+  BasisSet newbs;
+  set<int> uniqElems = mol->uniqueElems();
+  for (auto kv : set_)
+    if (uniqElems.find(kv.first) != uniqElems.end())
+      newbs.set_[kv.first] = kv.second;
+  return newbs;
 }
 
 // I'm a great fan of NWChem... So, NWChem style!

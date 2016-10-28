@@ -7,7 +7,7 @@
 
 namespace minichem {
 
-RhfWavefunction* rhf(BasisSet* bs, Molecule* mol);
+RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol);
 
 } // namespace minichem
 

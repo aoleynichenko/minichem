@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 
+#include "../chem/Molecule.h"
 #include "../qscript/QS_Object.h"
 
 namespace minichem {
@@ -33,6 +34,7 @@ public:
   void addLBlock(std::string elemSym, LBlock block);
   std::string toString() const;
   std::string getTypeString() const;
+  BasisSet filter(Molecule*) const;
 private:
   std::map<int, BasisTemplate_t> set_;
 };

@@ -1,6 +1,7 @@
 #include <cctype>
 #include <cmath>
 #include <iomanip>
+#include <set>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -146,6 +147,14 @@ void Molecule::check() const
 			<< ne << ", non-paired = " << nonpaired;
 		throw runtime_error(errmsg.str());
 	}
+}
+
+std::set<int> Molecule::uniqueElems() const
+{
+	std::set<int> uniq;
+	for (auto atom : atoms)
+		uniq.insert(atom.charge);
+	return uniq;
 }
 
 } //namespace minichem
