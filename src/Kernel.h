@@ -21,6 +21,11 @@
 #include "./lib/io/Lexer.h"
 #include "./lib/io/OutputStream.h"
 
+// QuantumScript engine essentials
+#include "./lib/qscript/QS_Object.h"
+#include "./lib/qscript/QS_RuntimeError.h"
+#include "./lib/qscript/QS_Scope.h"
+
 namespace minichem {
 
 class Kernel {
@@ -36,7 +41,9 @@ private:
 	std::vector<std::string> inputFiles_m;
 	std::string libPath;  // path to basis set libraries
 
+	// QuantumScript engine variables
 	Lexer lex;
+	qscript::QS_Scope scope_m;
 
 	void hline();
 	// parser
@@ -44,6 +51,8 @@ private:
 	void declMolecule();
 	void declBasisSet(BasisSet* bs, Lexer* lexer);
 	void runTask();
+	void doTypeof();
+	void doPrint();
 };
 
 // Main log. It is separated from kernel variables to be stable wrt kernel crash.

@@ -29,8 +29,10 @@ public:
   static std::string am2string(int L);  // L -> {S, P, D, F...}
   static int parseAngmom(std::string am);  // {S, P, D, F... -> L}
 
+  BasisSet();
   void addLBlock(std::string elemSym, LBlock block);
   std::string toString() const;
+  std::string getTypeString() const;
 private:
   std::map<int, BasisTemplate_t> set_;
 };

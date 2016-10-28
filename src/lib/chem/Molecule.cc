@@ -1,5 +1,6 @@
 #include <cctype>
 #include <cmath>
+#include <iomanip>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -8,12 +9,16 @@
 #include "Elements.h"
 #include "Molecule.h"
 #include "../io/OutputStream.h"
+#include "../qscript/QS_Object.h"
 
 namespace minichem {
 
+using std::fixed;
 using std::invalid_argument;
 using std::ostringstream;
 using std::runtime_error;
+using std::setprecision;
+using std::setw;
 using std::string;
 using std::vector;
 
@@ -25,7 +30,12 @@ Molecule::Atom::Atom(int Z, double _x, double _y, double _z)
 }
 
 Molecule::Molecule()
-	:	mult(1), charge(0), atoms(vector<Atom>())
+	:	qscript::QS_Object(), mult(1), charge(0), atoms(vector<Atom>())
+{
+	type = TYPE_MOL;
+}
+
+Molecule::~Molecule()
 {
 }
 
@@ -110,9 +120,20 @@ double Molecule::enuc() const
 	return en;
 }
 
-string Molecule::toString()
+string Molecule::toString() const
 {
-	return "";
+	ostringstream out;
+	out << "Charge = " << charge << "\nMult = " << mult << "\n";
+	out << fixed << setprecision(8);
+	for (auto atom : atoms)
+		out << "  " << std::left << setw(3) << Elements::charge2sym(atom.charge) << std::right
+			<< setw(15) << atom.x << setw(15) << atom.y << setw(15) << atom.z << "\n";
+	return out.str();
+}
+
+string Molecule::getTypeString() const
+{
+  return "molecule";
 }
 
 void Molecule::check() const

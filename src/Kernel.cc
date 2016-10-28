@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
+#include <memory>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -18,6 +19,11 @@
 #include "./lib/io/OutputStream.h"
 #include "./lib/io/Token.h"
 
+// QuantumScript engine essentials
+#include "./lib/qscript/QS_Object.h"
+#include "./lib/qscript/QS_RuntimeError.h"
+#include "./lib/qscript/QS_Scope.h"
+
 // Quantum-chemical subroutines
 #include "./scf/scf.h"
 
@@ -25,6 +31,7 @@ using std::exception;
 using std::ifstream;
 using std::ostringstream;
 using std::runtime_error;
+using std::shared_ptr;
 using std::string;
 using std::vector;
 
@@ -148,20 +155,28 @@ inline void Kernel::hline()
 void Kernel::execScript()
 {
 	Token t = lex.get();
-	if (t.ttype == Token::TT_KW_MOL)
-		declMolecule();
-	else if (t.ttype == Token::TT_KW_BASIS) {
-		BasisSet bs;
-		lex.putback(t);  // we will start basis set declaration from [basis] token
-		declBasisSet(&bs, &lex);
-		out->printf("%s\n", bs.toString().c_str());
+	while (t.ttype != Token::TT_EOF) {
+		if (t.ttype == Token::TT_KW_MOL)
+			declMolecule();
+		else if (t.ttype == Token::TT_KW_BASIS) {
+			BasisSet* bs = new BasisSet();
+			lex.putback(t);  // we will start basis set declaration from [basis] token
+			declBasisSet(bs, &lex);
+			scope_m.set("bs", bs);
+		}
+		else if (t.ttype == Token::TT_KW_TASK)
+			runTask();
+		else if (t.ttype == Token::TT_KW_TYPEOF)
+			doTypeof();
+		else if (t.ttype == Token::TT_KW_PRINT)
+			doPrint();
+		else {
+			mainlog->log("[ERROR] Unknown token in Kernel::execScript(): " + t.toString());
+			throw SyntaxError("unknown token: " + t.toString());
+		}
+		t = lex.get();
 	}
-	else if (t.ttype == Token::TT_KW_MOL)
-		runTask();
-	else {
-		mainlog->log("[ERROR] Unknown token in Kernel::execScript(): " + t.toString());
-		throw SyntaxError("unknown token: " + t.toString());
-	}
+	mainlog->log("End of input file (EOF)");
 }
 
 void Kernel::declMolecule()
@@ -209,7 +224,7 @@ void Kernel::declMolecule()
 
 	// read xyz and create new Molecule
 	// now we have Symbol or integer Z
-	Molecule mol;
+	Molecule* mol = new Molecule();
 	while (t.ttype == Token::TT_WORD || t.ttype == Token::TT_NUMBER) {
 		int Z = 0;
 		if (t.ttype == Token::TT_WORD) {  // sym  x  y  z
@@ -227,21 +242,22 @@ void Kernel::declMolecule()
 		double y = lex.getdouble();
 		double z = lex.getdouble();
 		double c = bohrs ? 1.0 : 1.889725989;  // convert A to a.u.
-		mol.addAtom(Z, c*x, c*y, c*z);
+		mol->addAtom(Z, c*x, c*y, c*z);
 		t = lex.get();
 	}
 
-	mol.setMult(mult);
-	mol.setCharge(charge);
+	mol->setMult(mult);
+	mol->setCharge(charge);
 
 	if (t.ttype != '}') {
 		mainlog->log("[ERROR] In Kernel::declMolecule(): '}' expected");
 		throw SyntaxError("expected '}' in molecule declaration");
 	}
-	mol.check();  // check nelec, charge and multiplicity
+	mol->check();  // check nelec, charge and multiplicity
 	// all is OK!
+	scope_m.set(molname, mol);
 	mainlog->log("Molecule specification was succesfully read, charge = %d, \
-mult = %d, nelec = %d", mol.getCharge(), mol.getMult(), mol.nelec());
+mult = %d, nelec = %d", mol->getCharge(), mol->getMult(), mol->nelec());
 }
 
 // this function is designed to be very flexible and recursive in order to read
@@ -258,7 +274,7 @@ void Kernel::declBasisSet(BasisSet* bs, Lexer* lexer)
 		t = lexer->get();
 	}
 	if (t.ttype != '{') {
-		if (setname != "unnamed") {  // basis cc-pvtz
+		if (setname != "unnamed") {  // example: basis "cc-pvtz"
 			mainlog->log("In Kernel::declBasisSet(): basis set '%s' declared in short notation", setname.c_str());
 			// load basis from file/library or make it current if it is already loaded
 			// 1. search in our variables
@@ -282,6 +298,7 @@ void Kernel::declBasisSet(BasisSet* bs, Lexer* lexer)
 			}
 			else
 				throw SyntaxError("basis set '" + setname + "' not found");
+			lex.putback(t);  // because se have tested input for {
 			return;
 		}
 		else {
@@ -395,6 +412,48 @@ Ncontracted=%d}", sym.c_str(), block.l_, alphas.str().c_str(), ncontr);
 		mainlog->log("[ERROR] In Kernel::declBasisSet(): '}' expected, but found " + t.toString());
 		throw SyntaxError("expected '}' in basis set declaration");
 	}
+}
+
+void Kernel::doTypeof()
+{
+	vector<string> names;
+
+	lex.setEolEnabled(true);
+	Token t(Token::TT_EOF);
+	do {
+		t = lex.get();
+		if (t.ttype != Token::TT_WORD)
+			throw SyntaxError("in typeof operator: expected word, but found " + t.toString());
+		names.push_back(t.sval);
+		t = lex.get();
+	} while (t.ttype == ',');
+	if (t.ttype != Token::TT_EOL && t.ttype != Token::TT_EOF)
+		throw SyntaxError("expected end-of-line after 'typeof' statement");
+	lex.setEolEnabled(false);
+
+	for (auto name : names)
+		out->printf("%s\n", scope_m.get(name)->getTypeString().c_str());
+}
+
+void Kernel::doPrint()
+{
+	vector<string> names;
+
+	lex.setEolEnabled(true);
+	Token t(Token::TT_EOF);
+	do {
+		t = lex.get();
+		if (t.ttype != Token::TT_WORD)
+			throw SyntaxError("in 'print' operator: expected word, but found " + t.toString());
+		names.push_back(t.sval);
+		t = lex.get();
+	} while (t.ttype == ',');
+	if (t.ttype != Token::TT_EOL && t.ttype != Token::TT_EOF)
+		throw SyntaxError("expected end-of-line after 'print' statement");
+	lex.setEolEnabled(false);
+
+	for (auto name : names)
+		out->printf("%s\n", scope_m.get(name)->toString().c_str());
 }
 
 void Kernel::runTask()

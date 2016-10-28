@@ -18,6 +18,7 @@ public:
 	};
 
 	Molecule();
+	~Molecule();
 	std::vector<Atom>* getAtoms();
 	void addAtom(int Z, double x, double y, double z);
 	void addAtom(std::string symbol, double x, double y, double z);
@@ -32,7 +33,8 @@ public:
 	int  nbeta()  const;
 	int  nelec()  const;
 	double enuc() const;
-	std::string toString();
+	std::string toString() const;
+	std::string getTypeString() const;
 	void check() const;
 private:
 	int mult;

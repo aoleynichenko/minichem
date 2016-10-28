@@ -9,5 +9,6 @@ mol LiH {
   Li  1.4632  0.0000  0.0000
 }
 
-task scf
+print LiH
+#task scf
 

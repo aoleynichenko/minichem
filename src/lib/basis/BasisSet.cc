@@ -7,6 +7,7 @@
 
 #include "BasisSet.h"
 #include "../chem/Elements.h"
+#include "../qscript/QS_Object.h"
 
 namespace minichem {
 
@@ -17,6 +18,12 @@ using std::ostringstream;
 using std::setprecision;
 using std::setw;
 using std::string;
+
+BasisSet::BasisSet()
+  : qscript::QS_Object()
+{
+  type = TYPE_BAS;
+}
 
 void BasisSet::addLBlock(std::string elemSym, LBlock block)
 {
@@ -58,6 +65,11 @@ string BasisSet::toString() const
   }
 
   return str.str();  // str is an ostringstream object!
+}
+
+string BasisSet::getTypeString() const
+{
+  return "basisset";
 }
 
 static string str_tolower(string s)

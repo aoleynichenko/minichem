@@ -7,7 +7,7 @@ FC=gfortran
 CCFLAGS=-Wall
 CXXFLAGS=-Wall
 CLEAN=rm -rf *.o
-OBJ=QS_Object.o
+OBJ=QS_Object.o QS_Scope.o QS_RuntimeError.o
 HEADERS=
 
 libqscript.o: $(OBJ)
@@ -15,6 +15,12 @@ libqscript.o: $(OBJ)
 
 QS_Object.o: QS_Object.cc
 	$(CXX) $(CXXFLAGS) -c -o QS_Object.o QS_Object.cc
+
+QS_RuntimeError.o: QS_RuntimeError.cc
+	$(CXX) $(CXXFLAGS) -c -o QS_RuntimeError.o QS_RuntimeError.cc
+
+QS_Scope.o: QS_Scope.cc
+	$(CXX) $(CXXFLAGS) -c -o QS_Scope.o QS_Scope.cc
 
 clean:
 	$(CLEAN)

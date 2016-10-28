@@ -31,10 +31,11 @@ public:
   QS_Scope();
   ~QS_Scope();
   void newScope();
-  QS_Object* operator[](std::string name);
+  void set(std::string, QS_Object*);
+  QS_Object* get(std::string);
 private:
   QS_Scope* top;  // scope 'this' is nested into 'top'
-  std::map<std::string, QS_Object> table;
+  std::map<std::string, QS_Object*> table;
 };
 
   }
