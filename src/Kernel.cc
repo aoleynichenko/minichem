@@ -208,7 +208,7 @@ void Kernel::declMolecule()
 	// get additional parameters
 	int mult = 1;
 	int charge = 0;
-	int bohrs = 1;  // angstroms by default
+	int bohrs = 1;  // bohrs by default
 	t = lex.get();
 	while (t.ttype == Token::TT_WORD) {
 		if (isElementSymbol(t.sval))
@@ -338,7 +338,8 @@ void Kernel::declBasisSet(BasisSet* bs, Lexer* lexer)
 				throw SyntaxError("wrong angular momentum should be string, but found " + am.toString());
 			int L = parseAngularMomentum(am.sval);
 			if (L < 0)
-				throw SyntaxError("wrong angular momentum: " + am.sval + " (expected S, P, D, F ot G)");
+				throw SyntaxError("wrong angular momentum: " + am.sval +
+					" (expected S, P, D, F or G, found '" + am.sval + "')");
 			// read block!
 			lexer->setEolEnabled(true);
 			BasisSet::LBlock block;
@@ -579,7 +580,7 @@ int parseAngularMomentum(string ams)
 {
 	ams = str_tolower(ams);
 	string momlabels[] = {"s", "p", "d", "f", "g"};
-	int maxmom = 4;
+	int maxmom = 5;
 	for (int i = 0; i < maxmom; i++)
 		if (momlabels[i] == ams)
 			return i;

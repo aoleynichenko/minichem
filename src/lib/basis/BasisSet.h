@@ -32,6 +32,7 @@ public:
 
   BasisSet();
   void addLBlock(std::string elemSym, LBlock block);
+  BasisTemplate_t* getBlocks(int charge);
   std::string toString() const;
   std::string getTypeString() const;
   BasisSet filter(Molecule*) const;

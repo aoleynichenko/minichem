@@ -39,6 +39,12 @@ void BasisSet::addLBlock(std::string elemSym, LBlock block)
   set_[Z].push_back(block);
 }
 
+BasisSet::BasisTemplate_t* BasisSet::getBlocks(int charge)
+{
+  Elements::charge2sym(charge);  // check charge
+  return &set_[charge];
+}
+
 BasisSet BasisSet::filter(Molecule* mol) const
 {
   BasisSet newbs;

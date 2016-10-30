@@ -1,10 +1,10 @@
 # Makefile for 'scf' module
 
 CC=gcc
-CXX=g++
+#CXX=g++
 FC=gfortran
 CCFLAGS=-Wall
-CXXFLAGS=-Wall
+#CXXFLAGS=-Wall
 CLEAN=rm -rf *.o *.a
 OBJ=rhf.o
 HEADERS=

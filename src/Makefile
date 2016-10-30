@@ -31,7 +31,7 @@ CC=mpicc
 CXX=g++
 FC=mpif90
 CCFLAGS=-Wall
-CXXFLAGS=-Wall -std=c++11 -I $(LIBINT_HOME)/include -I $(LIBINT_HOME)/include/libint2 \
+CXXFLAGS=-std=c++11 -I $(LIBINT_HOME)/include -I $(LIBINT_HOME)/include/libint2 \
 		 -I $(LIBEIGEN_INCLUDE)
 LINKFLAGS=-L $(LIBINT_HOME)/lib -lint2
 SRC=main.c
@@ -78,4 +78,3 @@ make-lib:
 
 make-scf:
 	$(MAKE) -C scf libscf.o CXX=$(CXX)
-
