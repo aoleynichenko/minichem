@@ -42,6 +42,8 @@ std::vector<size_t> mapShellBfn(const AtomCenteredBasis_t& shells);
 
 Matrix computeOneBodyInts(const AtomCenteredBasis_t& shells,
                           Operator obtype, Molecule* mol);
+Matrix computeTwoBodyPart_simple(const AtomCenteredBasis_t& shells,
+                          const Matrix& D, Molecule* mol);
 
 RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
 {
@@ -59,6 +61,7 @@ RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
   // basis set: create and print information
   auto shells = makeAtomCenteredSet(mol, bs);
   size_t nao = basisDimension(shells);
+  auto nocc = mol->nelec()/2;
 
   out->printf("Number of shells   : %d\n", shells.size());
   out->printf("Dimension          : %d\n", nao);
@@ -76,11 +79,55 @@ RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
   V.resize(0,0);
   mainlog->log("One-electron integrals done");
 
-  // AO basis set orthogonalization
-
   // initial guess
+  Matrix D;
+  Eigen::GeneralizedSelfAdjointEigenSolver<Matrix> gen_eig_solver(H, S);
+  auto C = gen_eig_solver.eigenvectors();
+  auto C_occ = C.leftCols(nocc);
+  D = C_occ * C_occ.transpose();
 
   // main loop
+  const auto maxiter = 100;
+  const auto conv = 1e-12;
+  auto iter = 0;
+  auto rmsd = 0.0;
+  auto ediff = 0.0;
+  auto ehf = 0.0;
+  auto enuc = mol->enuc();
+
+  out->printf(" Iter        E(elec)              E(tot)               Delta(E)             RMS(D)    \n");
+  do {
+    iter++;
+
+      // Save a copy of the energy and the density
+    auto ehf_last = ehf;
+    auto D_last = D;
+
+    // build a new Fock matrix
+    auto F = H;
+    F += computeTwoBodyPart_simple(shells, D, mol);
+
+    // solve F C = e S C
+    Eigen::GeneralizedSelfAdjointEigenSolver<Matrix> gen_eig_solver(F, S);
+    auto C = gen_eig_solver.eigenvectors();
+
+    // compute density, D = C(occ) . C(occ)T
+    auto C_occ = C.leftCols(nocc);
+    D = C_occ * C_occ.transpose();
+
+    // compute HF energy
+    ehf = 0.0;
+    for (auto i = 0; i < nao; i++)
+      for (auto j = 0; j < nao; j++)
+        ehf += D(i,j) * (H(i,j) + F(i,j));
+
+    // compute difference with last iteration
+    ediff = ehf - ehf_last;
+    rmsd = (D - D_last).norm();
+
+    out->printf(" %02d %20.12f %20.12f %20.12f %20.12f\n", iter, ehf, ehf + enuc, ediff, rmsd);
+  } while (((fabs(ediff) > conv) || (fabs(rmsd) > conv)) && (iter < maxiter));
+
   libint2::finalize(); // done with libint
 
   return nullptr;
@@ -157,6 +204,92 @@ Matrix computeOneBodyInts(const AtomCenteredBasis_t& shells,
   }
 
   return result;
+}
+
+// the simplest (and the slowest!) implementation - without permutational
+// symmetry of 2-e integrals
+Matrix computeTwoBodyPart_simple(const AtomCenteredBasis_t& shells,
+                                 const Matrix& D, Molecule* mol)
+{
+  const auto n = basisDimension(shells);
+  auto max_l = maxAngularMomentum(shells);  // is const?
+  auto max_nprim = maxNumberPrimitives(shells);
+  auto atoms = mol->getAtoms();
+  Matrix G = Matrix::Zero(n,n);
+
+  // construct the ERI engine
+  Engine engine(Operator::coulomb, max_nprim, max_l, 0);
+  auto offs = mapShellBfn(shells);
+  const auto& buf = engine.results();
+
+  // loop over shell pairs of the Fock matrix, {s1,s2}
+  // Fock matrix is symmetric, but skipping it here for simplicity
+  for(auto s1 = 0; s1 != shells.size(); s1++) {
+    auto bf1_first = offs[s1]; // first basis function in this shell
+    auto n1 = shells[s1].size();
+    for(auto s2 = 0; s2 != shells.size(); s2++) {
+      auto bf2_first = offs[s2];
+      auto n2 = shells[s2].size();
+
+      // loop over shell pairs of the density matrix, {s3,s4}
+      // again symmetry is not used for simplicity
+      for(auto s3 = 0; s3 != shells.size(); s3++) {
+        auto bf3_first = offs[s3];
+        auto n3 = shells[s3].size();
+        for(auto s4 = 0; s4 != shells.size(); s4++) {
+          auto bf4_first = offs[s4];
+          auto n4 = shells[s4].size();
+
+          // Coulomb contribution to the Fock matrix is from {s1,s2,s3,s4} integrals
+          // Compute shell quartet
+          // J = <PQ|RS>    K = <PQ|SR>
+          // J = (PR|QS)    K = (PS|QR)
+          engine.compute(shells[s1], shells[s2], shells[s3], shells[s4]);
+          const auto* eris_J = buf[0];
+          if (eris_J == nullptr)
+            continue; // if all integrals screened out, skip to next quartet
+
+          // hence some manual labor here:
+          // 1) loop over every integral in the shell set (= nested loops over basis functions in each shell)
+          // and 2) add contribution from each integral
+          for(auto f1 = 0, idx = 0; f1 != n1; f1++) {
+            const auto bf1 = f1 + bf1_first;
+            for(auto f2 = 0; f2 != n2; f2++) {
+              const auto bf2 = f2 + bf2_first;
+              for(auto f3 = 0; f3 != n3; f3++) {
+                const auto bf3 = f3 + bf3_first;
+                for(auto f4 = 0; f4 != n4; ++f4, ++idx) {  // f4++ ??
+                  const auto bf4 = f4 + bf4_first;
+                  G(bf1,bf2) += D(bf3,bf4) * 2.0 * eris_J[idx];
+                }
+              }
+            }
+          }
+
+          // exchange contribution to the Fock matrix is from {s1,s3,s2,s4} integrals
+          engine.compute(shells[s1], shells[s3], shells[s2], shells[s4]);
+          const auto* eris_K = buf[0];
+
+          for(auto f1 = 0, idx = 0; f1 != n1; f1++) {
+            const auto bf1 = f1 + bf1_first;
+            for(auto f3 = 0; f3 != n3; f3++) {
+              const auto bf3 = f3 + bf3_first;
+              for(auto f2 = 0; f2 != n2; f2++) {
+                const auto bf2 = f2 + bf2_first;
+                for(auto f4 = 0; f4 != n4; ++f4, ++idx) {
+                  const auto bf4 = f4 + bf4_first;
+                  G(bf1,bf2) -= D(bf3,bf4) * eris_K[idx];
+                }
+              }
+            }
+          }
+
+        }
+      }
+    }
+  }
+
+  return G;
 }
 
 // utilities for working with AtomCenteredBasis_t
