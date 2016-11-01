@@ -47,12 +47,21 @@ Matrix computeTwoBodyPart_simple(const AtomCenteredBasis_t& shells,
 
 RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
 {
+  // timing
+  struct {
+    double time_1e;
+    double time_guess;
+    double time_fock;
+    double time_diag;
+    double time_dens;
+  } rhf_timing = {0, 0, 0, 0, 0};
+
   BasisSet basis = bs->filter(mol);
   out = ker->getOutput();
 
-  out->printf("               ********************************\n");
-  out->printf("               *      Hartree-Fock Method     *\n");
-  out->printf("               ********************************\n");
+  out->printf("               ******************************************\n");
+  out->printf("               *     Restricted Hartree-Fock Method     *\n");
+  out->printf("               ******************************************\n");
   out->println();
   out->printf("                     Basis Set Information\n");
   out->printf("                    -----------------------\n");
@@ -66,10 +75,14 @@ RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
   out->printf("Number of shells   : %d\n", shells.size());
   out->printf("Dimension          : %d\n", nao);
   out->printf("Integration engine : %s\n", "Libint");
+  out->printf("Initial guess      : %s\n", "Hcore");
+  out->println();
 
   // initializes the Libint integrals library ... now ready to compute
   libint2::initialize();
 
+  // one-electron matrices
+  auto start = std::chrono::system_clock::now();
   Matrix S = computeOneBodyInts(shells, Operator::overlap, mol); // overlap
   Matrix T = computeOneBodyInts(shells, Operator::kinetic, mol); // kinetic
   Matrix V = computeOneBodyInts(shells, Operator::nuclear, mol); // nuclear-attraction
@@ -77,26 +90,32 @@ RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
   // T and V no longer needed, free up the memory
   T.resize(0,0);
   V.resize(0,0);
+  auto t1 = std::chrono::system_clock::now();
+  rhf_timing.time_1e += std::chrono::duration_cast<std::chrono::milliseconds>(t1 - start).count();
   mainlog->log("One-electron integrals done");
 
   // initial guess
   Matrix D;
+  t1 = std::chrono::system_clock::now();
   Eigen::GeneralizedSelfAdjointEigenSolver<Matrix> gen_eig_solver(H, S);
   auto C = gen_eig_solver.eigenvectors();
   auto C_occ = C.leftCols(nocc);
   D = C_occ * C_occ.transpose();
+  auto t2 = std::chrono::system_clock::now();
+  rhf_timing.time_guess += std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
 
   // main loop
-  const auto maxiter = 100;
-  const auto conv = 1e-12;
+  const auto maxiter = 150;
+  const auto conv = 1e-8;
   auto iter = 0;
   auto rmsd = 0.0;
   auto ediff = 0.0;
   auto ehf = 0.0, e1e = 0.0, e2e = 0.0;
   auto enuc = mol->enuc();
+  double curr_ms = 0.0;
 
-  out->printf(" Iter        E(elec)              E(tot)               Delta(E)             RMS(D)    \n");
-  out->printf("--------------------------------------------------------------------------------------\n");
+  out->printf(" Iter        E(elec)              E(tot)               Delta(E)              RMS(D)          Time, sec\n");
+  out->printf("----------------------------------------------------------------------------------------------------------\n");
   do {
     iter++;
 
@@ -105,40 +124,63 @@ RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
     auto D_last = D;
 
     // build a new Fock matrix
+    auto t3 = std::chrono::system_clock::now();
     auto F = H;
     F += computeTwoBodyPart_simple(shells, D);
+    auto t4 = std::chrono::system_clock::now();
+    rhf_timing.time_fock += std::chrono::duration_cast<std::chrono::milliseconds>(t4 - t3).count();
 
     // solve F C = e S C
+    auto t5 = std::chrono::system_clock::now();
     Eigen::GeneralizedSelfAdjointEigenSolver<Matrix> gen_eig_solver(F, S);
     auto C = gen_eig_solver.eigenvectors();
+    auto t6 = std::chrono::system_clock::now();
+    rhf_timing.time_diag += std::chrono::duration_cast<std::chrono::milliseconds>(t6 - t5).count();
 
     // compute density, D = C(occ) . C(occ)T
+    auto t7 = std::chrono::system_clock::now();
     auto C_occ = C.leftCols(nocc);
     D = C_occ * C_occ.transpose();
+    auto t8 = std::chrono::system_clock::now();
+    rhf_timing.time_dens += std::chrono::duration_cast<std::chrono::milliseconds>(t8 - t7).count();
 
     // compute HF energy
     e1e = e2e = 0.0;
     for (auto i = 0; i < nao; i++)
       for (auto j = 0; j < nao; j++) {
-        e1e += D(i,j) * H(i,j);
-        e2e += D(i,j) * F(i,j);
-	}
-	ehf = e1e + e2e;
+        e1e += D(i,j) * H(i,j) * 2;         // One-electron energy
+        e2e += D(i,j) * (F(i,j) - H(i,j));  // Two-electron energy (in fact, * G(i,j))
+      }
+    ehf = e1e + e2e;
 
     // compute difference with last iteration
     ediff = ehf - ehf_last;
     rmsd = (D - D_last).norm();
 
-    out->printf(" %02d %20.12f %20.12f %20.12f %20.12f\n", iter, ehf, ehf + enuc, ediff, rmsd);
+    auto t = std::chrono::system_clock::now();
+    curr_ms = std::chrono::duration_cast<std::chrono::milliseconds>(t -start).count();
+    out->printf(" %02d %20.12f %20.12f %20.12f %20.12f %13.3f\n", iter, ehf, ehf + enuc, ediff, rmsd, curr_ms/1000);
   } while (((fabs(ediff) > conv) || (fabs(rmsd) > conv)) && (iter < maxiter));
-  
-  out->printf("--------------------------------------------------------------------------------------\n");
+
+  out->printf("----------------------------------------------------------------------------------------------------------\n");
   out->printf(" Converged!\n\n");
   out->printf("           Total RHF energy = %20.12f\n", ehf + enuc);
   out->printf("          Electronic energy = %20.12f\n", ehf);
   out->printf("        One-electron energy = %20.12f\n", e1e);
   out->printf("        Two-electron energy = %20.12f\n", e2e);
   out->printf("   Nuclear repulsion energy = %20.12f\n", enuc);
+
+  // print timing
+  out->println();
+  out->printf("      Time for:           sec\n");
+  out->printf("---------------------------------\n");
+  out->printf("  One-electron ints  %9.3f\n", rhf_timing.time_1e/1000);
+  out->printf("  Initial guess      %9.3f\n", rhf_timing.time_guess/1000);
+  out->printf("  Fock matrix        %9.3f\n", rhf_timing.time_fock/1000);
+  out->printf("  Density matrix     %9.3f\n", rhf_timing.time_dens/1000);
+  out->printf("  Diagonalization    %9.3f\n", rhf_timing.time_diag/1000);
+  out->printf("  Time per iteration %9.3f\n", curr_ms/iter/1000);
+  out->printf("---------------------------------\n\n");
 
   libint2::finalize(); // done with libint
 

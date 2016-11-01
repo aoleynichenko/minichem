@@ -1,6 +1,6 @@
 start h2o
 basis
- * library sto-3g
+ * library cc-pvdz
 end
 
 geometry units angstroms

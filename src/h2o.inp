@@ -1,4 +1,4 @@
-basis "sto-3g"
+basis "def2-SVP"
 
 mol h2o {
   units angstroms

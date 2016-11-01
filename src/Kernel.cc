@@ -13,6 +13,7 @@
 
 #include "Kernel.h"
 #include "./lib/basis/BasisSet.h"
+#include "./lib/chem/Elements.h"
 #include "./lib/chem/Molecule.h"
 #include "./lib/except/SyntaxError.h"
 #include "./lib/io/Lexer.h"
@@ -563,17 +564,12 @@ bool isint(double d)
 
 int isElementSymbol(string s)
 {
-	static const int lensym = 18;
-	static string symbols[] = {
-		"h",  "he",
-		"li", "be", "b",  "c",  "n",  "o",  "f",  "ne",
-		"na", "mg", "al", "si", "p",  "s",  "cl", "ar"
-	};
-	s = str_tolower(s);
-	for (size_t i = 0; i < lensym; i++)
-		if (s == symbols[i])
-			return i + 1;
-	return 0;  // symbol not found
+	try {
+		return Elements::sym2charge(s);
+	}
+	catch (exception&) {
+		return 0;  // symbol not found
+	}
 }
 
 int parseAngularMomentum(string ams)
