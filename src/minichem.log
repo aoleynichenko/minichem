@@ -1,0 +1,144 @@
+[2016-11-01 10:41:43] Log created
+[2016-11-01 10:41:43] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-11-01 10:41:43] Running on avo (Linux)
+[2016-11-01 10:41:43] Kernel arguments: "./minichem LiH.inp "
+[2016-11-01 10:41:43] MINICHEM_HOME = /home/piton/gitdir/minichem
+[2016-11-01 10:41:43] Input files: 1 ( LiH.inp )
+[2016-11-01 10:41:43] Starting kernel (Kernel::start())
+[2016-11-01 10:41:43] New input file: "LiH.inp"
+[2016-11-01 10:41:43] Basis set declaration started
+[2016-11-01 10:41:43] In Kernel::declBasisSet(): basis set 'cc-pVDZ' declared in short notation
+[2016-11-01 10:41:43] [ERROR] Syntax error in file LiH.inp: basis set 'cc-pVDZ' not found
+[2016-11-01 10:41:43] Exit
+[2016-11-01 10:42:02] Log created
+[2016-11-01 10:42:02] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-11-01 10:42:02] Running on avo (Linux)
+[2016-11-01 10:42:02] Kernel arguments: "./minichem LiH.inp "
+[2016-11-01 10:42:02] MINICHEM_HOME = /home/piton/gitdir/minichem
+[2016-11-01 10:42:02] Input files: 1 ( LiH.inp )
+[2016-11-01 10:42:02] Starting kernel (Kernel::start())
+[2016-11-01 10:42:02] New input file: "LiH.inp"
+[2016-11-01 10:42:02] Basis set declaration started
+[2016-11-01 10:42:02] In Kernel::declBasisSet(): basis set 'sto-3g' declared in short notation
+[2016-11-01 10:42:02] Search basis set 'sto-3g' in minichem's library
+[2016-11-01 10:42:02] File 'sto-3g' exists (in library directory), invoke recursive
+[2016-11-01 10:42:02] Basis set declaration started
+[2016-11-01 10:42:02] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element He: {L=0, alpha=[6.36242,1.15892,0.31365], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element Li: {L=0, alpha=[0.63629,0.14786,0.0480887], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element Li: {L=1, alpha=[0.63629,0.14786,0.0480887], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element Be: {L=0, alpha=[30.1679,5.49512,1.48719], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element Be: {L=0, alpha=[1.31483,0.305539,0.0993707], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element Be: {L=1, alpha=[1.31483,0.305539,0.0993707], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element B: {L=0, alpha=[48.7911,8.88736,2.40527], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element B: {L=0, alpha=[2.23696,0.519821,0.169062], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element B: {L=1, alpha=[2.23696,0.519821,0.169062], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element C: {L=0, alpha=[71.6168,13.0451,3.53051], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element C: {L=0, alpha=[2.94125,0.683483,0.22229], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element C: {L=1, alpha=[2.94125,0.683483,0.22229], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element N: {L=0, alpha=[99.1062,18.0523,4.88566], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element N: {L=0, alpha=[3.78046,0.878497,0.285714], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element N: {L=1, alpha=[3.78046,0.878497,0.285714], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element O: {L=0, alpha=[130.709,23.8089,6.44361], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element O: {L=0, alpha=[5.03315,1.1696,0.380389], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element O: {L=1, alpha=[5.03315,1.1696,0.380389], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element F: {L=0, alpha=[166.679,30.3608,8.21682], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element F: {L=0, alpha=[6.4648,1.50228,0.488588], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element F: {L=1, alpha=[6.4648,1.50228,0.488588], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element Ne: {L=0, alpha=[207.016,37.7082,10.2053], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element Ne: {L=0, alpha=[8.24632,1.91627,0.623229], Ncontracted=1}
+[2016-11-01 10:42:02] Succesfully read new L-block for element Ne: {L=1, alpha=[8.24632,1.91627,0.623229], Ncontracted=1}
+[2016-11-01 10:42:02] Molecule declaration started
+[2016-11-01 10:42:02] Molecule specification was succesfully read, charge = 0, mult = 1, nelec = 4
+[2016-11-01 10:42:02] One-electron integrals done
+[2016-11-01 10:42:03] End of input file (EOF)
+[2016-11-01 10:42:03] Exit
+[2016-11-01 10:42:09] Log created
+[2016-11-01 10:42:09] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-11-01 10:42:09] Running on avo (Linux)
+[2016-11-01 10:42:09] Kernel arguments: "./minichem LiH.inp "
+[2016-11-01 10:42:09] MINICHEM_HOME = /home/piton/gitdir/minichem
+[2016-11-01 10:42:09] Input files: 1 ( LiH.inp )
+[2016-11-01 10:42:09] Starting kernel (Kernel::start())
+[2016-11-01 10:42:09] New input file: "LiH.inp"
+[2016-11-01 10:42:09] Basis set declaration started
+[2016-11-01 10:42:09] In Kernel::declBasisSet(): basis set 'sto-3g' declared in short notation
+[2016-11-01 10:42:09] Search basis set 'sto-3g' in minichem's library
+[2016-11-01 10:42:09] File 'sto-3g' exists (in library directory), invoke recursive
+[2016-11-01 10:42:09] Basis set declaration started
+[2016-11-01 10:42:09] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element He: {L=0, alpha=[6.36242,1.15892,0.31365], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element Li: {L=0, alpha=[0.63629,0.14786,0.0480887], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element Li: {L=1, alpha=[0.63629,0.14786,0.0480887], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element Be: {L=0, alpha=[30.1679,5.49512,1.48719], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element Be: {L=0, alpha=[1.31483,0.305539,0.0993707], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element Be: {L=1, alpha=[1.31483,0.305539,0.0993707], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element B: {L=0, alpha=[48.7911,8.88736,2.40527], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element B: {L=0, alpha=[2.23696,0.519821,0.169062], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element B: {L=1, alpha=[2.23696,0.519821,0.169062], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element C: {L=0, alpha=[71.6168,13.0451,3.53051], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element C: {L=0, alpha=[2.94125,0.683483,0.22229], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element C: {L=1, alpha=[2.94125,0.683483,0.22229], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element N: {L=0, alpha=[99.1062,18.0523,4.88566], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element N: {L=0, alpha=[3.78046,0.878497,0.285714], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element N: {L=1, alpha=[3.78046,0.878497,0.285714], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element O: {L=0, alpha=[130.709,23.8089,6.44361], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element O: {L=0, alpha=[5.03315,1.1696,0.380389], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element O: {L=1, alpha=[5.03315,1.1696,0.380389], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element F: {L=0, alpha=[166.679,30.3608,8.21682], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element F: {L=0, alpha=[6.4648,1.50228,0.488588], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element F: {L=1, alpha=[6.4648,1.50228,0.488588], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element Ne: {L=0, alpha=[207.016,37.7082,10.2053], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element Ne: {L=0, alpha=[8.24632,1.91627,0.623229], Ncontracted=1}
+[2016-11-01 10:42:09] Succesfully read new L-block for element Ne: {L=1, alpha=[8.24632,1.91627,0.623229], Ncontracted=1}
+[2016-11-01 10:42:09] Molecule declaration started
+[2016-11-01 10:42:09] Molecule specification was succesfully read, charge = 0, mult = 1, nelec = 4
+[2016-11-01 10:42:09] One-electron integrals done
+[2016-11-01 10:42:10] End of input file (EOF)
+[2016-11-01 10:42:10] Exit
+[2016-11-01 10:42:17] Log created
+[2016-11-01 10:42:17] Kernel::Kernel(int argc, char **argv) invoked, argc == 2
+[2016-11-01 10:42:17] Running on avo (Linux)
+[2016-11-01 10:42:17] Kernel arguments: "./minichem h2o.inp "
+[2016-11-01 10:42:17] MINICHEM_HOME = /home/piton/gitdir/minichem
+[2016-11-01 10:42:17] Input files: 1 ( h2o.inp )
+[2016-11-01 10:42:17] Starting kernel (Kernel::start())
+[2016-11-01 10:42:17] New input file: "h2o.inp"
+[2016-11-01 10:42:17] Basis set declaration started
+[2016-11-01 10:42:17] In Kernel::declBasisSet(): basis set 'sto-3g' declared in short notation
+[2016-11-01 10:42:17] Search basis set 'sto-3g' in minichem's library
+[2016-11-01 10:42:17] File 'sto-3g' exists (in library directory), invoke recursive
+[2016-11-01 10:42:17] Basis set declaration started
+[2016-11-01 10:42:17] Succesfully read new L-block for element H: {L=0, alpha=[3.42525,0.623914,0.168855], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element He: {L=0, alpha=[6.36242,1.15892,0.31365], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element Li: {L=0, alpha=[16.1196,2.9362,0.794651], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element Li: {L=0, alpha=[0.63629,0.14786,0.0480887], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element Li: {L=1, alpha=[0.63629,0.14786,0.0480887], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element Be: {L=0, alpha=[30.1679,5.49512,1.48719], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element Be: {L=0, alpha=[1.31483,0.305539,0.0993707], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element Be: {L=1, alpha=[1.31483,0.305539,0.0993707], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element B: {L=0, alpha=[48.7911,8.88736,2.40527], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element B: {L=0, alpha=[2.23696,0.519821,0.169062], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element B: {L=1, alpha=[2.23696,0.519821,0.169062], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element C: {L=0, alpha=[71.6168,13.0451,3.53051], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element C: {L=0, alpha=[2.94125,0.683483,0.22229], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element C: {L=1, alpha=[2.94125,0.683483,0.22229], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element N: {L=0, alpha=[99.1062,18.0523,4.88566], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element N: {L=0, alpha=[3.78046,0.878497,0.285714], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element N: {L=1, alpha=[3.78046,0.878497,0.285714], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element O: {L=0, alpha=[130.709,23.8089,6.44361], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element O: {L=0, alpha=[5.03315,1.1696,0.380389], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element O: {L=1, alpha=[5.03315,1.1696,0.380389], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element F: {L=0, alpha=[166.679,30.3608,8.21682], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element F: {L=0, alpha=[6.4648,1.50228,0.488588], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element F: {L=1, alpha=[6.4648,1.50228,0.488588], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element Ne: {L=0, alpha=[207.016,37.7082,10.2053], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element Ne: {L=0, alpha=[8.24632,1.91627,0.623229], Ncontracted=1}
+[2016-11-01 10:42:17] Succesfully read new L-block for element Ne: {L=1, alpha=[8.24632,1.91627,0.623229], Ncontracted=1}
+[2016-11-01 10:42:17] Molecule declaration started
+[2016-11-01 10:42:17] Molecule specification was succesfully read, charge = 0, mult = 1, nelec = 10
+[2016-11-01 10:42:17] One-electron integrals done
+[2016-11-01 10:42:19] End of input file (EOF)
+[2016-11-01 10:42:19] Exit
