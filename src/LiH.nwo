@@ -1,0 +1,515 @@
+ argument  1 = LiH.nw
+
+
+
+============================== echo of input deck ==============================
+# Hartree-Fock calculation of LiH
+
+start LiH
+echo
+
+geometry units atomic
+  H 0 0 0
+  Li 1.4632 0 0
+end
+
+basis "ao basis" CARTESIAN
+H    S
+      3.42525091             0.15432897
+      0.62391373             0.53532814
+      0.16885540             0.44463454
+Li    S
+     16.1195750              0.15432897
+      2.9362007              0.53532814
+      0.7946505              0.44463454
+Li    S
+      0.6362897             -0.09996723
+      0.1478601              0.39951283
+      0.0480887              0.70011547
+Li    P
+      0.6362897              0.15591627
+      0.1478601              0.60768372
+      0.0480887              0.39195739
+end
+
+#scf
+#  print "kinetic"
+#end
+
+task scf
+================================================================================
+
+
+                                         
+                                         
+
+
+              Northwest Computational Chemistry Package (NWChem) 6.6
+              ------------------------------------------------------
+
+
+                    Environmental Molecular Sciences Laboratory
+                       Pacific Northwest National Laboratory
+                                Richland, WA 99352
+
+                              Copyright (c) 1994-2015
+                       Pacific Northwest National Laboratory
+                            Battelle Memorial Institute
+
+             NWChem is an open-source computational chemistry package
+                        distributed under the terms of the
+                      Educational Community License (ECL) 2.0
+             A copy of the license is included with this distribution
+                              in the LICENSE.TXT file
+
+                                  ACKNOWLEDGMENT
+                                  --------------
+
+            This software and its documentation were developed at the
+            EMSL at Pacific Northwest National Laboratory, a multiprogram
+            national laboratory, operated for the U.S. Department of Energy
+            by Battelle under Contract Number DE-AC05-76RL01830. Support
+            for this work was provided by the Department of Energy Office
+            of Biological and Environmental Research, Office of Basic
+            Energy Sciences, and the Office of Advanced Scientific Computing.
+
+
+           Job information
+           ---------------
+
+    hostname        = avo
+    program         = nwchem
+    date            = Tue Nov  1 10:33:32 2016
+
+    compiled        = Пт_ноя_20_00:03:40_2015
+    source          = /opt/nwchem/nwchem-6.6
+    nwchem branch   = 6.6
+    nwchem revision = 27746
+    ga revision     = 10594
+    input           = LiH.nw
+    prefix          = LiH.
+    data base       = ./LiH.db
+    status          = startup
+    nproc           =        1
+    time left       =     -1s
+
+
+
+           Memory information
+           ------------------
+
+    heap     =   46991804 doubles =    358.5 Mbytes
+    stack    =   46991809 doubles =    358.5 Mbytes
+    global   =   93983616 doubles =    717.0 Mbytes (distinct from heap & stack)
+    total    =  187967229 doubles =   1434.1 Mbytes
+    verify   = yes
+    hardfail = no 
+
+
+           Directory information
+           ---------------------
+
+  0 permanent = .
+  0 scratch   = .
+
+
+
+
+                                NWChem Input Module
+                                -------------------
+
+
+ ORDER OF PRIMARY AXIS IS BEING SET TO 4
+ C4V symmetry detected
+
+          ------
+          auto-z
+          ------
+
+
+                             Geometry "geometry" -> ""
+                             -------------------------
+
+ Output coordinates in a.u. (scale by  1.000000000 to convert to a.u.)
+
+  No.       Tag          Charge          X              Y              Z
+ ---- ---------------- ---------- -------------- -------------- --------------
+    1 H                    1.0000     0.00000000     0.00000000    -1.09740000
+    2 Li                   3.0000     0.00000000     0.00000000     0.36580000
+
+      Atomic Mass 
+      ----------- 
+
+      H                  1.007825
+      Li                 7.016000
+
+
+ Effective nuclear repulsion energy (a.u.)       2.0503007108
+
+            Nuclear Dipole moment (a.u.) 
+            ----------------------------
+        X                 Y               Z
+ ---------------- ---------------- ----------------
+     0.0000000000     0.0000000000     0.0000000000
+
+      Symmetry information
+      --------------------
+
+ Group name             C4v       
+ Group number             18
+ Group order               8
+ No. of unique centers     2
+
+      Symmetry unique atoms
+
+     1    2
+
+
+
+                                Z-matrix (autoz)
+                                -------- 
+
+ Units are Angstrom for bonds and degrees for angles
+
+      Type          Name      I     J     K     L     M      Value
+      ----------- --------  ----- ----- ----- ----- ----- ----------
+    1 Stretch                  1     2                       0.77429
+
+
+            XYZ format geometry
+            -------------------
+     2
+ geometry
+ H                     0.00000000     0.00000000    -0.58071911
+ Li                    0.00000000     0.00000000     0.19357304
+
+ ==============================================================================
+                                internuclear distances
+ ------------------------------------------------------------------------------
+       center one      |      center two      | atomic units |       a.u.
+ ------------------------------------------------------------------------------
+    2 Li               |   1 H                |     1.46320  |     1.46320
+ ------------------------------------------------------------------------------
+                         number of included internuclear distances:          1
+ ==============================================================================
+
+
+
+                      Basis "ao basis" -> "" (cartesian)
+                      -----
+  H (Hydrogen)
+  ------------
+            Exponent  Coefficients 
+       -------------- ---------------------------------------------------------
+  1 S  3.42525091E+00  0.154329
+  1 S  6.23913730E-01  0.535328
+  1 S  1.68855400E-01  0.444635
+
+  Li (Lithium)
+  ------------
+            Exponent  Coefficients 
+       -------------- ---------------------------------------------------------
+  1 S  1.61195750E+01  0.154329
+  1 S  2.93620070E+00  0.535328
+  1 S  7.94650500E-01  0.444635
+
+  2 S  6.36289700E-01 -0.099967
+  2 S  1.47860100E-01  0.399513
+  2 S  4.80887000E-02  0.700115
+
+  3 P  6.36289700E-01  0.155916
+  3 P  1.47860100E-01  0.607684
+  3 P  4.80887000E-02  0.391957
+
+
+
+ Summary of "ao basis" -> "" (cartesian)
+ ------------------------------------------------------------------------------
+       Tag                 Description            Shells   Functions and Types
+ ---------------- ------------------------------  ------  ---------------------
+ H                       user specified              1        1   1s
+ Li                      user specified              3        5   2s1p
+
+
+                                 NWChem SCF Module
+                                 -----------------
+
+
+
+  ao basis        = "ao basis"
+  functions       =     6
+  atoms           =     2
+  closed shells   =     2
+  open shells     =     0
+  charge          =   0.00
+  wavefunction    = RHF 
+  input vectors   = atomic
+  output vectors  = ./LiH.movecs
+  use symmetry    = T
+  symmetry adapt  = T
+
+
+ Summary of "ao basis" -> "ao basis" (cartesian)
+ ------------------------------------------------------------------------------
+       Tag                 Description            Shells   Functions and Types
+ ---------------- ------------------------------  ------  ---------------------
+ H                       user specified              1        1   1s
+ Li                      user specified              3        5   2s1p
+
+
+      Symmetry analysis of basis
+      --------------------------
+
+        a1          4
+        a2          0
+        b1          0
+        b2          0
+        e           2
+
+
+ Forming initial guess at       0.0s
+
+
+      Superposition of Atomic Density Guess
+      -------------------------------------
+
+ Sum of atomic energies:          -7.78210783
+
+      Non-variational initial energy
+      ------------------------------
+
+ Total energy =      -7.701614
+ 1-e energy   =     -13.832489
+ 2-e energy   =       4.080575
+ HOMO         =      -0.232319
+ LUMO         =       0.035517
+
+
+      Symmetry analysis of molecular orbitals - initial
+      -------------------------------------------------
+
+  Numbering of irreducible representations: 
+
+     1 a1          2 a2          3 b1          4 b2          5 e       
+
+  Orbital symmetries:
+
+     1 a1          2 a1          3 a1          4 e           5 e       
+     6 a1      
+
+
+ Starting SCF solution at       0.0s
+
+
+
+ ----------------------------------------------
+         Quadratically convergent ROHF
+
+ Convergence threshold     :          1.000E-04
+ Maximum no. of iterations :           30
+ Final Fock-matrix accuracy:          1.000E-07
+ ----------------------------------------------
+
+
+ #quartets = 5.500D+01 #integrals = 9.700D+01 #direct =  0.0% #cached =100.0%
+
+
+ Integral file          = ./LiH.aoints.0
+ Record size in doubles =  65536        No. of integs per rec  =  43688
+ Max. records in memory =      2        Max. records in file   = 629435
+ No. of bits per label  =      8        No. of bits per value  =     64
+
+
+              iter       energy          gnorm     gmax       time
+             ----- ------------------- --------- --------- --------
+                 1       -7.5755633735  1.91D-01  1.25D-01      0.1
+                 2       -7.5858117190  1.06D-01  9.43D-02      0.1
+                 3       -7.5867478401  3.44D-03  2.55D-03      0.1
+                 4       -7.5867526274  8.56D-06  6.36D-06      0.1
+
+
+       Final RHF  results 
+       ------------------ 
+
+         Total SCF energy =     -7.586752627419
+      One-electron energy =    -13.749114181125
+      Two-electron energy =      4.112060842935
+ Nuclear repulsion energy =      2.050300710771
+
+        Time for solution =      0.0s
+
+
+
+       Symmetry analysis of molecular orbitals - final
+       -----------------------------------------------
+
+  Numbering of irreducible representations: 
+
+     1 a1          2 a2          3 b1          4 b2          5 e       
+
+  Orbital symmetries:
+
+     1 a1          2 a1          3 a1          4 e           5 e       
+     6 a1      
+
+             Final eigenvalues
+             -----------------
+
+              1      
+    1   -2.4577
+    2   -0.3048
+    3    0.0656
+    4    0.1472
+    5    0.1472
+    6    0.5931
+
+                       ROHF Final Molecular Orbital Analysis
+                       -------------------------------------
+
+ Vector    2  Occ=2.000000D+00  E=-3.048249D-01  Symmetry=a1
+              MO Center=  8.3D-17, -7.6D-17, -7.0D-01, r^2= 1.4D+00
+   Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
+  ----- ------------  ---------------      ----- ------------  ---------------
+     1      0.531498  1 H  s                  6     -0.430163  2 Li pz         
+     3      0.380853  2 Li s                  2     -0.325439  2 Li s          
+
+ Vector    3  Occ=0.000000D+00  E= 6.564361D-02  Symmetry=a1
+              MO Center= -7.2D-16,  6.9D-16,  1.1D+00, r^2= 2.6D+00
+   Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
+  ----- ------------  ---------------      ----- ------------  ---------------
+     3      0.868250  2 Li s                  6      0.560867  2 Li pz         
+     1     -0.171765  1 H  s                  2     -0.163668  2 Li s          
+
+ Vector    4  Occ=0.000000D+00  E= 1.472240D-01  Symmetry=e
+              MO Center=  7.0D-16, -1.7D-16,  1.9D-01, r^2= 3.3D+00
+   Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
+  ----- ------------  ---------------      ----- ------------  ---------------
+     4      0.972444  2 Li px                 5     -0.233137  2 Li py         
+
+ Vector    5  Occ=0.000000D+00  E= 1.472240D-01  Symmetry=e
+              MO Center= -9.8D-17, -4.1D-16,  1.9D-01, r^2= 3.3D+00
+   Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
+  ----- ------------  ---------------      ----- ------------  ---------------
+     5      0.972444  2 Li py                 4      0.233137  2 Li px         
+
+ Vector    6  Occ=0.000000D+00  E= 5.931020D-01  Symmetry=a1
+              MO Center=  3.7D-17, -3.3D-17, -6.3D-01, r^2= 3.0D+00
+   Bfn.  Coefficient  Atom+Function         Bfn.  Coefficient  Atom+Function  
+  ----- ------------  ---------------      ----- ------------  ---------------
+     1      1.539382  1 H  s                  6      1.081476  2 Li pz         
+     3     -0.947487  2 Li s                  2     -0.339906  2 Li s          
+
+
+ center of mass
+ --------------
+ x =   0.00000000 y =   0.00000000 z =   0.18201614
+
+ moments of inertia (a.u.)
+ ------------------
+           1.886690420567           0.000000000000           0.000000000000
+           0.000000000000           1.886690420567           0.000000000000
+           0.000000000000           0.000000000000           0.000000000000
+
+  Mulliken analysis of the total density
+  --------------------------------------
+
+    Atom       Charge   Shell Charges
+ -----------   ------   -------------------------------------------------------
+    1 H    1     0.97   0.97
+    2 Li   3     3.03   1.97  0.46  0.60
+
+       Multipole analysis of the density wrt the origin
+       ------------------------------------------------
+
+     L   x y z        total         open         nuclear
+     -   - - -        -----         ----         -------
+     0   0 0 0     -0.000000      0.000000      4.000000
+
+     1   1 0 0     -0.000000      0.000000      0.000000
+     1   0 1 0      0.000000      0.000000      0.000000
+     1   0 0 1      1.942201      0.000000      0.000000
+
+     2   2 0 0     -3.756434      0.000000      0.000000
+     2   1 1 0      0.000000      0.000000      0.000000
+     2   1 0 1      0.000000      0.000000      0.000000
+     2   0 2 0     -3.756434      0.000000      0.000000
+     2   0 1 1     -0.000000      0.000000      0.000000
+     2   0 0 2     -5.237121      0.000000      1.605716
+
+
+ Parallel integral file used       1 records with       0 large values
+
+
+ Task  times  cpu:        0.0s     wall:        0.0s
+ Summary of allocated global arrays
+-----------------------------------
+  No active global arrays
+
+
+
+                         GA Statistics for process    0
+                         ------------------------------
+
+       create   destroy   get      put      acc     scatter   gather  read&inc
+calls:  255      255     1253      587      917        0        0      103     
+number of processes/call 1.00e+00 1.00e+00 1.00e+00 0.00e+00 0.00e+00
+bytes total:             1.26e+05 7.12e+04 6.24e+04 0.00e+00 0.00e+00 8.24e+02
+bytes remote:            0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.00e+00
+Max memory consumed for GA by this process: 4128 bytes
+MA_summarize_allocated_blocks: starting scan ...
+MA_summarize_allocated_blocks: scan completed: 0 heap blocks, 0 stack blocks
+MA usage statistics:
+
+	allocation statistics:
+					      heap	     stack
+					      ----	     -----
+	current number of blocks	         0	         0
+	maximum number of blocks	        18	        14
+	current total bytes		         0	         0
+	maximum total bytes		   1053704	  22509160
+	maximum total K-bytes		      1054	     22510
+	maximum total M-bytes		         2	        23
+
+
+                                NWChem Input Module
+                                -------------------
+
+
+
+
+
+                                     CITATION
+                                     --------
+                Please cite the following reference when publishing
+                           results obtained with NWChem:
+
+                 M. Valiev, E.J. Bylaska, N. Govind, K. Kowalski,
+              T.P. Straatsma, H.J.J. van Dam, D. Wang, J. Nieplocha,
+                        E. Apra, T.L. Windus, W.A. de Jong
+                 "NWChem: a comprehensive and scalable open-source
+                  solution for large scale molecular simulations"
+                      Comput. Phys. Commun. 181, 1477 (2010)
+                           doi:10.1016/j.cpc.2010.04.018
+
+                                      AUTHORS
+                                      -------
+          E. Apra, E. J. Bylaska, W. A. de Jong, N. Govind, K. Kowalski,
+       T. P. Straatsma, M. Valiev, H. J. J. van Dam, D. Wang, T. L. Windus,
+        J. Hammond, J. Autschbach, K. Bhaskaran-Nair, J. Brabec, K. Lopata,
+       S. A. Fischer, S. Krishnamoorthy, W. Ma, M. Klemm, O. Villa, Y. Chen,
+    V. Anisimov, F. Aquino, S. Hirata, M. T. Hackler, T. Risthaus, M. Malagoli,
+       A. Marenich, A. Otero-de-la-Roza, J. Mullin, P. Nichols, R. Peverati,
+     J. Pittner, Y. Zhao, P.-D. Fan, A. Fonari, M. Williamson, R. J. Harrison,
+       J. R. Rehr, M. Dupuis, D. Silverstein, D. M. A. Smith, J. Nieplocha,
+        V. Tipparaju, M. Krishnan, B. E. Van Kuiken, A. Vazquez-Mayagoitia,
+        L. Jensen, M. Swart, Q. Wu, T. Van Voorhis, A. A. Auer, M. Nooijen,
+      L. D. Crosby, E. Brown, G. Cisneros, G. I. Fann, H. Fruchtl, J. Garza,
+        K. Hirao, R. A. Kendall, J. A. Nichols, K. Tsemekhman, K. Wolinski,
+     J. Anchell, D. E. Bernholdt, P. Borowski, T. Clark, D. Clerc, H. Dachsel,
+   M. J. O. Deegan, K. Dyall, D. Elwood, E. Glendening, M. Gutowski, A. C. Hess,
+         J. Jaffe, B. G. Johnson, J. Ju, R. Kobayashi, R. Kutteh, Z. Lin,
+   R. Littlefield, X. Long, B. Meng, T. Nakajima, S. Niu, L. Pollack, M. Rosing,
+   K. Glaesemann, G. Sandrone, M. Stave, H. Taylor, G. Thomas, J. H. van Lenthe,
+                               A. T. Wong, Z. Zhang.
+
+ Total times  cpu:        0.0s     wall:        0.1s

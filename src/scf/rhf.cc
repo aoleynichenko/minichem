@@ -43,7 +43,9 @@ std::vector<size_t> mapShellBfn(const AtomCenteredBasis_t& shells);
 Matrix computeOneBodyInts(const AtomCenteredBasis_t& shells,
                           Operator obtype, Molecule* mol);
 Matrix computeTwoBodyPart_simple(const AtomCenteredBasis_t& shells,
-                          const Matrix& D, Molecule* mol);
+                          const Matrix& D);
+
+#include <iostream>
 
 RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
 {
@@ -99,13 +101,13 @@ RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
   do {
     iter++;
 
-      // Save a copy of the energy and the density
+    // Save a copy of the energy and the density
     auto ehf_last = ehf;
     auto D_last = D;
 
     // build a new Fock matrix
     auto F = H;
-    F += computeTwoBodyPart_simple(shells, D, mol);
+    F += computeTwoBodyPart_simple(shells, D);
 
     // solve F C = e S C
     Eigen::GeneralizedSelfAdjointEigenSolver<Matrix> gen_eig_solver(F, S);
@@ -127,6 +129,7 @@ RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
 
     out->printf(" %02d %20.12f %20.12f %20.12f %20.12f\n", iter, ehf, ehf + enuc, ediff, rmsd);
   } while (((fabs(ediff) > conv) || (fabs(rmsd) > conv)) && (iter < maxiter));
+  out->printf("** Hartree-Fock energy = %20.12f\n", ehf + enuc);
 
   libint2::finalize(); // done with libint
 
@@ -144,10 +147,10 @@ AtomCenteredBasis_t makeAtomCenteredSet(Molecule* mol, BasisSet* bs)
       for (auto c = b->contr_.begin(); c != b->contr_.end(); c++) { // loop over contracted f-ns
         // one-by-one! Generally contracted basis sets are yet unavailable in Libint
         vector<Shell::Contraction> libint_contr; // libint-style contracted f-ns
-        libint_contr.push_back({b->l_, !b->cart_, *c});
+        libint_contr.push_back({b->l_, b->cart_, *c});
         // !!! here: implicit contruction of libint2::Shell object from
         // vector<double>, vector<Contraction> and std::array<double, 3>
-        bfns.push_back({b->alpha_, libint_contr, {a->x, a->y, a->z}});
+        bfns.push_back({b->alpha_, libint_contr, {{a->x, a->y, a->z}}});
       }
   }
   return bfns;
@@ -209,12 +212,11 @@ Matrix computeOneBodyInts(const AtomCenteredBasis_t& shells,
 // the simplest (and the slowest!) implementation - without permutational
 // symmetry of 2-e integrals
 Matrix computeTwoBodyPart_simple(const AtomCenteredBasis_t& shells,
-                                 const Matrix& D, Molecule* mol)
+                                 const Matrix& D)
 {
   const auto n = basisDimension(shells);
   auto max_l = maxAngularMomentum(shells);  // is const?
   auto max_nprim = maxNumberPrimitives(shells);
-  auto atoms = mol->getAtoms();
   Matrix G = Matrix::Zero(n,n);
 
   // construct the ERI engine
