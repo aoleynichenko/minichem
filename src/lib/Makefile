@@ -1,10 +1,10 @@
 # Makefile for 'lib' module
 
-CC=gcc
-CXX=g++
-FC=gfortran
-CCFLAGS=-Wall
-CXXFLAGS=-Wall
+#CC=gcc
+#CXX=g++
+#FC=gfortran
+#CCFLAGS=-Wall
+#CXXFLAGS=-Wall
 CLEAN=rm -rf *.o *.a
 OBJ=io/libio.o chem/libchem.o basis/libbasis.o wf/libwf.o \
 	qscript/libqscript.o

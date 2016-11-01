@@ -1,10 +1,10 @@
 # Makefile for 'lib/wf' module
 
-CC=gcc
-CXX=g++
-FC=gfortran
-CCFLAGS=-Wall
-CXXFLAGS=-Wall
+#CC=gcc
+#CXX=g++
+#FC=gfortran
+#CCFLAGS=-Wall
+#CXXFLAGS=-Wall
 CLEAN=rm -rf *.o
 OBJ=Wavefunction.o
 HEADERS=

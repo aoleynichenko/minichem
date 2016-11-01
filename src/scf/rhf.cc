@@ -45,8 +45,6 @@ Matrix computeOneBodyInts(const AtomCenteredBasis_t& shells,
 Matrix computeTwoBodyPart_simple(const AtomCenteredBasis_t& shells,
                           const Matrix& D);
 
-#include <iostream>
-
 RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
 {
   BasisSet basis = bs->filter(mol);
@@ -94,10 +92,11 @@ RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
   auto iter = 0;
   auto rmsd = 0.0;
   auto ediff = 0.0;
-  auto ehf = 0.0;
+  auto ehf = 0.0, e1e = 0.0, e2e = 0.0;
   auto enuc = mol->enuc();
 
   out->printf(" Iter        E(elec)              E(tot)               Delta(E)             RMS(D)    \n");
+  out->printf("--------------------------------------------------------------------------------------\n");
   do {
     iter++;
 
@@ -118,10 +117,13 @@ RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
     D = C_occ * C_occ.transpose();
 
     // compute HF energy
-    ehf = 0.0;
+    e1e = e2e = 0.0;
     for (auto i = 0; i < nao; i++)
-      for (auto j = 0; j < nao; j++)
-        ehf += D(i,j) * (H(i,j) + F(i,j));
+      for (auto j = 0; j < nao; j++) {
+        e1e += D(i,j) * H(i,j);
+        e2e += D(i,j) * F(i,j);
+	}
+	ehf = e1e + e2e;
 
     // compute difference with last iteration
     ediff = ehf - ehf_last;
@@ -129,7 +131,14 @@ RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
 
     out->printf(" %02d %20.12f %20.12f %20.12f %20.12f\n", iter, ehf, ehf + enuc, ediff, rmsd);
   } while (((fabs(ediff) > conv) || (fabs(rmsd) > conv)) && (iter < maxiter));
-  out->printf("** Hartree-Fock energy = %20.12f\n", ehf + enuc);
+  
+  out->printf("--------------------------------------------------------------------------------------\n");
+  out->printf(" Converged!\n\n");
+  out->printf("           Total RHF energy = %20.12f\n", ehf + enuc);
+  out->printf("          Electronic energy = %20.12f\n", ehf);
+  out->printf("        One-electron energy = %20.12f\n", e1e);
+  out->printf("        Two-electron energy = %20.12f\n", e2e);
+  out->printf("   Nuclear repulsion energy = %20.12f\n", enuc);
 
   libint2::finalize(); // done with libint
 
