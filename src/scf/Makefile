@@ -6,7 +6,7 @@ FC=gfortran
 CCFLAGS=-Wall
 #CXXFLAGS=-Wall
 CLEAN=rm -rf *.o *.a
-OBJ=rhf.o
+OBJ=rhf.o Diis.o
 HEADERS=
 
 libscf.o: $(OBJ)
@@ -14,6 +14,9 @@ libscf.o: $(OBJ)
 
 rhf.o: rhf.cc
 	$(CXX) $(CXXFLAGS) -c -o rhf.o rhf.cc
+
+Diis.o: Diis.cc
+	$(CXX) $(CXXFLAGS) -c -o Diis.o Diis.cc
 
 clean:
 	$(CLEAN)

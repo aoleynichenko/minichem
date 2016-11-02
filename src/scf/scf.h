@@ -15,7 +15,11 @@ namespace minichem {
 RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol);
 
 typedef std::vector<libint2::Shell> AtomCenteredBasis_t;
-typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> Matrix;
+
+#ifndef _MATRIX_TYPEDEF
+#define _MATRIX_TYPEDEF
+  typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> Matrix;
+#endif
 
 } // namespace minichem
 

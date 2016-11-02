@@ -92,6 +92,8 @@ int Kernel::start()
 {
 	mainlog->log("Starting kernel (Kernel::start())");
 
+	auto t0 = std::chrono::system_clock::now();
+
 	// firstly, read settings from ~/.minichemrc
 	// .minichemrc is an ordinary minichem script, user can write there,
 	// for example, path to basis libraries, scf options (bad style!!!), etc.
@@ -132,6 +134,17 @@ int Kernel::start()
 		}
 	}
 
+	// print wall timing
+	// this code may contain errors :)
+	auto t1 = std::chrono::system_clock::now();
+	double wallt = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+	int ms  = ((int) wallt) % 1000;
+	int sec = ((int) wallt - ms)/1000;
+	int min = (sec - sec % 60) / 60;
+	int hrs = (min - min % 60) / 60;
+	int day = (hrs - hrs % 24) / 24;
+	out->printf("Wall time: %d days %d hours %d min %d sec %d ms\n", day, hrs%24, min%60, sec%60, ms);
+
 	return 0; // OK!
 }
 
@@ -158,7 +171,7 @@ inline void Kernel::hline()
 -----------------------------\n");   // 80 x '-'
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 /***                                PARSER                                 ***/
 /*****************************************************************************/
 

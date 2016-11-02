@@ -50,7 +50,7 @@ all: $(TARGET)
 clean:
 	$(CLEAN)
 	rm -f minichem
-	rm *.{b,p,zmat,b^-1,movecs,db,cfock,ges,log} # rm nwchem's temp files
+	rm -f *.{b,p,zmat,b^-1,movecs,db,cfock,ges,log} # rm nwchem's temp files
 	$(MAKE) -C lib clean
 	$(MAKE) -C scf clean
 install:
