@@ -1,5 +1,5 @@
 # test
-basis "cc-pVTZ"
+basis "sto-3g"
 
 mol LiH {
   mult 1

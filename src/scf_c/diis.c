@@ -4,7 +4,7 @@
  * список достиг заданной длины (5-10 результатов итераций), то последний
  * его элемент освобождается. То есть, чем "старее" матрица, тем дальше она
  * от начала в этом списке.
- * 
+ *
  * Лучше всего эту часть алгоритма переписать на C++!
  */
 
@@ -48,14 +48,14 @@ DIISList_t *diis_store(DIISList_t *head, double *errm, double *fock, int dim, in
 	DIISList_t *leaf = (DIISList_t *) qalloc(sizeof(DIISList_t));
 	DIISList_t *p = head, *last;
 	int i = 0;
-	
+
 	*leaf = *head;  // copy all fields
 	head->next = leaf;
 	head->dim = dim;
 	head->E = errm;
 	head->F = (double *) qalloc(dim*dim*sizeof(double));
 	memcpy(head->F, fock, dim*dim*sizeof(double));
-	
+
 	p = head;
 	last = head;
 	// обрезаем лишние элементы так, чтобы их было ровно diisbas в этом списке
@@ -76,7 +76,7 @@ DIISList_t *diis_store(DIISList_t *head, double *errm, double *fock, int dim, in
 		qfree(last->F, sizeof(double) * last->dim * last->dim);
 		qfree(last, sizeof(DIISList_t));
 	}
-	
+
 	return leaf;
 }
 
@@ -94,7 +94,7 @@ double matscalprod(double *A, double *B, int n)
 {
 	int i, j;
 	double prod = 0.0;
-	
+
 	for (i = 0; i < n; i++)
 		for (j = 0; j < n; j++)
 			prod += A[i*n+j]*B[i*n+j];
@@ -108,9 +108,9 @@ void make_error_matrix(double *e, double *F, double *D, double *S, int n)
 	double *T1; // temporary array
 	double alpha = 1.0, // for dgemm
 		   beta = 0.0;
-	
+
 	T1 = (double *) qalloc(bytes);
-	
+
 	// T1 <- D*F
 	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, n, n, n, alpha, D, n, F, n, beta, T1, n);
 	// e <- S*T1, where 'e' is used as intermediate buffer to reduce memory usage
@@ -120,7 +120,7 @@ void make_error_matrix(double *e, double *F, double *D, double *S, int n)
 	// e <- F*T1 - e
 	beta = -1.0;
 	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, n, n, n, alpha, F, n, T1, n, beta, e, n);
-	
+
 	qfree(T1, bytes);
 }
 
@@ -131,10 +131,10 @@ void diis_extrapolate(double *F, DIISList_t *diislist, int diisbas)
 	int diislen = diis_length(diislist);  // размерность итеративного подпространства
 	int bdim = diislen + 1;   // B matrix size
 	double *B = (double *) qalloc(bdim * bdim * sizeof(double));
-	
+
 	// compute Bij
 	// максимально неэкономная схема
-	// собираем сначала указатели на все матрицы ошибокc
+	// собираем сначала указатели на все матрицы ошибок
 	double **errmats = (double **) qalloc(diislen * sizeof(double*));
 	DIISList_t *p = diislist;
 	i = 0;
@@ -142,7 +142,7 @@ void diis_extrapolate(double *F, DIISList_t *diislist, int diisbas)
 		errmats[i++] = p->E;
 		p = p->next;
 	}
-	
+
 	for (i = 0; i < diislen; i++) {
 		for (j = 0; j < diislen; j++)
 			B[i*bdim+j] = matscalprod(errmats[i], errmats[j], dim);
@@ -152,20 +152,20 @@ void diis_extrapolate(double *F, DIISList_t *diislist, int diisbas)
 	for (i = 0; i < bdim-1; i++)
 		B[(bdim-1)*bdim+i] = -1.0;
 	B[bdim*bdim-1] = 0.0;
-	
+
 	// A*x = B  --->  B*c = (0,0,0...-1) = r = right
 	// B имеет размер bdim x bdim
 	// r - это столбец высотой bdim
 	// ld(B) = bdim
 	// ld(r) = 1
-	
+
 	int info;
 	int *ipiv = (int *) qalloc(sizeof(int)*bdim);
 	double *right = (double *) qalloc(sizeof(double)*bdim);
 	for (i = 0; i < bdim; i++)
 		right[i] = 0.0;
 	right[bdim-1] = -1;
-	
+
         info = LAPACKE_dgesv(LAPACK_ROW_MAJOR, bdim, 1, B, bdim, ipiv, right, 1);
         // Check for the exact singularity
         if( info > 0 ) {
@@ -174,10 +174,10 @@ void diis_extrapolate(double *F, DIISList_t *diislist, int diisbas)
                 printf( "the solution could not be computed.\n" );
                 errquit("error occured while DIIS extrapolation");
         }
-	
+
 	qfree(ipiv, sizeof(int)*bdim);
 	qfree(B, bdim * bdim * sizeof(double));
-	
+
 	// и вот теперь создаем в F линейную комбинацию всех матриц Фока
 	double **focks = errmats;  // to avoid reallocation
 	p = diislist;
@@ -192,8 +192,7 @@ void diis_extrapolate(double *F, DIISList_t *diislist, int diisbas)
 			for (k = 0; k < diislen; k++)
 				F[i*dim+j] += focks[k][i*dim+j] * right[k];
 		}
-	
+
 	qfree(focks, diislen * sizeof(double *));
 	qfree(right, sizeof(double) * bdim);
 }
-

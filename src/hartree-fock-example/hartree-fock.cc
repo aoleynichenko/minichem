@@ -346,7 +346,7 @@ std::vector<libint2::Shell> make_sto3g_basis(const std::vector<Atom>& atoms) {
             {
               {3.425250910, 0.623913730, 0.168855400}, // exponents of primitive Gaussians
               {  // contraction 0: s shell (l=0), spherical=false, contraction coefficients
-                {0, true, {0.15432897, 0.53532814, 0.44463454}}
+                {0, false, {0.15432897, 0.53532814, 0.44463454}}
               },
               {{atoms[a].x, atoms[a].y, atoms[a].z}}   // origin coordinates
             }
@@ -418,7 +418,7 @@ std::vector<libint2::Shell> make_sto3g_basis(const std::vector<Atom>& atoms) {
             {
               {130.709320000, 23.808861000, 6.443608300},
               {
-                {0, true, {0.15432897, 0.53532814, 0.44463454}}
+                {0, false, {0.15432897, 0.53532814, 0.44463454}}
               },
               {{atoms[a].x, atoms[a].y, atoms[a].z}}
             }

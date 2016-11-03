@@ -1,6 +1,9 @@
 #ifndef _DIIS_H_INCLUDED
 #define _DIIS_H_INCLUDED
 
+#include <deque>
+#include <utility>
+
 #include <Eigen/Core>
 
 namespace minichem {
@@ -22,6 +25,7 @@ public:
 private:
   int bas_m;
   const Matrix& S_m;
+  std::deque<std::pair<Matrix,Matrix>> listFE_m;
 };
 
 } // namespace minichem

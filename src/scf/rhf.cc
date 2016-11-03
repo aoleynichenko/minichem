@@ -57,6 +57,7 @@ RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
     double time_fock;
     double time_diag;
     double time_dens;
+    double time_diis;
   } rhf_timing = {0, 0, 0, 0, 0};
 
   BasisSet basis = bs->filter(mol);
@@ -116,6 +117,7 @@ RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
   auto ehf = 0.0, e1e = 0.0, e2e = 0.0;
   auto enuc = mol->enuc();
   double curr_ms = 0.0;
+  Diis diis(6, S);
 
   out->printf(" Iter        E(elec)              E(tot)               Delta(E)              RMS(D)          Time, sec\n");
   out->printf("----------------------------------------------------------------------------------------------------------\n");
@@ -132,6 +134,15 @@ RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
     F += computeTwoBodyPart(shells, D);
     auto t4 = std::chrono::system_clock::now();
     rhf_timing.time_fock += std::chrono::duration_cast<std::chrono::milliseconds>(t4 - t3).count();
+
+    // DIIS
+    if (iter > 2) {
+      diis.storeFock(F, D);
+      if (iter > 3)
+        F = diis.extrapolate(); // obtain new F from DIIS extrapolation
+    }
+    auto t_diis = std::chrono::system_clock::now();
+    rhf_timing.time_diis += std::chrono::duration_cast<std::chrono::milliseconds>(t_diis - t4).count();
 
     // solve F C = e S C
     auto t5 = std::chrono::system_clock::now();
@@ -177,12 +188,13 @@ RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
   out->println();
   out->printf("      Time for:           sec\n");
   out->printf("---------------------------------\n");
-  out->printf("  One-electron ints  %9.3f\n", rhf_timing.time_1e/1000);
-  out->printf("  Initial guess      %9.3f\n", rhf_timing.time_guess/1000);
-  out->printf("  Fock matrix        %9.3f\n", rhf_timing.time_fock/1000);
-  out->printf("  Density matrix     %9.3f\n", rhf_timing.time_dens/1000);
-  out->printf("  Diagonalization    %9.3f\n", rhf_timing.time_diag/1000);
-  out->printf("  Time per iteration %9.3f\n", curr_ms/iter/1000);
+  out->printf("  One-electron ints    %9.3f\n", rhf_timing.time_1e/1000);
+  out->printf("  Initial guess        %9.3f\n", rhf_timing.time_guess/1000);
+  out->printf("  Fock matrix          %9.3f\n", rhf_timing.time_fock/1000);
+  out->printf("  Density matrix       %9.3f\n", rhf_timing.time_dens/1000);
+  out->printf("  Diagonalization      %9.3f\n", rhf_timing.time_diag/1000);
+  out->printf("  DIIS extrapolation   %9.3f\n", rhf_timing.time_diis/1000);
+  out->printf("  Time per iteration   %9.3f\n", curr_ms/iter/1000);
   out->printf("---------------------------------\n\n");
 
   libint2::finalize(); // done with libint
