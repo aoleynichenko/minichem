@@ -530,7 +530,7 @@ std::string getOsName()
 	#ifdef __i386__
 	bits = " x86";
 	#endif
-	#ifdef __x8_64__
+	#ifdef __x86_64__
 	bits = " x86_64";
 	#endif
 
