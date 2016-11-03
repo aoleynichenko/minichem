@@ -4,11 +4,11 @@ A very simple quantum chemistry program.
 Minichem is a tiny educational project, created in order to better understand the computational methods of quantum chemistry. I will improve it while studying new methods.
 For details, see A. Szabo, N. Ostlund, "Modern Quantim Chemistry", and T. Helgaker, P. Jorgensen, J. Olsen, "Molecular Electronic-Structure Theory". All example calculations were validated using NWChem.
 
-Features (NOW ONLY RHF IS AVAILABLE! TO USE THESE FEATURES, COMPILE WITH MAKEFILE_C!):
+Features:
  - Single-point energy calculation;
  - RHF and UHF methods;
  - DIIS convergence acceleration algorithm;
- - OpenMP parallelization;
+ - OpenMP parallelization (not yet implemented in C++ version);
  - Available elements: all periodic table (but only non-relativistic treatment is available!);
  - Available basis sets: cartesian and spherical with L up to g-functions;
  - Own scripting language QuantumScript, which is used in input files;
