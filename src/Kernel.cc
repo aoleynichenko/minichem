@@ -517,7 +517,16 @@ void Kernel::runTask()
 	if (t.sval == "scf") {  // run Hartree-Fock calculation
 		if (!currMolecule || !currBasis)
 			throw runtime_error("please, specify current molecule and basis set");
-		rhf(this, currBasis, currMolecule);
+		// auto selection of proper HF method
+		// Note!!! You may have singlet with na != nb (of course, it is not ground state).
+		// Setting number of electrons for orbitals in each irrep is much better!
+		// (to be implemented in future)
+		auto na = currMolecule->nalpha();
+		auto nb = currMolecule->nbeta();
+		if (na == nb)
+			rhf(this, currBasis, currMolecule);
+		else
+			uhf(this, currBasis, currMolecule);
 	}
 	else
 		throw SyntaxError("in task directive: " + t.sval + " method is not yet implemented'");

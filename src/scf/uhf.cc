@@ -50,7 +50,7 @@ UhfWavefunction* uhf(Kernel* ker, BasisSet* bs, Molecule* mol)
   out = ker->getOutput();
 
   out->printf("               ******************************************\n");
-  out->printf("               *     Restricted Hartree-Fock Method     *\n");
+  out->printf("               *    Unrestricted Hartree-Fock Method    *\n");
   out->printf("               ******************************************\n");
   out->println();
   out->printf("                     Basis Set Information\n");
