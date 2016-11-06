@@ -14,4 +14,4 @@ public:
 
 } // namespace minichem
 
-#endif // _WAVEFUNCTION_H_INCLUDED
+#endif // _RHF_WAVEFUNCTION_H_INCLUDED
