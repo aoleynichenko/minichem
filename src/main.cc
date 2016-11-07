@@ -18,6 +18,7 @@
 #include "minichem.h"
 #include "lib/io/OutputStream.h"
 
+
 using std::exception;
 using std::string;
 
@@ -59,11 +60,20 @@ written in educational purposes\n");
 	out->println();
 }
 
-int main(int argc, char **argv)
+
+int main(int argc, char *argv[])
 {
-	// init
+	//init
 	startTimePoint = std::chrono::high_resolution_clock::now();
-	mainlog = new Log("minichem.log");
+	std::string logName = detectCmdLog(argc, argv);
+
+	//if user specified the log
+	if(!logName.empty())
+		mainlog = new Log(logName);
+	else
+		mainlog = new Log("minichem.log");
+
+
 
 	// run minichem's kernel with command-line parameters
 	outputHeader();
