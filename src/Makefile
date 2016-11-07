@@ -32,12 +32,12 @@ CXX=g++
 FC=mpif90
 CCFLAGS=-Wall
 CXXFLAGS=-std=c++11 -I $(LIBINT_HOME)/include -I $(LIBINT_HOME)/include/libint2 \
-		 -I $(LIBEIGEN_INCLUDE)
+		 -I $(LIBEIGEN_INCLUDE) -D__linux__
 LINKFLAGS=-L $(LIBINT_HOME)/lib -lint2
 SRC=main.c
 OBJS=lib/auxlib.o scf/libscf.o Kernel.o main.o
 TARGET=minichem
-CLEAN=rm -rf *.o
+CLEAN=rm -rf *.o *.[lL][oO][gG]
 INCLUDES=
 
 # common variables for all subdirectories
