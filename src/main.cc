@@ -57,6 +57,7 @@ written in educational purposes\n");
 	printf("Date:       %s", asctime(localtime(&t)));
 	out->printf("Authors:\n");
 	out->printf("  Alexander Oleynichenko        alexvoleynichenko@gmail.com\n");
+	out->printf("  Dmitry Chestnykh		     dm.chestnykh@gmail.com\n");
 	out->println();
 }
 
