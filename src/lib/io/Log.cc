@@ -6,14 +6,63 @@
 
 #include "Log.h"
 
+
+//#if defined UNIX_LIKE_OS /*This line myst exist*/
+#include <getopt.h>
+//#endif
+
 using std::invalid_argument;
 using std::string;
 
 namespace minichem {
 
+
+
+/*This code enables user to specify
+ the logfile in command line argument
+ in 3 forms:
+ 1) --logfile=log_file
+ 2) -llog_file
+ 3) -l log_file
+*/
+
+/*
+ этот код использует getopt_long(), которая есть только в Unix-Like OS.
+ поэтому надо корректно во время компиляции определить
+ подходит ли наша ось для того чтоб этот код выполнился.
+ Этому должен способствовать скрипт configure, но я не умею
+ писать входные файлы для autoconf - программы, создающей
+ этот самый configure. Мб когда-нибудь потом. Аналогично надо проверить,
+ можем ли мы инклюдить getopt.h. P.S. лень это все на англ писать :)
+ */
+std::string detectCmdLog(int argc, char *argv[])
+{
+
+	std::string retval = "";
+//#ifdef UNIX_LIKE_OS /*This line must exist!!!*/
+
+	const char *shortOptionsForm = "l:";
+	const struct option options[] = {
+		{"logfile", required_argument, NULL, 'l'}
+	};
+	int rez, optInd;
+	while((rez = getopt_long(argc, argv, shortOptionsForm, options, &optInd)) != -1){
+		switch(rez){
+			case 'l':{
+				if(optarg)
+					retval = std::string(optarg);
+			}
+		}
+	}
+//#endif //UNIX_LIKE_OS
+	return retval;
+}
+
+
 Log::Log(string logname)
 {
-	logfile_m = fopen(logname.c_str(), "a");
+	this -> logName = logname; //подчеркиваю что инициализируется именно член объекта.
+	logfile_m = fopen(logName.c_str(), "a");
 	if (!logfile_m)
 		throw invalid_argument("Cannot create log file " + logname);
 	log("Log created");

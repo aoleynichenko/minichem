@@ -11,6 +11,9 @@
 #include <unistd.h>
 #include <vector>
 
+//#include <iostream>
+
+
 #include "Kernel.h"
 #include "./lib/basis/BasisSet.h"
 #include "./lib/chem/Elements.h"
@@ -44,8 +47,14 @@ int  isElementSymbol(string s);
 int parseAngularMomentum(string ams);
 bool isint(double d);
 
+extern Log* mainlog;
+
+
+
+
 Kernel::Kernel(int argc, char **argv)
 {
+
 	mainlog->log("Kernel::Kernel(int argc, char **argv) invoked, argc == %d", argc);
 	char hostname[128];
 	gethostname(hostname, 128);
@@ -79,6 +88,12 @@ search and inclusion of basis sets");
 	params.str("");
 	params.clear();
 	for (auto inp = inputFiles_m.begin(); inp != inputFiles_m.end(); inp++) {
+		//ignore specified logfile
+		if(*inp == "--logfile=" + mainlog -> getLogName() ||   /* --logfile=log_file*/
+		   *inp == "-l" + mainlog -> getLogName()         ||   /* -llog_file*/
+		  (*inp == "-l" && *++inp == mainlog -> getLogName())) /* -l log_file*/
+				continue;
+
 		params << *inp << " ";
 		if (!fileExists(*inp)) {
 			mainlog->log("[WARNING] File \"%s\" doesn't exists!", inp->c_str());
@@ -112,6 +127,13 @@ int Kernel::start()
 	}*/
 
 	for (auto inp = inputFiles_m.begin(); inp != inputFiles_m.end(); inp++) {
+		//ignore specified logfile
+		if(*inp == "--logfile=" + mainlog -> getLogName() ||   /* --logfile=log_file*/
+		   *inp == "-l" + mainlog -> getLogName()         ||   /* -llog_file*/
+		  (*inp == "-l" && *++inp == mainlog -> getLogName())) /* -l log_file*/
+			continue;
+		
+
 		hline();
 		if (!fileExists(*inp)) {
 			mainlog->log("[ERROR] File \"%s\" doesn't exists, will be ignored", inp->c_str());
