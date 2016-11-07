@@ -96,9 +96,17 @@ double Molecule::mass() const
 	return mass;
 }
 
-// to be implemented!
-//int Molecule::nalpha() const;
-//int Molecule::nbeta()  const;
+int Molecule::nalpha() const
+{
+	check();
+	return (nelec() + mult - 1) / 2;
+}
+
+int Molecule::nbeta() const
+{
+	return nelec() - nalpha();
+}
+
 int Molecule::nelec() const
 {
 	int ne = 0;

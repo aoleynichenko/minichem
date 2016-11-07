@@ -6,7 +6,7 @@ FC=gfortran
 CCFLAGS=-Wall
 #CXXFLAGS=-Wall
 CLEAN=rm -rf *.o *.a
-OBJ=rhf.o Diis.o
+OBJ=rhf.o uhf.o Diis.o
 HEADERS=
 
 .cc.o:
