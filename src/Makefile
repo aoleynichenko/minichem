@@ -32,7 +32,7 @@ CXX=g++
 FC=mpif90
 CCFLAGS=-Wall
 CXXFLAGS=-std=c++11 -I $(LIBINT_HOME)/include -I $(LIBINT_HOME)/include/libint2 \
-		 -I $(LIBEIGEN_INCLUDE) -D__linux__
+		 -I $(LIBEIGEN_INCLUDE)
 LINKFLAGS=-L $(LIBINT_HOME)/lib -lint2
 SRC=main.c
 OBJS=lib/auxlib.o scf/libscf.o Kernel.o main.o
