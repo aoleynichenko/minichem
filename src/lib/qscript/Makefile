@@ -5,7 +5,7 @@
 #CXX=g++
 #FC=gfortran
 #CCFLAGS=-Wall
-#CXXFLAGS=-Wall
+#CXXFLAGS+=-Wall
 CLEAN=rm -rf *.o
 OBJ=QS_Object.o QS_Scope.o QS_RuntimeError.o
 HEADERS=

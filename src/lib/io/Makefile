@@ -4,7 +4,8 @@ CC=gcc
 CXX=g++
 FC=gfortran
 CCFLAGS=-Wall
-CXXFLAGS=-Wall
+#It is very important: '+=' instead of '='
+CXXFLAGS+=-Wall
 CLEAN=rm -rf *.o
 OBJ=OutputStream.o Lexer.o Token.o Log.o
 HEADERS=
