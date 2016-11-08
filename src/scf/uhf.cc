@@ -44,7 +44,7 @@ UhfWavefunction* uhf(Kernel* ker, BasisSet* bs, Molecule* mol)
     double time_diag;
     double time_dens;
     double time_diis;
-  } rhf_timing = {0, 0, 0, 0, 0};
+  } uhf_timing = {0, 0, 0, 0, 0, 0};
 
   BasisSet basis = bs->filter(mol);
   out = ker->getOutput();
@@ -60,8 +60,11 @@ UhfWavefunction* uhf(Kernel* ker, BasisSet* bs, Molecule* mol)
   // basis set: create and print information
   auto shells = makeAtomCenteredSet(mol, bs);
   size_t nao = basisDimension(shells);
-  auto nocc = mol->nelec()/2;
+  auto na = mol->nalpha();
+  auto nb = mol->nbeta();
 
+  out->printf("Nalpha             : %d\n", na);
+  out->printf("Nbeta              : %d\n", nb);
   out->printf("Number of shells   : %d\n", shells.size());
   out->printf("Dimension          : %d\n", nao);
   out->printf("Integration engine : %s\n", "Libint");
@@ -81,18 +84,21 @@ UhfWavefunction* uhf(Kernel* ker, BasisSet* bs, Molecule* mol)
   T.resize(0,0);
   V.resize(0,0);
   auto t1 = std::chrono::system_clock::now();
-  rhf_timing.time_1e += std::chrono::duration_cast<std::chrono::milliseconds>(t1 - start).count();
+  uhf_timing.time_1e += std::chrono::duration_cast<std::chrono::milliseconds>(t1 - start).count();
   mainlog->log("One-electron integrals done");
 
   // initial guess
-  Matrix D;
+  Matrix Da, Db;
   t1 = std::chrono::system_clock::now();
   Eigen::GeneralizedSelfAdjointEigenSolver<Matrix> gen_eig_solver(H, S);
-  auto C = gen_eig_solver.eigenvectors();
-  auto C_occ = C.leftCols(nocc);
-  D = C_occ * C_occ.transpose();
+  auto Ca = gen_eig_solver.eigenvectors();
+  auto Cb = Ca;
+  auto Ca_occ = Ca.leftCols(na);
+  Da = Ca_occ * Ca_occ.transpose();
+  auto Cb_occ = Cb.leftCols(nb);
+  Db = Cb_occ * Cb_occ.transpose();
   auto t2 = std::chrono::system_clock::now();
-  rhf_timing.time_guess += std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
+  uhf_timing.time_guess += std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
 
   // main loop
   const auto maxiter = 150;
@@ -112,50 +118,53 @@ UhfWavefunction* uhf(Kernel* ker, BasisSet* bs, Molecule* mol)
 
     // Save a copy of the energy and the density
     auto ehf_last = ehf;
-    auto D_last = D;
+    auto Da_last = Da, Db_last = Db;
 
     // build a new Fock matrix
     auto t3 = std::chrono::system_clock::now();
-    auto F = H;
-    F += computeTwoBodyPart_uhf(shells, D);
+    auto Fa = H, Fb = H;
+    //F += computeTwoBodyPart_uhf(shells, D);
     auto t4 = std::chrono::system_clock::now();
-    rhf_timing.time_fock += std::chrono::duration_cast<std::chrono::milliseconds>(t4 - t3).count();
+    uhf_timing.time_fock += std::chrono::duration_cast<std::chrono::milliseconds>(t4 - t3).count();
 
     // DIIS
-    if (iter > 2) {
+    /*if (iter > 2) {
       diis.storeFock(F, D);
       if (iter > 3)
         F = diis.extrapolate(); // obtain new F from DIIS extrapolation
     }
     auto t_diis = std::chrono::system_clock::now();
     rhf_timing.time_diis += std::chrono::duration_cast<std::chrono::milliseconds>(t_diis - t4).count();
+    */
 
     // solve F C = e S C
     auto t5 = std::chrono::system_clock::now();
-    Eigen::GeneralizedSelfAdjointEigenSolver<Matrix> gen_eig_solver(F, S);
-    auto C = gen_eig_solver.eigenvectors();
+    Eigen::GeneralizedSelfAdjointEigenSolver<Matrix> gen_eig_solver_a(Fa, S);
+    auto Ca = gen_eig_solver.eigenvectors();
+    Eigen::GeneralizedSelfAdjointEigenSolver<Matrix> gen_eig_solver_b(Fb, S);
+    auto Cb = gen_eig_solver.eigenvectors();
     auto t6 = std::chrono::system_clock::now();
-    rhf_timing.time_diag += std::chrono::duration_cast<std::chrono::milliseconds>(t6 - t5).count();
+    uhf_timing.time_diag += std::chrono::duration_cast<std::chrono::milliseconds>(t6 - t5).count();
 
     // compute density, D = C(occ) . C(occ)T
     auto t7 = std::chrono::system_clock::now();
-    auto C_occ = C.leftCols(nocc);
-    D = C_occ * C_occ.transpose();
+    auto Ca_occ = Ca.leftCols(na);
+    Da = Ca_occ * Ca_occ.transpose();
+    auto Cb_occ = Cb.leftCols(nb);
+    Db = Cb_occ * Cb_occ.transpose();
     auto t8 = std::chrono::system_clock::now();
-    rhf_timing.time_dens += std::chrono::duration_cast<std::chrono::milliseconds>(t8 - t7).count();
+    uhf_timing.time_dens += std::chrono::duration_cast<std::chrono::milliseconds>(t8 - t7).count();
 
     // compute HF energy
-    e1e = e2e = 0.0;
+    ehf = 0.0;
     for (auto i = 0; i < nao; i++)
       for (auto j = 0; j < nao; j++) {
-        e1e += D(i,j) * H(i,j) * 2;         // One-electron energy
-        e2e += D(i,j) * (F(i,j) - H(i,j));  // Two-electron energy (in fact, * G(i,j))
+        ehf += 0.5 * ((Da(i,j) + Db(i,j))*H(j,i) + Da(j,i)*Fa(i,j) + Db(j,i)*Fb(i,j));
       }
-    ehf = e1e + e2e;
 
     // compute difference with last iteration
     ediff = ehf - ehf_last;
-    rmsd = (D - D_last).norm();
+    rmsd = (Da+Db - Da_last - Db_last).norm();  // computed using total density matrix
 
     auto t = std::chrono::system_clock::now();
     curr_ms = std::chrono::duration_cast<std::chrono::milliseconds>(t -start).count();
@@ -164,22 +173,22 @@ UhfWavefunction* uhf(Kernel* ker, BasisSet* bs, Molecule* mol)
 
   out->printf("----------------------------------------------------------------------------------------------------------\n");
   out->printf(" Converged!\n\n");
-  out->printf("           Total RHF energy = %20.12f\n", ehf + enuc);
+  out->printf("           Total UHF energy = %20.12f\n", ehf + enuc);
   out->printf("          Electronic energy = %20.12f\n", ehf);
-  out->printf("        One-electron energy = %20.12f\n", e1e);
-  out->printf("        Two-electron energy = %20.12f\n", e2e);
+//  out->printf("        One-electron energy = %20.12f\n", e1e);
+//  out->printf("        Two-electron energy = %20.12f\n", e2e);
   out->printf("   Nuclear repulsion energy = %20.12f\n", enuc);
 
   // print timing
   out->println();
   out->printf("      Time for:           sec\n");
   out->printf("---------------------------------\n");
-  out->printf("  One-electron ints    %9.3f\n", rhf_timing.time_1e/1000);
-  out->printf("  Initial guess        %9.3f\n", rhf_timing.time_guess/1000);
-  out->printf("  Fock matrix          %9.3f\n", rhf_timing.time_fock/1000);
-  out->printf("  Density matrix       %9.3f\n", rhf_timing.time_dens/1000);
-  out->printf("  Diagonalization      %9.3f\n", rhf_timing.time_diag/1000);
-  out->printf("  DIIS extrapolation   %9.3f\n", rhf_timing.time_diis/1000);
+  out->printf("  One-electron ints    %9.3f\n", uhf_timing.time_1e/1000);
+  out->printf("  Initial guess        %9.3f\n", uhf_timing.time_guess/1000);
+  out->printf("  Fock matrix          %9.3f\n", uhf_timing.time_fock/1000);
+  out->printf("  Density matrix       %9.3f\n", uhf_timing.time_dens/1000);
+  out->printf("  Diagonalization      %9.3f\n", uhf_timing.time_diag/1000);
+  out->printf("  DIIS extrapolation   %9.3f\n", uhf_timing.time_diis/1000);
   out->printf("  Time per iteration   %9.3f\n", curr_ms/iter/1000);
   out->printf("---------------------------------\n\n");
 

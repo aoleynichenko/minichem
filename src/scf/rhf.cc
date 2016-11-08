@@ -58,7 +58,7 @@ RhfWavefunction* rhf(Kernel* ker, BasisSet* bs, Molecule* mol)
     double time_diag;
     double time_dens;
     double time_diis;
-  } rhf_timing = {0, 0, 0, 0, 0};
+  } rhf_timing = {0, 0, 0, 0, 0, 0};
 
   BasisSet basis = bs->filter(mol);
   out = ker->getOutput();
