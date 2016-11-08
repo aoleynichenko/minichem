@@ -7,9 +7,10 @@
 #include "Log.h"
 
 
-//#if defined UNIX_LIKE_OS /*This line myst exist*/
+//TODO add AC_CHECH_HEADER for getopt.h
+#if defined __UNIX_LIKE_OS
 #include <getopt.h>
-//#endif
+#endif
 
 using std::invalid_argument;
 using std::string;
@@ -33,13 +34,13 @@ namespace minichem {
  Этому должен способствовать скрипт configure, но я не умею
  писать входные файлы для autoconf - программы, создающей
  этот самый configure. Мб когда-нибудь потом. Аналогично надо проверить,
- можем ли мы инклюдить getopt.h. P.S. лень это все на англ писать :)
+ можем ли мы инклюдить getopt.h. P.S. лень это все на англ писать :) 
  */
 std::string detectCmdLog(int argc, char *argv[])
 {
 
 	std::string retval = "";
-//#ifdef UNIX_LIKE_OS /*This line must exist!!!*/
+#if defined __UNIX_LIKE_OS /*This line must exist!!!*/
 
 	const char *shortOptionsForm = "l:";
 	const struct option options[] = {
@@ -54,7 +55,7 @@ std::string detectCmdLog(int argc, char *argv[])
 			}
 		}
 	}
-//#endif //UNIX_LIKE_OS
+#endif //__UNIX_LIKE_OS
 	return retval;
 }
 

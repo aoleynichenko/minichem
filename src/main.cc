@@ -75,6 +75,13 @@ int main(int argc, char *argv[])
 		mainlog = new Log("minichem.log");
 
 
+	/*mainlog allocation successful or not?*/
+	if(!mainlog){
+		out -> printf("ERROR: CANNOT CREATE LOGFILE\n");
+		return -1; /*is it good?*/
+	}
+
+
 
 	// run minichem's kernel with command-line parameters
 	outputHeader();
