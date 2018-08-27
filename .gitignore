@@ -2,5 +2,6 @@
 *.o
 
 # executables
+bin/*
 *.x
 
