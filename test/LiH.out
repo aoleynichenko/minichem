@@ -1,17 +1,17 @@
 Minichem 0.0
 By Alexander Oleynichenko, 2016
-Build:      1281
-Build date: Mar  9 2016 21:44:01
-Compiler:   gcc 5.2.0
-Date:       Wed Mar  9 22:43:09 2016
+Build:      1397
+Build date: Oct 30 2016 15:20:54
+Compiler:   gcc 6.2.1
+Date:       Sun Oct 30 15:21:24 2016
 Cores:      1
-Arguments:  ../bin/minichem LiH.nw 
+Arguments:  ./minichem LiH.nw 
 ------------------------------------------------------------
 >>> LiH.nw
 # Hartree-Fock calculation of LiH
 
 start LiH
-nproc 4
+#nproc 4
 echo
 
 geometry units atomic
@@ -34,17 +34,12 @@ Li    SP
       0.0480887              0.70011547             0.39195739       
 end
 
+scf
+  print "kinetic"
+end
+
 task scf
 ------------------------------------------------------------
-
-                *****************************
-                *           OPENMP          *
-                *           ------          *
-                * Number of threads       4 *
-                * Cores available         8 *
-                * OpenMP version        4.0 *
-                *****************************
-
                     Basis information
    H
   ----
@@ -81,6 +76,15 @@ Spherical basis set summary:
           *      Parallel SCF Module     *
           ********************************
 
+                    SCF Parameters
+                    --------------
+               Wavefunction : RHF
+             Max iterations : 50
+               Density conv : 1e-06
+                Energy conv : 1e-07
+                       DIIS : on
+                    diisbas : 5
+
 Formula:   
 Atoms:     2
 Electrons: 4
@@ -88,33 +92,56 @@ Mol mass:  7.949
 Charge:    0
 Spin mult: 1
 Units:     atomic
-------------------------------------------------------------
 One-electron integrals evaluation algorithm: Obara-Saika
 Two-electron integrals evaluation algorithm: Obara-Saika
-One-electron integrals done in 0.000000 sec
+One-electron integrals done in 0.000001 sec
 
-****************** BASIS ORTHOGONALIZATION *******************
-Algorithm: canonical
+
+    ==============================================
+       Kinetic Energy One-Electron AO Integrals 
+    ==============================================
+    1eke   H   0   s     H   0   s      0.76003188
+    1eke   H   0   s     Li  1   s      0.12339390
+    1eke   H   0   s     Li  2   s      0.08678189
+    1eke   H   0   s     Li  3   px    -0.24971000
+    1eke   H   0   s     Li  4   py     0.00000000
+    1eke   H   0   s     Li  5   pz     0.00000000
+    1eke   Li  1   s     Li  1   s      3.57678641
+    1eke   Li  1   s     Li  2   s     -0.02023738
+    1eke   Li  1   s     Li  3   px     0.00000000
+    1eke   Li  1   s     Li  4   py     0.00000000
+    1eke   Li  1   s     Li  5   pz     0.00000000
+    1eke   Li  2   s     Li  2   s      0.10216337
+    1eke   Li  2   s     Li  3   px     0.00000000
+    1eke   Li  2   s     Li  4   py     0.00000000
+    1eke   Li  2   s     Li  5   pz     0.00000000
+    1eke   Li  3   px    Li  3   px     0.31968169
+    1eke   Li  3   px    Li  4   py     0.00000000
+    1eke   Li  3   px    Li  5   pz     0.00000000
+    1eke   Li  4   py    Li  4   py     0.31968169
+    1eke   Li  4   py    Li  5   pz     0.00000000
+    1eke   Li  5   pz    Li  5   pz     0.31968169
+Basis orthogonalization algorithm: canonical
 Basis functions elimination threshold: 1e-08
 Overlap matrix lowest eigenvalue = 0.21665917
-AO basis orthogonalization done in 0.000067 sec
+AO basis orthogonalization done in 0.000088 sec
 
 Initial guess: extended Huckel theory
 Initial energy = -9.73843756
-Initial guess done in 0.000182 sec
+Initial guess done in 0.000028 sec
 
 #bfns = 6
 #eris = 231
 
  iter.       Energy         Delta E       RMS-Dens       DIIS-Err     time
 ----------------------------------------------------------------------------
-   1      -7.43459657     0.25354028     0.39915999     0.14784029    0.01
-   2      -7.58393689    -0.14934032     0.04348552     0.01709432    0.01
-   3      -7.58942395    -0.00548706     0.03779352     0.00808894    0.02
-   4      -7.58695963     0.00246431     0.00542955     0.00125973    0.02
-   5      -7.58675355     0.00020608     0.00034175     0.00002358    0.03
-   6      -7.58675266     0.00000089     0.00000332     0.00000113    0.04
-   7      -7.58675264     0.00000002     0.00000016     0.00000001    0.04
+   1      -7.43459657     0.25354028     0.39915999     0.14784029    0.02
+   2      -7.58393689    -0.14934032     0.04348552     0.01709432    0.03
+   3      -7.58942395    -0.00548706     0.03779352     0.00808894    0.05
+   4      -7.58695963     0.00246431     0.00542955     0.00125973    0.06
+   5      -7.58675355     0.00020608     0.00034175     0.00002358    0.07
+   6      -7.58675266     0.00000089     0.00000332     0.00000113    0.08
+   7      -7.58675264     0.00000002     0.00000016     0.00000001    0.09
 ----------------------------------------------------------------------------
           Total SCF energy =    -7.58675264
   Nuclear repulsion energy =     2.05030071
@@ -125,7 +152,7 @@ Initial guess done in 0.000182 sec
   Orthogonalization      0.000
   Initial guess          0.000
   Density matrix         0.000
-  Fock matrix            0.042
+  Fock matrix            0.093
   Diagonalization        0.000
 ---------------------------------
 
@@ -160,12 +187,12 @@ Initial guess done in 0.000182 sec
                Multipole moments
                -----------------
   D       x            y            z
-     1.94219902   0.00000000   0.00000000
+     1.94219902  -0.00000000  -0.00000000
 
   |D| = 1.94219902 a.u. = 4.93657703 Debye
 
 
-Allocated: 32392 bytes
-Freed:     29096 bytes
-Max usage: 7568 bytes
-Total time: 0.04 sec
+Allocated: 34464 bytes
+Freed:     34464 bytes
+Max usage: 7312 bytes
+Total time: 0.09 sec

@@ -11,6 +11,7 @@ H        0.970605920     -1.144586200      0.000000000
 H       -0.858865390     -1.232589870      0.000000000
 end
 
+# STO-3G
 basis "ao basis" SPHERICAL
 H    S
       3.42525091             0.15432897       
@@ -31,6 +32,7 @@ C    P
 end
 
 scf
+  diis 4
   guess eht
 end
 

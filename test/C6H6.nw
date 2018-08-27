@@ -1,7 +1,10 @@
+# C6H6 single-point energy
+# HF molecular orbitals will be written to molden-format file c6h6.mos
+
 start C6H6
-memory 400 mb
+#memory 10 mb
 echo
-nproc 8
+#nproc 8
 
 geometry
 C  0.000  1.396  0.000
@@ -38,7 +41,12 @@ C    P
 end
 
 scf
-  diis 5
+  print "overlap"
+ # diis 5
 end
+
+#out
+#  molden
+#end
 
 task scf

@@ -1,12 +1,9 @@
-# Hartree-Fock calculation
-
-start HeH+
-#memory 10 kb
+start HeH
 echo
 
 geometry units angstroms
   H 0 0 0
-  He 0.7743 0 0
+  H 0.8 0 0 
 end
 charge 1
 
@@ -22,7 +19,8 @@ He    S
 end
 
 scf
-  maxiter 20
+  uhf
+  doublet
 end
 
 task scf

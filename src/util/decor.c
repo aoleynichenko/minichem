@@ -11,7 +11,6 @@ void help()
 	printf("where options include:\n");
 	printf("    -h              print this help message\n");
 	printf("    -v              print version and quit\n");
-	printf("    -i              run in interactive mode\n");
 	printf("    -o <file-name>  specify output file\n");
 	printf("    -noecho         do not print input files\n");
 	printf("for questions, ao2310@yandex.ru\n");
@@ -27,7 +26,7 @@ void print_header()
 	
 	printf("Minichem 0.0\n");
 	printf("By Alexander Oleynichenko, 2016\n");
-	printf("Build:      %d\n", buildno());
+    // printf("Build:      %d\n", buildno());
 	printf("Build date: %s %s\n", __DATE__, __TIME__);
 	
 	#if defined __ICC

@@ -1,7 +1,7 @@
 # Hartree-Fock calculation of LiH
 
 start LiH
-nproc 4
+#nproc 4
 echo
 
 geometry units atomic
@@ -23,5 +23,9 @@ Li    SP
       0.1478601              0.39951283             0.60768372       
       0.0480887              0.70011547             0.39195739       
 end
+
+#scf
+#  print "kinetic"
+#end
 
 task scf

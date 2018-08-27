@@ -4,7 +4,7 @@ CC=gcc
 FC=gfortran
 CCFLAGS=-Wall
 CLEAN=rm -rf *.o
-OBJ=errors.o decor.o buildno.o memory.o
+OBJ=errors.o decor.o memory.o
 HEADERS=util.h
 
 errors.o: errors.c
@@ -15,9 +15,6 @@ memory.o: memory.c
 
 decor.o: decor.c
 	$(CC) $(CCFLAGS) -c decor.c -o decor.o
-
-buildno.o: buildno.c
-	$(CC) $(CCFLAGS) -c buildno.c -o buildno.o
 
 util.o: $(OBJ)
 	ld -r $(OBJ) -o util.o

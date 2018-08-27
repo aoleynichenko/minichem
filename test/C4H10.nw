@@ -3,7 +3,7 @@
 start C4H10
 memory 400 mb
 echo
-nproc 8
+nproc 4
 
 geometry
 C     0.26142641   0.14797325  -1.94490743

@@ -1,0 +1,34 @@
+# Hartree-Fock calculation
+
+start HeH+
+#memory 10 kb
+echo
+#nproc 2
+
+geometry units angstroms
+  H 0 0 0
+  He 0.7743 0 0
+end
+charge 1
+
+basis
+H    S
+      3.42525091             0.15432897       
+      0.62391373             0.53532814       
+      0.16885540             0.44463454       
+He    S
+      6.36242139             0.15432897       
+      1.15892300             0.53532814       
+      0.31364979             0.44463454  
+end
+
+scf
+  diis 2
+  maxiter 20
+end
+
+task scf
+
+
+
+

@@ -1,2 +1,0 @@
-#!/bin/sh
-g++ hartree-fock.cc -o hartree-fock -I /usr/local/libint/2.2.0-beta1/include/ -I /usr/local/libint/2.2.0-beta1/include/libint2 -I /usr/include/eigen3/ -L /usr/local/libint/2.2.0-beta1/lib/ -lint2 

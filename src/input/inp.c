@@ -277,25 +277,18 @@ void directive_geometry()
 void directive_task()
 {
 	nextToken();
-	int method = ttype;
+	if (ttype != TT_KW_SCF)
+		errquit("only SCF calculations can be performed");
 	nextToken();
-	if (!(ttype == TT_WORD && sval && !strcmp(sval, "energy"))) /* task <method> energy */
+	if (!(ttype == TT_WORD && sval && !strcmp(sval, "energy"))) /* task scf energ */
 		lexerPushBack();
-
-	if (method == TT_KW_SCF) {
-		scf_energy(&calc_info.molecule);
-	}
-	else if (method == TT_KW_MP2) {
-		//mp2_energy(&calc_info.molecule);
-	}
-	else
-		errquit("only SCF and MP2 calculations can be performed");
+	scf_energy(&calc_info.molecule);
 }
 
 void calc_info_defaults()
 {
 	calc_info.echo = 0;
-	strcpy(calc_info.name, "default");
+	strcpy(calc_info.name, "John-A-Pople");
 	calc_info.nproc = 1;
 	calc_info.memory = 200*1024*1014;  /* 200 mb per thread */
 	/* molecule */
@@ -304,11 +297,6 @@ void calc_info_defaults()
 	calc_info.molecule.capacity = 0;
 	calc_info.molecule.charge   = 0;
 	calc_info.molecule.mult     = 1; /* singlet */
-	/* wavefunction */
-	calc_info.wf.type = WF_NOTHING;
-	calc_info.wf.nalpha = 0;
-	calc_info.wf.nbeta  = 0;
-	calc_info.wf.data = NULL;
 	/* output */
 	calc_info.out_molden_vectors = 0;
 }

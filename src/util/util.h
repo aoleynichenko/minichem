@@ -14,4 +14,3 @@ void setmemavail(int bytes);
 void *qalloc(size_t bytes);
 void qfree(void *p, size_t n);
 void memstats();
-

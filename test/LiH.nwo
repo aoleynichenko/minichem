@@ -1,0 +1,198 @@
+Minichem 0.0
+By Alexander Oleynichenko, 2016
+Build:      1396
+Build date: Oct 30 2016 15:14:58
+Compiler:   gcc 6.2.1
+Date:       Sun Oct 30 15:16:07 2016
+Cores:      1
+Arguments:  ./minichem LiH.nw 
+------------------------------------------------------------
+>>> LiH.nw
+# Hartree-Fock calculation of LiH
+
+start LiH
+#nproc 4
+echo
+
+geometry units atomic
+  H 0 0 0
+  Li 1.4632 0 0
+end
+
+basis "ao basis" SPHERICAL
+H    S
+      3.42525091             0.15432897       
+      0.62391373             0.53532814       
+      0.16885540             0.44463454        
+Li    S
+     16.1195750              0.15432897       
+      2.9362007              0.53532814       
+      0.7946505              0.44463454       
+Li    SP
+      0.6362897             -0.09996723             0.15591627       
+      0.1478601              0.39951283             0.60768372       
+      0.0480887              0.70011547             0.39195739       
+end
+
+scf
+  print "overlap"
+end
+
+task scf
+------------------------------------------------------------
+                    Basis information
+   H
+  ----
+  1   1S     3.42525091     0.15432897
+             0.62391373     0.53532814
+             0.16885540     0.44463454
+
+
+   Li
+  ----
+  1   1S    16.11957500     0.15432897
+             2.93620070     0.53532814
+             0.79465050     0.44463454
+
+  2   2S     0.63628970    -0.09996723
+             0.14786010     0.39951283
+             0.04808870     0.70011547
+
+  3   2P     0.63628970     0.15591627
+             0.14786010     0.60768372
+             0.04808870     0.39195739
+
+
+Spherical basis set summary:
+*---------*-----------------*--------*------------*
+| Element |   Description   | Shells | Primitives |
+*---------*-----------------*--------*------------*
+|   H     | ao basis        |   1    |     3      |
+|   Li    | ao basis        |   3    |     9      |
+*---------*-----------------*--------*------------*
+
+------------------------------------------------------------
+          ********************************
+          *      Parallel SCF Module     *
+          ********************************
+
+                    SCF Parameters
+                    --------------
+               Wavefunction : RHF
+             Max iterations : 50
+               Density conv : 1e-06
+                Energy conv : 1e-07
+                       DIIS : on
+                    diisbas : 5
+
+Formula:   
+Atoms:     2
+Electrons: 4
+Mol mass:  7.949
+Charge:    0
+Spin mult: 1
+Units:     atomic
+One-electron integrals evaluation algorithm: Obara-Saika
+Two-electron integrals evaluation algorithm: Obara-Saika
+One-electron integrals done in 0.000001 sec
+
+
+    ==============================================
+           Overlap One-Electron AO Integrals 
+    ==============================================
+    1eov   H   0   s     H   0   s      0.99999999
+    1eov   H   0   s     Li  1   s      0.34793046
+    1eov   H   0   s     Li  2   s      0.57644880
+    1eov   H   0   s     Li  3   px    -0.49922266
+    1eov   H   0   s     Li  4   py     0.00000000
+    1eov   H   0   s     Li  5   pz     0.00000000
+    1eov   Li  1   s     Li  1   s      1.00000000
+    1eov   Li  1   s     Li  2   s      0.24113665
+    1eov   Li  1   s     Li  3   px     0.00000000
+    1eov   Li  1   s     Li  4   py     0.00000000
+    1eov   Li  1   s     Li  5   pz     0.00000000
+    1eov   Li  2   s     Li  2   s      1.00000000
+    1eov   Li  2   s     Li  3   px     0.00000000
+    1eov   Li  2   s     Li  4   py     0.00000000
+    1eov   Li  2   s     Li  5   pz     0.00000000
+    1eov   Li  3   px    Li  3   px     1.00000006
+    1eov   Li  3   px    Li  4   py     0.00000000
+    1eov   Li  3   px    Li  5   pz     0.00000000
+    1eov   Li  4   py    Li  4   py     1.00000006
+    1eov   Li  4   py    Li  5   pz     0.00000000
+    1eov   Li  5   pz    Li  5   pz     1.00000006
+Basis orthogonalization algorithm: canonical
+Basis functions elimination threshold: 1e-08
+Overlap matrix lowest eigenvalue = 0.21665917
+AO basis orthogonalization done in 0.000079 sec
+
+Initial guess: extended Huckel theory
+Initial energy = -9.73843756
+Initial guess done in 0.000023 sec
+
+#bfns = 6
+#eris = 231
+
+ iter.       Energy         Delta E       RMS-Dens       DIIS-Err     time
+----------------------------------------------------------------------------
+   1      -7.43459657     0.25354028     0.39915999     0.14784029    0.02
+   2      -7.58393689    -0.14934032     0.04348552     0.01709432    0.03
+   3      -7.58942395    -0.00548706     0.03779352     0.00808894    0.04
+   4      -7.58695963     0.00246431     0.00542955     0.00125973    0.05
+   5      -7.58675355     0.00020608     0.00034175     0.00002358    0.07
+   6      -7.58675266     0.00000089     0.00000332     0.00000113    0.08
+   7      -7.58675264     0.00000002     0.00000016     0.00000001    0.09
+----------------------------------------------------------------------------
+          Total SCF energy =    -7.58675264
+  Nuclear repulsion energy =     2.05030071
+
+
+      Time for:           sec
+---------------------------------
+  Orthogonalization      0.000
+  Initial guess          0.000
+  Density matrix         0.000
+  Fock matrix            0.087
+  Diagonalization        0.000
+---------------------------------
+
+
+         Molecular Orbitals Summary
+  +-----+-----+----------------+----------+
+  | No  | Occ |     Energy     | Symmetry |
+  +-----+-----+----------------+----------+
+  | 1   |  2  |    -2.45767018 |     ?    |
+  | 2   |  2  |    -0.30482380 |     ?    |
+  | 3   |  0  |     0.06564385 |     ?    |
+  | 4   |  0  |     0.14722461 |     ?    |
+  | 5   |  0  |     0.14722461 |     ?    |
+  | 6   |  0  |     0.59310317 |     ?    |
+  +-----+-----+----------------+----------+
+
+        Mulliken population analysis
+        ----------------------------
+
+      Atom     Population     Charge
+      1  H     0.96566805   0.03433195
+      2  Li    3.03433195  -0.03433195
+
+
+        Loewdin population analysis
+        ---------------------------
+
+      Atom     Population     Charge
+      1  H     0.96570442   0.03429558
+      2  Li    3.03429558  -0.03429558
+
+               Multipole moments
+               -----------------
+  D       x            y            z
+     1.94219902  -0.00000000  -0.00000000
+
+  |D| = 1.94219902 a.u. = 4.93657703 Debye
+
+
+Allocated: 34464 bytes
+Freed:     34464 bytes
+Max usage: 7312 bytes
+Total time: 0.09 sec

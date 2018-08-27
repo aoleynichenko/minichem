@@ -3,7 +3,7 @@
 start CO
 #memory 20 kb
 echo
-nproc 4
+#nproc 8
 
 geometry units atomic
   C 0 0 0
@@ -30,7 +30,7 @@ O    SP
 end
 
 scf
-  diis 7
+  diis 6
   maxiter 100
 end
 

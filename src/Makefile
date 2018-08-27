@@ -1,81 +1,43 @@
-# minichem's top-level makefile
-# C++ version of minichem code
-#
-# Alexander Oleynichenko, 2016
-# For questions, alexvoleynichenko@gmail.com
-#
-# Libraries which are needed to be installed on your machine before
-# build minichem:
-#  - Eigen  >= 3.2.10
-#  - Libint >= 2.2.0
-# To properly build minichem, you should set LIBINT_HOME and LIBEIGEN_HEADERS
-# path variables specific for your machine (examples are given).
-# Attention: minichem has been tested only for x86_64 platform!
-
-
-# To evaluate integrals over gaussian atomic basis function
-# minichem uses libint2 library by Edward Valeev and coworkers.
-# LIBINT_HOME contains header files and static libraries lib/libint2.a
-# and lib/libint2.la. You can easily detect LIBINT_HOME directory on
-# your computer, it consists of folders: include, lib, share
-
-LIBINT_HOME=/usr/local/libint/2.2.0-beta1
-
-# Directory with Eigen's headers and source code.
-# On my laptop, there are following folders in $(LIBEIGEN_INCLUDE):
-#    Eigen  signature_of_eigen3_matrix_library  unsupported
-
-LIBEIGEN_INCLUDE=/usr/include/eigen3
+# Minichem top-level makefile
 
 CC=mpicc
-CXX=g++
 FC=mpif90
 CCFLAGS=-Wall
-CXXFLAGS=-std=c++11 -I $(LIBINT_HOME)/include -I $(LIBINT_HOME)/include/libint2 \
-		 -I $(LIBEIGEN_INCLUDE)
-LINKFLAGS=-L $(LIBINT_HOME)/lib -lint2
 SRC=main.c
-OBJS=lib/auxlib.o scf/libscf.o Kernel.o main.o
-TARGET=minichem
-CLEAN=rm -rf *.o *.[lL][oO][gG]
-INCLUDES=
-
-# common variables for all subdirectories
-export CXX
-export CXXFLAGS
+OBJS=util/util.o input/input.o scf/libscf.a main.o
+TARGET=minichem.x
+CLEAN=rm -rf *.o
 
 .PHONY: all clean install uninstall
 
 all: $(TARGET)
 clean:
 	$(CLEAN)
-	rm -f minichem
-	rm -f *.{b,p,zmat,b^-1,movecs,db,cfock,ges,log} # rm nwchem's temp files
-	$(MAKE) -C lib clean
+	$(MAKE) -C util clean
+	$(MAKE) -C input clean
 	$(MAKE) -C scf clean
 install:
-	@mkdir ../bin ../lib
-	@cp $(TARGET) ../bin
-	@mkdir ../lib/basissets
-	@cp basissets/* ../lib/basissets/
-	@echo Congratulations! Now you have minichem on your computer!
-	@echo Set MINICHEM_HOME variable to enable minichem\'s basis set library
-	@echo Proper MINICHEM_HOME = `pwd`/..
+	mkdir ../bin ../lib
+	cp $(TARGET) ../bin
 uninstall:
-	@rm -r ../bin ../lib
+	rm -r ../bin ../lib
 
-$(TARGET): make-lib make-scf Kernel.o main.o
-	echo $(CXXFLAGS)
-	$(CXX) $(CXXFLAGS) -lm -fopenmp -o $(TARGET) $(OBJS) $(LINKFLAGS)
+$(TARGET): make-util make-input make-scf main.o
+	$(CC) $(CCFLAGS) -lm -fopenmp -o $(TARGET) $(OBJS) -llapack -lblas -lcblas -llapacke
+		
+main.o: main.c
+	$(CC) $(CCFLAGS) -c -I util -I input -o main.o main.c
 
-main.o: main.cc
-	$(CXX) $(CXXFLAGS) -c -o main.o main.cc
+make-util:
+	$(MAKE) -C util util.o CC=$(CC)
 
-Kernel.o: Kernel.cc
-	$(CXX) $(CXXFLAGS) -c -o Kernel.o Kernel.cc
-
-make-lib:
-	$(MAKE) -C lib auxlib.o CXX=$(CXX)
+make-input:
+	$(MAKE) -C input input.o CC=$(CC)
 
 make-scf:
-	$(MAKE) -C scf libscf.o CXX=$(CXX)
+	$(MAKE) -C scf libscf.a CC=$(CC)
+
+
+
+
+

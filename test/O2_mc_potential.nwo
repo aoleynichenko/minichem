@@ -1,0 +1,222 @@
+Minichem 0.0
+By Alexander Oleynichenko, 2016
+Build:      1394
+Build date: Mar 12 2016 23:05:52
+Compiler:   gcc 5.2.0
+Date:       Sat Mar 12 23:22:58 2016
+Cores:      1
+Arguments:  ./minichem O2.nw 
+------------------------------------------------------------
+>>> O2.nw
+start O2
+echo
+
+geometry units angstroms
+O          0.00000        0.00000        0.00000
+O          1.20800        0.00000        0.00000
+end
+
+basis "ao basis" SPHERICAL 
+O    S
+    130.7093200              0.15432897       
+     23.8088610              0.53532814       
+      6.4436083              0.44463454       
+O    SP
+      5.0331513             -0.09996723             0.15591627       
+      1.1695961              0.39951283             0.60768372       
+      0.3803890              0.70011547             0.39195739      
+end
+
+scf
+  rhf
+  print "potential"
+  #triplet
+end
+
+task scf
+------------------------------------------------------------
+                    Basis information
+   O
+  ----
+  1   1S   130.70932000     0.15432897
+            23.80886100     0.53532814
+             6.44360830     0.44463454
+
+  2   2S     5.03315130    -0.09996723
+             1.16959610     0.39951283
+             0.38038900     0.70011547
+
+  3   2P     5.03315130     0.15591627
+             1.16959610     0.60768372
+             0.38038900     0.39195739
+
+
+Spherical basis set summary:
+*---------*-----------------*--------*------------*
+| Element |   Description   | Shells | Primitives |
+*---------*-----------------*--------*------------*
+|   O     | ao basis        |   3    |     9      |
+*---------*-----------------*--------*------------*
+
+------------------------------------------------------------
+          ********************************
+          *      Parallel SCF Module     *
+          ********************************
+
+                    SCF Parameters
+                    --------------
+               Wavefunction : RHF
+             Max iterations : 50
+               Density conv : 1e-06
+                Energy conv : 1e-07
+                       DIIS : on
+                    diisbas : 5
+
+Formula:   
+Atoms:     2
+Electrons: 16
+Mol mass:  31.999
+Charge:    0
+Spin mult: 1
+Units:     angstroms
+One-electron integrals evaluation algorithm: Obara-Saika
+Two-electron integrals evaluation algorithm: Obara-Saika
+One-electron integrals done in 0.000001 sec
+
+
+    ===============================================
+      Nuclear-Attraction One-Electron AO Integrals 
+    ===============================================
+    1epe   O   0   s     O   0   s    -64.12294106
+    1epe   O   0   s     O   1   s     -8.01260504
+    1epe   O   0   s     O   2   px    -0.07797460
+    1epe   O   0   s     O   3   py     0.00000000
+    1epe   O   0   s     O   4   pz     0.00000000
+    1epe   O   0   s     O   5   s     -0.00000014
+    1epe   O   0   s     O   6   s     -0.78772571
+    1epe   O   0   s     O   7   px     1.33421093
+    1epe   O   0   s     O   8   py     0.00000000
+    1epe   O   0   s     O   9   pz     0.00000000
+    1epe   O   1   s     O   1   s    -12.54795566
+    1epe   O   1   s     O   2   px    -0.96762305
+    1epe   O   1   s     O   3   py     0.00000000
+    1epe   O   1   s     O   4   pz     0.00000000
+    1epe   O   1   s     O   5   s     -0.78772571
+    1epe   O   1   s     O   6   s     -3.47791927
+    1epe   O   1   s     O   7   px     4.08086514
+    1epe   O   1   s     O   8   py     0.00000000
+    1epe   O   1   s     O   9   pz     0.00000000
+    1epe   O   2   px    O   2   px   -12.85011333
+    1epe   O   2   px    O   3   py     0.00000000
+    1epe   O   2   px    O   4   pz     0.00000000
+    1epe   O   2   px    O   5   s     -1.33421093
+    1epe   O   2   px    O   6   s     -4.08086514
+    1epe   O   2   px    O   7   px     4.05669831
+    1epe   O   2   px    O   8   py     0.00000000
+    1epe   O   2   px    O   9   pz     0.00000000
+    1epe   O   3   py    O   3   py   -12.28476064
+    1epe   O   3   py    O   4   pz     0.00000000
+    1epe   O   3   py    O   5   s      0.00000000
+    1epe   O   3   py    O   6   s      0.00000000
+    1epe   O   3   py    O   7   px     0.00000000
+    1epe   O   3   py    O   8   py    -1.58726746
+    1epe   O   3   py    O   9   pz     0.00000000
+    1epe   O   4   pz    O   4   pz   -12.28476064
+    1epe   O   4   pz    O   5   s      0.00000000
+    1epe   O   4   pz    O   6   s      0.00000000
+    1epe   O   4   pz    O   7   px     0.00000000
+    1epe   O   4   pz    O   8   py     0.00000000
+    1epe   O   4   pz    O   9   pz    -1.58726746
+    1epe   O   5   s     O   5   s    -64.12294106
+    1epe   O   5   s     O   6   s     -8.01260504
+    1epe   O   5   s     O   7   px     0.07797460
+    1epe   O   5   s     O   8   py     0.00000000
+    1epe   O   5   s     O   9   pz     0.00000000
+    1epe   O   6   s     O   6   s    -12.54795566
+    1epe   O   6   s     O   7   px     0.96762305
+    1epe   O   6   s     O   8   py     0.00000000
+    1epe   O   6   s     O   9   pz     0.00000000
+    1epe   O   7   px    O   7   px   -12.85011333
+    1epe   O   7   px    O   8   py     0.00000000
+    1epe   O   7   px    O   9   pz     0.00000000
+    1epe   O   8   py    O   8   py   -12.28476064
+    1epe   O   8   py    O   9   pz     0.00000000
+    1epe   O   9   pz    O   9   pz   -12.28476064
+Basis orthogonalization algorithm: canonical
+Basis functions elimination threshold: 1e-08
+Overlap matrix lowest eigenvalue = 0.35929863
+AO basis orthogonalization done in 0.000086 sec
+
+Initial guess: extended Huckel theory
+Initial energy = -175.10171182
+Initial guess done in 0.000029 sec
+
+#bfns = 10
+#eris = 1540
+
+ iter.       Energy         Delta E       RMS-Dens       DIIS-Err     time
+----------------------------------------------------------------------------
+   1    -145.85406735     1.21176374     1.91210432     1.01281330    0.14
+   2    -147.72795208    -1.87388473     0.33974193     0.13092025    0.28
+   3    -147.56324541     0.16470667     0.09665964     0.02770795    0.42
+   4    -147.55058788     0.01265753     0.00248512     0.00067942    0.56
+   5    -147.55113245    -0.00054456     0.00006296     0.00001957    0.70
+   6    -147.55112734     0.00000511     0.00000055     0.00000017    0.84
+----------------------------------------------------------------------------
+          Total SCF energy =  -147.55112734
+  Nuclear repulsion energy =    28.03588074
+
+
+      Time for:           sec
+---------------------------------
+  Orthogonalization      0.000
+  Initial guess          0.000
+  Density matrix         0.000
+  Fock matrix            0.842
+  Diagonalization        0.000
+---------------------------------
+
+
+         Molecular Orbitals Summary
+  +-----+-----+----------------+----------+
+  | No  | Occ |     Energy     | Symmetry |
+  +-----+-----+----------------+----------+
+  | 1   |  2  |   -20.42541637 |     ?    |
+  | 2   |  2  |   -20.42480522 |     ?    |
+  | 3   |  2  |    -1.55449036 |     ?    |
+  | 4   |  2  |    -0.99277112 |     ?    |
+  | 5   |  2  |    -0.64228300 |     ?    |
+  | 6   |  2  |    -0.58223662 |     ?    |
+  | 7   |  2  |    -0.51883450 |     ?    |
+  | 8   |  2  |    -0.33053796 |     ?    |
+  | 9   |  0  |     0.18862575 |     ?    |
+  | 10  |  0  |     0.73368483 |     ?    |
+  +-----+-----+----------------+----------+
+
+        Mulliken population analysis
+        ----------------------------
+
+      Atom     Population     Charge
+      1  O     8.00000000   0.00000000
+      2  O     8.00000000  -0.00000000
+
+
+        Loewdin population analysis
+        ---------------------------
+
+      Atom     Population     Charge
+      1  O     8.00000000   0.00000000
+      2  O     8.00000000  -0.00000000
+
+               Multipole moments
+               -----------------
+  D       x            y            z
+    -0.00000000  -0.00000000  -0.00000000
+
+  |D| = 0.00000000 a.u. = 0.00000000 Debye
+
+
+Allocated: 65640 bytes
+Freed:     65640 bytes
+Max usage: 18160 bytes
+Total time: 0.84 sec
