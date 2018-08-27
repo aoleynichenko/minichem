@@ -1,6 +1,9 @@
 # object files
 *.o
 
+# static libraries
+*.a
+
 # executables
 bin/*
 *.x

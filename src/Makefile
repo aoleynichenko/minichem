@@ -17,7 +17,7 @@ clean:
 	$(MAKE) -C input clean
 	$(MAKE) -C scf clean
 install:
-	mkdir ../bin ../lib
+	mkdir -p ../bin ../lib
 	cp $(TARGET) ../bin
 uninstall:
 	rm -r ../bin ../lib
