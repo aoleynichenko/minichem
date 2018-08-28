@@ -29,7 +29,7 @@
 #include <string.h>
 
 #include "lexer.h"
-#include "../util/util.h"
+#include "util.h"
 
 #define ID_MAX 128
 

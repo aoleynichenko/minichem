@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../input/chem.h"
-#include "../input/basis.h"
+#include "chem.h"
+#include "basis.h"
 
 void scf_energy(struct cart_mol *);
 void scalapack();

@@ -5,13 +5,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../input/basis.h"
-#include "../input/input.h"
+#include "basis.h"
+#include "input.h"
 #include "ints.h"
 #include "lapacke.h"
 #include "molden.h"
 #include "scf.h"
-#include "../util/util.h"
+#include "util.h"
 
 /* Prototypes of locally used functions */
 void   rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M);

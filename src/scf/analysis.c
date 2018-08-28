@@ -6,9 +6,9 @@
 
 #include "scf.h"
 #include "ints.h"
-#include "../util/util.h"
-#include "../input/chem.h"
-#include "../input/basis.h"
+#include "util.h"
+#include "chem.h"
+#include "basis.h"
 
 int double_eq(double a, double b)
 {

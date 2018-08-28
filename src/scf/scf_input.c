@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../input/lexer.h"
-#include "../util/util.h"
-#include "../input/input.h"
+#include "lexer.h"
+#include "util.h"
+#include "input.h"
 #include "scf.h"
 
 void scf_print_opts(int doprint);

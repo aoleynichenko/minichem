@@ -5,13 +5,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../input/basis.h"
-#include "../input/input.h"
+#include "basis.h"
+#include "input.h"
 #include "ints.h"
 #include "lapacke.h"
 #include "molden.h"
 #include "scf.h"
-#include "../util/util.h"
+#include "util.h"
 
 void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M);
 void uhf_guess(double *Fa, double *Fb, double *H, double *Pa, double *Pb,

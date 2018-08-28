@@ -21,16 +21,20 @@ Possibilities to be implemented in the future:
  - Molecular symmetry;
  - I want to try to implement also four-index transformation and MP2
 
-How to compile: <br>
- $ cd src <br>
- $ make <br>
- $ make install <br>
-To compile minichem, you need the LAPACK library installed on your machine and any C++ compiler (I use g++ on my laptop).
-For more details about installation of external libraries, see src/Makefile.
+Required tools:
+ - C compilers (GNU or Intel)
+ - CMake and make
 
-How to uninstall: <br>
- $ cd src <br>
- $ make uninstall <br>
+Required libraries:
+ - libc
+ - MPI
+ - BLAS/LAPACK and CBLAS/LAPACKE (C wrappers for their routines)
+ - OpenMP (optional)
+
+How to compile: <br>
+ $ mkdir build && cd build <br>
+ $ cmake .. <br>
+ $ make [-jN] <br>
 
 For suggestions and questions, alexvoleynichenko@gmail.com, I look forward to any comments!
 

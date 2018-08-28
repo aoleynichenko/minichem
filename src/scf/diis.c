@@ -14,7 +14,7 @@
 
 #include "lapacke.h"
 #include "scf.h"
-#include "../util/util.h"
+#include "util.h"
 
 DIISList_t *newDIISList(double *errm, double *fock, int dim)
 {

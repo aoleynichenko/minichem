@@ -2,10 +2,10 @@
 #include <stdlib.h>
 
 #include "molden.h"
-#include "../input/input.h"
-#include "../input/chem.h"
-#include "../input/basis.h"
-#include "../util/util.h"
+#include "input.h"
+#include "chem.h"
+#include "basis.h"
+#include "util.h"
 
 void vectors_molden(struct cart_mol *mol, double *mo, double *en, int *occup, double n, char *name)
 {

@@ -23,8 +23,8 @@
 
 #pragma once
 
-#include "../input/basis.h"
-#include "../input/chem.h"
+#include "basis.h"
+#include "chem.h"
 
 double boys(int n, double x);
 

@@ -2,6 +2,10 @@
 
 #include "ints.h"
 
+#ifndef M_PI
+  #define M_PI 3.14159265358979323846
+#endif
+
 /* Very naive implementation of the Boys function Fn(x) */
 double boys(int n, double x)
 {

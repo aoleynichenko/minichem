@@ -6,9 +6,9 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-#include "../input/input.h"
-#include "../input/basis.h"
-#include "../util/util.h"
+#include "input.h"
+#include "basis.h"
+#include "util.h"
 #include "lapacke.h"
 
 #include <omp.h>

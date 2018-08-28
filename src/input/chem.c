@@ -1,6 +1,6 @@
 #include "chem.h"
 #include "input.h"
-#include "../util/util.h"
+#include "util.h"
 
 #include <ctype.h>
 #include <stdio.h>

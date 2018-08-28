@@ -15,8 +15,8 @@
 #include "chem.h"
 #include "input.h"
 #include "lexer.h"
-#include "../scf/scf.h"
-#include "../util/util.h"
+#include "scf.h"
+#include "util.h"
 
 static int rank;
 

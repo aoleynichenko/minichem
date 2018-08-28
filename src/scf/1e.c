@@ -6,10 +6,13 @@
  */
 
 #include "ints.h"
-#include "../input/basis.h"
-#include "../util/util.h"
+#include "basis.h"
+#include "util.h"
 
 #include <math.h>
+#ifndef M_PI
+  #define M_PI 3.14159265358979323846
+#endif
 
 /* Some help functions */
 double dist(double *A, double *B)

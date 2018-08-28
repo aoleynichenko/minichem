@@ -4,7 +4,9 @@
 # static libraries
 *.a
 
+# cmake directories & executables
+build/*
+
 # executables
-bin/*
 *.x
 
