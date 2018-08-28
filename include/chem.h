@@ -1,4 +1,12 @@
-#pragma once
+/***********************************************************************
+ * chem.h
+ * ======
+ * 
+ * 2016-2018 Alexander Oleynichenko
+ **********************************************************************/
+
+#ifndef CHEM_H_INCLUDED
+#define CHEM_H_INCLUDED
 
 #include "basis.h"
 
@@ -30,3 +38,6 @@ struct elem_info *searchByZ(int z);
 void append_atom(struct cart_mol *m, int Z, double x, double y, double z);
 int nelec(struct cart_mol *mol);
 int nalphabeta(struct cart_mol *mol, int *Nalpha, int *Nbeta);
+
+#endif /* CHEM_H_INCLUDED */
+

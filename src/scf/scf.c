@@ -16,8 +16,7 @@
 #include <cblas.h>
 
 #include "scf.h"
-#include "ints.h"
-#include "molden.h"
+#include "aoints.h"
 
 struct shell {
 	int size;

@@ -1,16 +1,20 @@
 /* Minichem - simple quantum chemistry program.
  * 
  * A. Oleynichenko
- * 
+ * 2016 - 2018
  */
 
 #include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
-#include <util.h>
-#include <input.h>
+#include "util.h"
+#include "input.h"
+
+void print_usage();
+void print_header();
 
 int main(int argc, char **argv)
 {
@@ -40,7 +44,7 @@ int main(int argc, char **argv)
 				!strcmp(*argvp, "--h") ||
 				!strcmp(*argvp, "-help") ||
 				!strcmp(*argvp, "-?")) {
-				help();
+				print_usage();
 				MPI_Finalize();
 				return 0;
 			}
@@ -100,6 +104,48 @@ int main(int argc, char **argv)
 }
 
 
+void print_usage()
+{
+	printf("Minichem 1.0\n");
+	printf("Usage: [mpirun -np N] minichem.x [options] <input-files>\n");
+	printf("where options include:\n");
+	printf("    -h              print this help message\n");
+	printf("    -v              print version and quit\n");
+	printf("    -o <file-name>  specify output file\n");
+	printf("    -noecho         do not print input files\n");
+	printf("for questions, alexvoleynichenko@gmail.com\n");
+	printf("\n");
+}
+
+
+/***********************************************************************
+ * print_header
+ * 
+ * Print version, compiler & platform info, settings for the parallel
+ * execution.
+ **********************************************************************/
+void print_header()
+{
+	time_t t = time(0);
+	int size;
+	
+	MPI_Comm_size(MPI_COMM_WORLD, &size);
+	
+	printf("Minichem 1.0\n");
+	printf("By Alexander Oleynichenko, 2018\n");
+	printf("Build date:    %s %s\n", __DATE__, __TIME__);
+	
+	#if defined __ICC
+	printf("Compiler:      Intel C Compiler %d\n", __ICC);
+	#elif defined __GNUC__
+	printf("Compiler:      gcc %d.%d.%d\n", __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__);
+	#else
+	printf("Compiler:      undetected\n");
+	#endif
+	
+	printf("Date:          %s", asctime(localtime(&t)));
+	printf("# MPI threads: %d\n", size);
+}
 
 
 

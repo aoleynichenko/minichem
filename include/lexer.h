@@ -1,4 +1,12 @@
-#pragma once
+/***********************************************************************
+ * lexer.h
+ * =======
+ * 
+ * 2016-2018 Alexander Oleynichenko
+ **********************************************************************/
+
+#ifndef LEXER_H_INCLUDED
+#define LEXER_H_INCLUDED
 
 #include <limits.h>
 #include <stdio.h>
@@ -64,3 +72,6 @@ void lexerSetWordChar(int ch);
 void print_tokens();
 void match(int type);
 void setEOLSignificant(int issign);
+
+#endif /* LEXER_H_INCLUDED */
+

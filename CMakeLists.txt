@@ -23,10 +23,11 @@ include_directories(include)
 add_subdirectory(src/input)
 add_subdirectory(src/util)
 add_subdirectory(src/scf)
+add_subdirectory(src/visual)
 
 add_executable(minichem.x src/main.c)
 
-target_link_libraries(minichem.x scf input util)
+target_link_libraries(minichem.x scf input util visual)
 target_link_libraries(minichem.x m ${MPI_C_LIBRARIES})
 target_link_libraries(minichem.x m lapack lapacke cblas)
 

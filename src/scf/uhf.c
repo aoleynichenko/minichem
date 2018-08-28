@@ -7,9 +7,8 @@
 
 #include "basis.h"
 #include "input.h"
-#include "ints.h"
-#include "lapacke.h"
-#include "molden.h"
+#include "aoints.h"
+#include "visual.h"
 #include "scf.h"
 #include "util.h"
 

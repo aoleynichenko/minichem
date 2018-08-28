@@ -1,10 +1,11 @@
 /***********************************************************************
- * ints.h
+ * aoints.h
+ * ========
  * 
  * Interface to minichem's molecular integrals evaluation module.
  * 
  * This module consists of:
- *  - ints.h      this header file;
+ *  - aoints.h    this header file;
  *  - boys.c      provides implementation of the Boys function;
  *  - 1e.c        functions for normalization of primitive Gaussians,
  *                functions for evaluation of overlap, kinetic and
@@ -18,10 +19,11 @@
  *  T.Helgaker, P. Jorgensen, J. Olsen, "Molecular Electronic-Structure
  *  Theory".
  * 
- * (c) Alexander Oleynichenko, 2016
- ***********************************************************************/
+ * 2016-2018 Alexander Oleynichenko
+ **********************************************************************/
 
-#pragma once
+#ifndef AOINTS_H_INCLUDED
+#define AOINTS_H_INCLUDED
 
 #include "basis.h"
 #include "chem.h"
@@ -62,7 +64,7 @@ double aoint_eri(struct basis_function *fi,
 void print_ints(struct basis_function *funcs, int N);
 
 
-
+#endif /* AOINTS_H_INCLUDED */
 
 
 

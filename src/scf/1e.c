@@ -5,7 +5,7 @@
  *
  */
 
-#include "ints.h"
+#include "aoints.h"
 #include "basis.h"
 #include "util.h"
 

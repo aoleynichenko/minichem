@@ -1,7 +1,7 @@
 #include <mpi.h>
 #include <stdio.h>
 
-#include "ints.h"
+#include "aoints.h"
 #include "scf.h"
 
 struct basis_function *basis_funcs;

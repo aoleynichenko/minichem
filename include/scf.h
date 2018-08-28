@@ -1,60 +1,18 @@
-#pragma once
+/***********************************************************************
+ * scf.h
+ * =====
+ * 
+ * 2016-2018 Alexander Oleynichenko
+ **********************************************************************/
+
+#ifndef SCF_H_INCLUDED
+#define SCF_H_INCLUDED
 
 #include "chem.h"
 #include "basis.h"
 
 void scf_energy(struct cart_mol *);
-void scalapack();
 
-extern void   pdlawrite_( char **filenam, int *m, int *n, double *A, int *ia, int *ja, int *descA, int *irwrit, int *icwrit, double *work);
-extern void   pdelset_( double *A, int *ia, int *ja, int *desca, double *alpha);
-extern double pdlamch_( int *ictxt, char *cmach);
-extern int    indxg2p_( int *indxglob, int *nb, int *iproc, int *isrcproc, int *nprocs);
-extern int    indxg2l_( int *indxglob, int *nb, int *iproc, int *isrcproc, int *nprocs);
-extern int    numroc_( int *n, int *nb, int *iproc, int *isrcproc, int *nprocs);
-extern void   descinit_( int *desc, int *m, int *n, int *mb, int *nb, int *irsrc, int *icsrc,
-                                int *ictxt, int *lld, int *info);
-extern void   pdlaset_( char *uplo, int *m, int *n, double *alpha, double *beta, double *A, int *ia, int *ja, int *descA );
-extern double pdlange_( char *norm, int *m, int *n, double *A, int *ia, int *ja, int *desca, double *work);
-extern void   pdlacpy_( char *uplo, int *m, int *n, double *a, int *ia, int *ja, int *desca,
-                                double *b, int *ib, int *jb, int *descb);
-extern void   pdgesv_( int *n, int *nrhs, double *A, int *ia, int *ja, int *desca, int* ipiv,
-                                double *B, int *ib, int *jb, int *descb, int *info);
-extern void   pdgesvd_( char *jobu, char *jobvt, int *m, int *n, double *a, int *ia, int *ja, int *desca,
-                                double *s, double *u, int *iu, int *ju, int *descu,
-                                double *vt, int *ivt, int *jvt, int *descvt, double *work, int *lwork, int *info);
-extern void   pdgemm_( char *TRANSA, char *TRANSB, int * M, int * N, int * K, double * ALPHA,
-                                double * A, int * IA, int * JA, int * DESCA, double * B, int * IB, int * JB, int * DESCB,
-                                double * BETA, double * C, int * IC, int * JC, int * DESCC );
-extern int    indxg2p_( int *indxglob, int *nb, int *iproc, int *isrcproc, int *nprocs);
-extern void pdsyev_( char *jobz, char *uplo, int *n,
-                double *a, int *ia, int *ja, int *desca, double *w,
-                double *z, int *iz, int *jz, int *descz,
-                double *work, int *lwork, int *info );
-
-#ifdef F77_WITH_NO_UNDERSCORE
-#define   numroc_      numroc
-#define   descinit_    descinit
-#define   pdlamch_     pdlamch
-#define   pdlange_     pdlange
-#define   pdlacpy_     pdlacpy
-#define   pdgesv_      pdgesv
-#define   pdgemm_      pdgemm
-#define   indxg2p_     indxg2p
-#endif
-
-extern void   Cblacs_pinfo( int* mypnum, int* nprocs);
-extern void   Cblacs_get( int context, int request, int* value);
-extern int    Cblacs_gridinit( int* context, char * order, int np_row, int np_col);
-extern void   Cblacs_gridinfo( int context, int*  np_row, int* np_col, int*  my_row, int*  my_col);
-extern void   Cblacs_gridexit( int context);
-extern void   Cblacs_exit( int error_code);
-
-extern void   dscal_( int *n, double *da, double *dx, int *incx);
-extern void   dsyev_( char* jobz, char* uplo, int* n, double* a, int* lda,
-                      double* w, double* work, int* lwork, int* info );
-extern void dgesv_( int* n, int* nrhs, double* a, int* lda, int* ipiv,
-                double* b, int* ldb, int* info );
 
 struct scf_opt {
 	int wavefuntype;
@@ -135,7 +93,7 @@ DIISList_t *newDIISList(double *errm, double *fock, int dim);
 void removeDIISList(DIISList_t *prev);
 double maxerr(double *errmatrix, int n);
 
-
+#endif /* SCF_H_INCLUDED */
 
 
 

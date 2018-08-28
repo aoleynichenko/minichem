@@ -1,9 +1,14 @@
 /***********************************************************************
- * Kernel of minichem
+ * inp.c
+ * =====
  * 
+ * Kernel of minichem.
+ * minichem works as a simple interpreter, it collects data from the
+ * input file and performs calculations when it finds the keyword 'task'
  * 
- ***********************************************************************
- */
+ * 2016-2018 Alexander Oleynichenko
+ * 
+ **********************************************************************/
 
 #include <mpi.h>
 #include <stdio.h>
@@ -18,13 +23,17 @@
 #include "scf.h"
 #include "util.h"
 
+
+// MPI rank
 static int rank;
 
+/* all user's settings (see input.h) */
 calc_information calc_info;
 
 /* from lexer.c */
 extern char *source; /* input file */
 extern int fsize;
+
 
 void directive_start();
 void directive_memory();
@@ -37,6 +46,15 @@ void directive_out();
 void calc_info_defaults();
 void directive_nproc();
 
+
+/***********************************************************************
+ * compute
+ * 
+ * This subroutine perfoms parsing and 'execution' of the input file
+ * 'filename'.
+ * 
+ * TODO: refactoring -- maybe rename it?
+ **********************************************************************/
 void compute(char *filename)
 {
 	struct cart_mol *mol;
@@ -122,6 +140,8 @@ void compute(char *filename)
 	MPI_Barrier(MPI_COMM_WORLD);
 }
 
+
+// start -- name of the job/task/calculation...
 void directive_start()
 {
 	nextToken();
@@ -130,6 +150,14 @@ void directive_start()
 	strcpy(calc_info.name, sval);
 }
 
+
+/***********************************************************************
+ * directive_out
+ * 
+ * Flushes data for another programs (xyz, MOs, density, etc...)
+ * Supported output formats:
+ *  - Molden (vectors -- MO visualization)
+ **********************************************************************/
 void directive_out()
 {
 	nextToken();
@@ -148,6 +176,12 @@ void directive_out()
 	}
 }
 
+
+/***********************************************************************
+ * directive_nproc
+ * 
+ * Set number of openmp threads.
+ **********************************************************************/
 void directive_nproc()
 {
 	int nproc;
@@ -176,6 +210,12 @@ void directive_nproc()
 	printf("                *****************************\n\n");
 }
 
+
+/***********************************************************************
+ * directive_memory
+ * 
+ * Set max allowed memory (RAM) usage.
+ **********************************************************************/
 void directive_memory()
 {
 	int memsize;
@@ -202,17 +242,38 @@ void directive_memory()
 	setmemavail(calc_info.memory);
 }
 
+
+/***********************************************************************
+ * directive_echo
+ * 
+ * Echo input file or not?
+ **********************************************************************/
 void directive_echo()
 {
 	calc_info.echo = 1;
 }
 
+
+/***********************************************************************
+ * directive_charge
+ * 
+ * Set molecular (total) charge.
+ * 
+ * TODO: just for compatibility of input files with nwchem. To be
+ * removed or it is a useful feature?
+ **********************************************************************/
 void directive_charge()
 {
 	match(TT_NUMBER);
 	calc_info.molecule.charge = nval;
 }
 
+
+/***********************************************************************
+ * directive_geometry
+ * 
+ * Set molecular geometry (xyz).
+ **********************************************************************/
 void directive_geometry()
 {
 	int i;
@@ -231,6 +292,7 @@ void directive_geometry()
 				else
 					errquit("in geometry input: expected 'angstroms' or 'atomic' after 'units' keyword");
 			}
+			// TODO: enable this code?
 			/*else if (!strcmp(sval, "charge")) {
 				match(TT_NUMBER);
 				calc_info.molecule.charge = nval;
@@ -267,13 +329,19 @@ void directive_geometry()
 			errquit(buf);
 		}
 	}
+	// TODO: enable this code?
 	/*if (rank == 0) {
 		mol_summary(&calc_info.molecule);
 		line_separator();
 	}*/
 }
 
-/* run calculation */
+
+/***********************************************************************
+ * directive_task
+ * 
+ * Starts quantum chemistry calculation.
+ **********************************************************************/
 void directive_task()
 {
 	nextToken();
@@ -285,6 +353,12 @@ void directive_task()
 	scf_energy(&calc_info.molecule);
 }
 
+
+/***********************************************************************
+ * calc_info_defaults
+ * 
+ * Default settings for the minichem.
+ **********************************************************************/
 void calc_info_defaults()
 {
 	calc_info.echo = 0;

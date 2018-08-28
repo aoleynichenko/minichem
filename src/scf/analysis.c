@@ -4,8 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <lapacke.h>
+
 #include "scf.h"
-#include "ints.h"
+#include "aoints.h"
 #include "util.h"
 #include "chem.h"
 #include "basis.h"

@@ -1,3 +1,10 @@
+/***********************************************************************
+ * basis.c
+ * =======
+ * 
+ * Parses the 'basis' section of an input file.
+ **********************************************************************/
+
 #include "basis.h"
 #include "chem.h"
 #include "lexer.h"
@@ -15,8 +22,15 @@ H    S
 end
 */
 
+// TODO: remove ths function
 void determine_principal_numbers(struct basis_set *);
 
+
+/***********************************************************************
+ * directive_basis
+ * 
+ * Parses the 'basis' section of an input file.
+ **********************************************************************/
 void directive_basis()
 {
 	extern struct elem_info ptable[];   // see ./chem.c
@@ -146,6 +160,8 @@ void directive_basis()
 	}
 }
 
+
+// TODO: delete this function (together with the implementation of the EHT)
 // estimates principal quantum number n for every GTO in set 'bs'
 // работает кое-как, но пока и ладно, сойдет
 void determine_principal_numbers(struct basis_set *bs)
@@ -192,12 +208,19 @@ void determine_principal_numbers(struct basis_set *bs)
 	}
 }
 
+
+/***********************************************************************
+ * print_basis_summary
+ * 
+ * Print information about the current basis set
+ * (exp-coef tables and summary).
+ **********************************************************************/
 void print_basis_summary()
 {
 	int i, j, type = -1;
 	extern struct elem_info ptable[];
 	struct elem_info *p = &ptable[0];
-	static char angmom[][3] = {"S", "P", "D"};
+	static char *angmom[] = {"S", "P", "D", "F", "G", "H", "I"};
 	
 	printf("                    Basis information\n");
 	for (; *p->sym; p++) {

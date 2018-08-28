@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "molden.h"
+#include "visual.h"
 #include "input.h"
 #include "chem.h"
 #include "basis.h"

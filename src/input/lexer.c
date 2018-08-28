@@ -1,4 +1,13 @@
-/*  Input file can consist of:
+/***********************************************************************
+ * lexer.c
+ * =======
+ * 
+ * Tokenizer for reading formatted input files.
+ * 
+ * 2016-2018 Alexander Oleynichenko
+ * 
+ ***********************************************************************
+ *   Input file can consist of:
  *    - keywords: start, echo, geometry, scf
  *    - identifiers (mini-keywords): conv, symmetry, nodisk, C, H
  *    - string literals: "final vectors analysis"
@@ -22,7 +31,7 @@
  *    noprint "final vectors analysis"
  *  end
  *  task scf energy
- */
+ **********************************************************************/
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

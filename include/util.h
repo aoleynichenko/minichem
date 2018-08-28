@@ -1,16 +1,23 @@
-#pragma once
+/***********************************************************************
+ * util.h
+ * ======
+ * 
+ * 2016-2018 Alexander Oleynichenko
+ **********************************************************************/
+
+#ifndef UTIL_H_INCLUDED
+#define UTIL_H_INCLUDED
 
 #include <stddef.h>
 
-int buildno();
 void echo(char *filename);
 void errquit(char *errmessage);
-void help();
 void line_separator();
-void print_header();
 
 /* memory management */
 void setmemavail(int bytes);
 void *qalloc(size_t bytes);
 void qfree(void *p, size_t n);
 void memstats();
+
+#endif /* UTIL_H_INCLUDED */
