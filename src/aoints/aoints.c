@@ -7,6 +7,7 @@
  * 2018 Alexander Oleynichenko
  **********************************************************************/
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -19,6 +20,7 @@
 
 // locally used routines
 void compute_1e_aoints(BasisFunc_t *bfns, int nbas, char *filename);
+void compute_2e_aoints(BasisFunc_t *bfns, int nbas, char *filename);
 
 
 void compute_aoints()
@@ -37,6 +39,7 @@ void compute_aoints()
 	printf("  # shells = %d\n", nshells);
 	
 	compute_1e_aoints(bfns, nbfns, "AOINTS1");
+	compute_2e_aoints(bfns, nbfns, "AOINTS2");
 	
 	printf("\n");
 	line_separator();
@@ -105,4 +108,70 @@ void compute_1e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
 	printf("done\n");
 }
 
+
+/***********************************************************************
+ * compute_2e_aoints
+ * 
+ * Computes all permutationally-unique two-electron integrals and write
+ * them to the binary file 'filename'.
+ * Only non-zero integrals will are stored.
+ * Format: <integral> <i1> <i2> <i3> <i4> (for each integral)
+ **********************************************************************/
+void compute_2e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
+{
+	int m, n, p, q;
+	int M = nbas;
+	double V_mnpq;
+	int i;
+	int fd;
+	typedef struct {
+		double val;
+		int i1, i2, i3, i4;
+	} integral_t;
+	const int BATCH_SIZE = 4096;
+	integral_t buf[BATCH_SIZE];
+	integral_t tmp;
+	int n_uniq = 0, n_nonzero = 0;
+	
+	printf("begin 2e integrals...\n");
+	printf("  sizeof buf (bytes) = %d\n", sizeof(buf));
+	printf("  sizeof integral (bytes) = %d\n", sizeof(integral_t));
+	fd = fastio_open(filename, "w");
+	
+	i = 0;
+	for (m = 0; m < M; m++)
+	for (n = m; n < M; n++)
+	for (p = m; p < M; p++)
+	for (q = (p == m) ? n : p; q < M; q++) {
+		n_uniq++;
+		V_mnpq = aoint_eri(&bfns[m], &bfns[n], &bfns[p], &bfns[q]);
+		// flush buffer to the disk
+		if (i == BATCH_SIZE) {
+			fastio_write(fd, buf, sizeof(buf));
+			i = 0;
+		}
+		// store integral in the buffer if nonzero
+		if (fabs(V_mnpq) < 1e-14) continue;
+
+		n_nonzero++;
+		tmp.val = V_mnpq;
+		tmp.i1 = m;
+		tmp.i2 = n;
+		tmp.i3 = p;
+		tmp.i4 = q;
+		buf[i] = tmp;
+		i++;
+	}
+	
+	// store remaining integrals
+	if (i > 0) {
+		fastio_write(fd, buf, i*sizeof(integral_t));
+	}
+	
+	printf("  # unique ERIs   = %d\n", n_uniq);
+	printf("  # non-zero ERIs = %d\n", n_nonzero);
+	
+	fastio_close(fd);
+	printf("done\n");
+}
 
