@@ -22,15 +22,16 @@ include_directories(SYSTEM ${MPI_INCLUDE_PATH})   # MPI header files
 
 ########################### Standard = C99 #############################
 
-if(CMAKE_COMPILER_IS_GNUCC)
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic")
-endif()
+#if(CMAKE_COMPILER_IS_GNUCC)
+#  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic")
+#endif()
 
 ############################# Compile it ! #############################
 
 include_directories(include)
 
 add_subdirectory(src/input)
+add_subdirectory(src/sys)
 add_subdirectory(src/util)
 add_subdirectory(src/scf)
 add_subdirectory(src/visual)

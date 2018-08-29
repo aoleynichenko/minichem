@@ -368,7 +368,8 @@ double aoint_potential(struct basis_function *fi, struct basis_function *fj)
 	}
 	else
 		errquit("angular momentum of basis function not equal to 0,1 hasn't implemented yet");
-			
+	
+	
 	for (k = 0; k < fi->f->nprim; k++)
 		for (h = 0; h < fj->f->nprim; h++) {
 			double a = fi->f->exp[k];
@@ -380,6 +381,7 @@ double aoint_potential(struct basis_function *fi, struct basis_function *fj)
 				v += -((double) geom->atoms[nuc].Z) * c * vab;
 			}
 		}
+	
 	return v;
 }
 

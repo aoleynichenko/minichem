@@ -15,17 +15,13 @@
 #include <mpi.h>
 #include <cblas.h>
 
+#include "sys.h"
 #include "scf.h"
 #include "aoints.h"
 
-struct shell {
-	int size;
-	struct basis_function *start;
-};
-
 void print_blacs_grid_info();
 void config_grid(int nprocs, int *nprow, int *npcol);
-void form_atom_centered_bfns(struct cart_mol *molecule, struct basis_function **bfns, struct shell **shs, int *M, int *nshells);
+//void form_atom_centered_bfns(struct cart_mol *molecule, struct basis_function **bfns, struct shell **shs, int *M, int *nshells);
 void print_matrix(char *annot, double *A, int dim);
 
 static int mpi_rank = -1;
@@ -36,9 +32,6 @@ struct scf_opt scf_options;
 
 /* task size - number of basis functions */
 int M;
-
-/* number of shells */
-int nshells;
 
 /* general BLACS variables */
 int ictxt;   /* BLACS context */
@@ -77,10 +70,6 @@ double *C;      /* vectors */
 double *E;		/* energies of orbitals, F's eigenvalues */
 double *OLDP;
 
-/* explicit set of basis functions */
-/* all basis functions are centered on atom at (x,y,z) */
-struct basis_function *bfns;
-struct shell *shells;
 
 struct scf_timing_t scf_timing;
 
@@ -93,6 +82,10 @@ void scf_energy(struct cart_mol *molecule)
 
 	MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
 	MPI_Comm_size(MPI_COMM_WORLD, &mpi_size);
+	
+	// evaluate AO integrals and write them to disk
+	geom = molecule;
+	compute_aoints();
 
 	if (mpi_size != 1)
 		errquit("Sorry! Parallel SCF module hasn't implemented yet. Please, run minichem on one node!");
@@ -115,10 +108,23 @@ void scf_energy(struct cart_mol *molecule)
 	else
 		scf_options.wavefuntype = SCF_UHF;
 	
-	print_scf_options(&scf_options);
+	// print SCF options
+	printf("                    SCF Parameters\n");
+	printf("                    --------------\n");
+	printf("               Wavefunction : %s\n", scf_options.wavefuntype == SCF_RHF ? "RHF" : "UHF");
+	printf("             Max iterations : %d\n", scf_options.maxiter);
+	printf("               Density conv : %g\n", scf_options.conv_dens);
+	printf("                Energy conv : %g\n", scf_options.conv_en);
+	printf("                       DIIS : %s\n", scf_options.diis ? "on" : "off");
+	if (scf_options.diis) {
+		printf("                    diisbas : %d\n", scf_options.diisbas);
+	}
+	printf("\n");
+
 	mol_summary(&calc_info.molecule);
-	geom = molecule;
-	form_atom_centered_bfns(molecule, &bfns, &shells, &M, &nshells);  // create atom-centered basis set
+	
+	//form_atom_centered_bfns(molecule, &bfns, &shells, &M, &nshells);  // create atom-centered basis set
+	M = nbfns;
 	
 	if (scf_options.wavefuntype == SCF_RHF)
 		rhf_loop(geom, bfns, M);
@@ -126,20 +132,6 @@ void scf_energy(struct cart_mol *molecule)
 		uhf_loop(geom, bfns, M);
 }
 
-
-void print_scf_options(struct scf_opt *opt)
-{
-	printf("                    SCF Parameters\n");
-	printf("                    --------------\n");
-	printf("               Wavefunction : %s\n", opt->wavefuntype == SCF_RHF ? "RHF" : "UHF");
-	printf("             Max iterations : %d\n", opt->maxiter);
-	printf("               Density conv : %g\n", opt->conv_dens);
-	printf("                Energy conv : %g\n", opt->conv_en);
-	printf("                       DIIS : %s\n", opt->diis ? "on" : "off");
-	if (opt->diis)
-	printf("                    diisbas : %d\n", opt->diisbas);
-	printf("\n");
-}
 
 // Ортогонализация базиса
 // Непараллельная реализация с использованием LAPACK
@@ -207,28 +199,31 @@ void compute_1e(double *Hcore, double *S, struct basis_function *bfns, int dim)
 {
 	int i, j;
 	double t1;
-	
-	if (mpi_rank == 0) {
-		printf("One-electron integrals evaluation algorithm: Obara-Saika\n");
-		printf("Two-electron integrals evaluation algorithm: Obara-Saika\n");
-	}
+	double *T, *V;
+	int fd;
 	
 	t1 = MPI_Wtime();
+		
+	fd = fastio_open("AOINTS1", "r");
+	fastio_read_int(fd, &dim);
+	T = (double *) malloc(sizeof(double) * dim * dim);
+	V = (double *) malloc(sizeof(double) * dim * dim);
+	fastio_read_doubles(fd, S, dim*dim);
+	fastio_read_doubles(fd, T, dim*dim);
+	fastio_read_doubles(fd, V, dim*dim);	
+	fastio_close(fd);
 	
-	// Overlap, Kinetic & Potential matrices
+	// Hcore = T + V
 	for (i = 0; i < dim; i++)
 		for (j = 0; j < dim; j++) {
-			struct basis_function *fi = &bfns[i];
-			struct basis_function *fj = &bfns[j];
-			S[dim*i+j] = aoint_overlap(fi, fj);
-			Hcore[dim*i+j] = aoint_kinetic(fi, fj) + aoint_potential(fi, fj);
+			Hcore[dim*i+j] = T[dim*i+j] + V[dim*i+j];
 		}
 	
-	MPI_Barrier(MPI_COMM_WORLD);
-	if (mpi_rank == 0)
-		printf("One-electron integrals done in %.6f sec\n", (MPI_Wtime()-t1)/1000);
+	printf("One-electron integrals read in %.6f sec\n", (MPI_Wtime()-t1)/1000);
 	
 	print_ints(bfns, dim);
+	free(T);
+	free(V);
 }
 
 
@@ -290,10 +285,6 @@ void print_matrix(char *annot, double *A, int dim)
 	}
 }
 
-#include "cblas.h"
-int dgemm_(char *transa, char *transb, int *m, int *n, int *k,
-	double *alpha, double *a, int *lda, double *b, int *ldb,
-	double *beta, double *c, int *ldc);
 
 void diag_fock(double *F, double *X, double *C, double *en, int M)
 {
@@ -306,6 +297,12 @@ void diag_fock(double *F, double *X, double *C, double *en, int M)
 	double *Temp = (double *) qalloc(M*M*sizeof(double));
 	double *TempF = (double *) qalloc(M*M*sizeof(double));
 	memcpy(TempF, F, M*M*sizeof(double));
+	
+	/*
+	int dgemm_(char *transa, char *transb, int *m, int *n, int *k,
+		double *alpha, double *a, int *lda, double *b, int *ldb,
+		double *beta, double *c, int *ldc);
+	*/
 	
 	// F = X*F*X', X stored in transposed form
 	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasTrans,   M, M, M, alpha, TempF, M, X, M, beta, Temp, M);
@@ -330,54 +327,6 @@ void diag_fock(double *F, double *X, double *C, double *en, int M)
 	qfree(Temp, M*M*sizeof(double));
 	qfree(TempF, M*M*sizeof(double));
 	scf_timing.time_diag += MPI_Wtime() - t0;
-}
-
-/* Creates atom-centered basis functions from molecular data.
- * Returns: vector of atom-centered functions bfns with length M.
- * This function should be executed by all processes.
- * */
-void form_atom_centered_bfns(struct cart_mol *molecule, struct basis_function **bfns, struct shell **shs, int *M, int *nsh)
-{
-	int i, j;
-	int K = 0;
-	int shn = 0;
-	struct basis_function *p;
-	struct shell *s;
-
-	for (i = 0; i < molecule->size; i++) {
-		struct elem_info *e = searchByZ(molecule->atoms[i].Z);
-		if (e) {
-			for (j = 0; j < e->bas->size; j++) {
-				K += 2*e->bas->cgtfs[j].L + 1;  // пока и так сойдет
-				shn++;
-			}
-		}
-	}
-	p = (struct basis_function *) malloc(K * sizeof(struct basis_function));
-	s = (struct shell *) malloc(shn * sizeof(struct shell));
-	*bfns = p;
-	*shs = s;
-	*M = K;
-	*nsh = shn;
-	for (i = 0; i < molecule->size; i++) {
-		struct elem_info *e = searchByZ(molecule->atoms[i].Z);
-		if (!e)
-			continue;
-		for (j = 0; j < e->bas->size; j++) {  // add atom-centered bfn
-			int L = e->bas->cgtfs[j].L;
-			int m;
-			
-			(*s).size = 2*L+1;
-			(*s).start = p;
-			for (m = 0; m < 2*L+1; m++) {
-				(*p).m = m;
-				(*p).f = &e->bas->cgtfs[j];
-				(*p).a = &molecule->atoms[i];
-				p++;
-			}
-			s++;
-		}
-	}
 }
 
 

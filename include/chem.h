@@ -23,6 +23,7 @@ struct atom {
 	int Z;
 	double r[3];
 };
+typedef struct atom Atom_t;
 
 struct cart_mol {
 	int size;
@@ -31,6 +32,7 @@ struct cart_mol {
 	int mult;
 	struct atom *atoms;
 };
+typedef struct cart_mol       Molecule_t;
 
 void mol_summary(struct cart_mol *molecule);
 struct elem_info *searchBySym(char *s);

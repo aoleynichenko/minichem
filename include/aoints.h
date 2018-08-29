@@ -28,6 +28,8 @@
 #include "basis.h"
 #include "chem.h"
 
+void compute_aoints();
+
 double boys(int n, double x);
 
 double cS00(double *A, double *B, double a, double b);

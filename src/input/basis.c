@@ -3,6 +3,13 @@
  * =======
  * 
  * Parses the 'basis' section of an input file.
+ * Sample:
+ * | basis "H_STO-3G" SPHERICAL
+ * | H    S
+ * |       3.42525091             0.15432897       
+ * |       0.62391373             0.53532814       
+ * |       0.16885540             0.44463454       
+ * | end
  **********************************************************************/
 
 #include "basis.h"
@@ -13,14 +20,23 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* Sample:
-basis "H_STO-3G" SPHERICAL
-H    S
-      3.42525091             0.15432897       
-      0.62391373             0.53532814       
-      0.16885540             0.44463454       
-end
-*/
+/***********************************************************************
+ * 
+ * global variables
+ * 
+ **********************************************************************/
+
+/* task size -- number of basis functions */
+int nbfns;
+
+/* number of shells */
+int nshells;
+
+/* explicit set of basis functions */
+/* all basis functions are centered on atom at (x,y,z) */
+struct basis_function *bfns;
+struct shell *shells;
+
 
 // TODO: remove ths function
 void determine_principal_numbers(struct basis_set *);
@@ -157,6 +173,55 @@ void directive_basis()
 		if (!p->bas)
 			continue;
 		determine_principal_numbers(p->bas);
+	}
+}
+
+
+/* Creates atom-centered basis functions from molecular data.
+ * Returns: vector of atom-centered functions bfns with length M.
+ * This function should be executed by all processes.
+ * */
+void form_atom_centered_bfns(struct cart_mol *molecule, struct basis_function **bfns, struct shell **shs, int *M, int *nsh)
+{
+	int i, j;
+	int K = 0;
+	int shn = 0;
+	struct basis_function *p;
+	struct shell *s;
+
+	for (i = 0; i < molecule->size; i++) {
+		struct elem_info *e = searchByZ(molecule->atoms[i].Z);
+		if (e) {
+			for (j = 0; j < e->bas->size; j++) {
+				K += 2*e->bas->cgtfs[j].L + 1;  // пока и так сойдет
+				shn++;
+			}
+		}
+	}
+	p = (struct basis_function *) malloc(K * sizeof(struct basis_function));
+	s = (struct shell *) malloc(shn * sizeof(struct shell));
+	*bfns = p;
+	*shs = s;
+	*M = K;
+	*nsh = shn;
+	for (i = 0; i < molecule->size; i++) {
+		struct elem_info *e = searchByZ(molecule->atoms[i].Z);
+		if (!e)
+			continue;
+		for (j = 0; j < e->bas->size; j++) {  // add atom-centered bfn
+			int L = e->bas->cgtfs[j].L;
+			int m;
+			
+			(*s).size = 2*L+1;
+			(*s).start = p;
+			for (m = 0; m < 2*L+1; m++) {
+				(*p).m = m;
+				(*p).f = &e->bas->cgtfs[j];
+				(*p).a = &molecule->atoms[i];
+				p++;
+			}
+			s++;
+		}
 	}
 }
 

@@ -42,8 +42,6 @@ struct scf_timing_t {
 extern struct scf_timing_t scf_timing;
 extern struct scf_opt scf_options;
 
-typedef struct basis_function BasisFunc_t;
-typedef struct cart_mol       Molecule_t;
 
 void directive_scf();
 void scf_init();

@@ -3,4 +3,4 @@
 <> module linalg => for LAPACK/BLAS wrappers & some other utilities
 <> store norm factor directly in the basis function? (for each exp)
 <> test system
-
+<> timing routines in util
