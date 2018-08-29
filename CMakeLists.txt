@@ -32,6 +32,7 @@ include_directories(include)
 
 add_subdirectory(src/input)
 add_subdirectory(src/sys)
+add_subdirectory(src/linalg)
 add_subdirectory(src/util)
 add_subdirectory(src/scf)
 add_subdirectory(src/visual)

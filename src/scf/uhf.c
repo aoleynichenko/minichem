@@ -18,7 +18,7 @@ void uhf_guess(double *Fa, double *Fb, double *H, double *Pa, double *Pb,
 			   double *Ea, double *Eb, Molecule_t *molecule,
 			   BasisFunc_t *bfns, int M);
 double uhf_energy(double *Pa, double *Pb, double *Fa, double *Fb, double *H, int M);
-void uhf_makefock(double *Fa, double *Fb, double *H, double *Pa, double *Pb, BasisFunc_t *bfns, int M);
+void uhf_makefock_direct(double *Fa, double *Fb, double *H, double *Pa, double *Pb, BasisFunc_t *bfns, int M);
 void uhf_makedensity(double *P, double *C, int nelec, int dim);
 double exact_S2(int Nalpha, int Nbeta);
 double uhf_S2(int Nalpha, int Nbeta, double *Ca, double *Cb, double *S, int dim);
@@ -94,7 +94,7 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 		memcpy(P0a, Pa, nbytes);  // store actual P
 		memcpy(P0b, Pb, nbytes);
 		
-		uhf_makefock(Fa, Fb, H, Pa, Pb, bfns, M);
+		uhf_makefock_direct(Fa, Fb, H, Pa, Pb, bfns, M);
 		
 		diag_fock(Fa, X, Ca, Ea, M);
 		diag_fock(Fb, X, Cb, Eb, M);
@@ -190,6 +190,13 @@ double uhf_energy(double *Pa, double *Pb, double *Fa, double *Fb, double *H, int
 	return 0.5*E0;
 }
 
+
+/***********************************************************************
+ * uhf_makefock_direct
+ * 
+ * Constructs alpha and beta Fock matrices -- direct algorithm
+ * (2e integrals are evaluated just-in-time).
+ **********************************************************************/
 /*
 F(m, n) += D(p, q) * I(m, n, p, q)
 F(n, m) += D(p, q) * I(n, m, p, q)
@@ -209,7 +216,7 @@ F(q, m) -= 0.5 * D(p, n) * I(q, p, m, n)
 F(n, q) -= 0.5 * D(m, p) * I(n, m, q, p)
 F(q, n) -= 0.5 * D(p, m) * I(q, p, n, m)
 */
-void uhf_makefock(double *Fa, double *Fb, double *H, double *Pa, double *Pb, BasisFunc_t *bfns, int M)
+void uhf_makefock_direct(double *Fa, double *Fb, double *H, double *Pa, double *Pb, BasisFunc_t *bfns, int M)
 {
 	int m, i, j;
 	double t0 = MPI_Wtime();

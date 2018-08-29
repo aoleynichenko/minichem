@@ -6,16 +6,14 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
+#include <omp.h>
+#include <mpi.h>
+
 #include "input.h"
 #include "basis.h"
 #include "util.h"
-#include "lapacke.h"
-
-#include <omp.h>
-#include <mpi.h>
-#include <cblas.h>
-
 #include "sys.h"
+#include "linalg.h"
 #include "scf.h"
 #include "aoints.h"
 
@@ -140,26 +138,16 @@ void orthobasis(double *S, double *X, int dim)
 	int i, j;
 	int mbytes = dim * dim * sizeof(double); // N bytes in dim x dim matrix
 	int vbytes = dim * sizeof(double);       // N bytes in vector
-	int info, lwork, lda = dim;
 	double thresh = 1e-8;
 	double t0 = MPI_Wtime();
-	double *val, *work, wkopt;
+	double *val;
 	
 	printf("Basis orthogonalization algorithm: canonical\n");
 	printf("Basis functions elimination threshold: %g\n", thresh);
 	
 	// Solve eigenproblem for overlap matrix S
-	val = (double *) qalloc(vbytes);
-	memcpy(X, S, mbytes);
-	lwork = -1;
-	dsyev_("V", "U", &dim, X, &lda, val, &wkopt, &lwork, &info);
-	lwork = (int) wkopt;
-    work = (double*) qalloc(lwork * sizeof(double));
-    dsyev_("V", "U", &dim, X, &lda, val, work, &lwork, &info);
-    
-    if(info > 0)   // Check for convergence
-		errquit("LAPACK failed to orthogonalize overlap matrix");
-	qfree(work, lwork * sizeof(double));
+	val = (double *) qalloc(vbytes);  // eigenvalues
+	linalg_dsyev(S, val, X, dim);
 	
 	printf("Overlap matrix lowest eigenvalue = %.8f\n", val[0]);
 	
@@ -272,55 +260,25 @@ double maxerr(double *errmatrix, int n)
 	return max;
 }
 
-void print_matrix(char *annot, double *A, int dim)
-{
-	int i, j;
-	
-	if (annot)
-		printf("%s\n", annot);
-	for (i = 0; i < dim; i++) {
-		for (j = 0; j < dim; j++)
-			printf("%13.8f", A[i*dim+j]);
-		printf("\n");
-	}
-}
-
 
 void diag_fock(double *F, double *X, double *C, double *en, int M)
 {
 	int i, j;
-	int info, lwork, lda = M, ldb = M, ldc = M;
-	double alpha = 1.0;
-	double beta = 0.0;
-	double *work, wkopt, t0 = MPI_Wtime();
+	double t0 = MPI_Wtime();
 	
 	double *Temp = (double *) qalloc(M*M*sizeof(double));
 	double *TempF = (double *) qalloc(M*M*sizeof(double));
 	memcpy(TempF, F, M*M*sizeof(double));
 	
-	/*
-	int dgemm_(char *transa, char *transb, int *m, int *n, int *k,
-		double *alpha, double *a, int *lda, double *b, int *ldb,
-		double *beta, double *c, int *ldc);
-	*/
-	
 	// F = X*F*X', X stored in transposed form
-	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasTrans,   M, M, M, alpha, TempF, M, X, M, beta, Temp, M);
-	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, M, M, M, alpha, X, M, Temp, M, beta, TempF, M);
+	linalg_square_dgemm(TempF, 'N', X,    'T', Temp,  M);
+	linalg_square_dgemm(X,     'N', Temp, 'N', TempF, M);
 	
-	memcpy(C, TempF, sizeof(double) * M * M);
-	lwork = -1;
-	dsyev_("V", "U", &M, C, &lda, en, &wkopt, &lwork, &info);
-	lwork = (int) wkopt;
-    work = (double*) qalloc(lwork * sizeof(double));
-    dsyev_("V", "U", &M, C, &lda, en, work, &lwork, &info);
-    
-    if(info > 0)   // Check for convergence
-		errquit("LAPACK failed to orthogonalize Fock matrix");
-	qfree(work, lwork * sizeof(double));
+	// diagonalize F'
+	linalg_dsyev(TempF, en, C, M);
 	
 	// transform C:  C = X*C
-	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, M, M, M, alpha, C, M, X, M, beta, Temp, M);
+	linalg_square_dgemm(C, 'N', X, 'N', Temp, M);
 	memcpy(C, Temp, M*M*sizeof(double));
 	// Now, transformed vectors are 'lying' in the C matrix rows
 	
@@ -328,6 +286,11 @@ void diag_fock(double *F, double *X, double *C, double *en, int M)
 	qfree(TempF, M*M*sizeof(double));
 	scf_timing.time_diag += MPI_Wtime() - t0;
 }
+
+
+/**********************************************************************/
+/**********************************************************************/
+/**********************************************************************/
 
 
 /* This function prints information about BLACS process grid and

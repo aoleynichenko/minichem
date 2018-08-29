@@ -19,7 +19,7 @@ void   rhf_guess(double *F, double *H, double *P, double *S, double *X,
 			   BasisFunc_t *bfns, int M);
 void   rhf_makedensity(double *P, double *C, int nelec, int M);
 double rhf_energy(double *P, double *F, double *H, int M);
-void   rhf_makefock(double *F, double *H, double *P, BasisFunc_t *bfns, int M);
+void   rhf_makefock_direct(double *F, double *H, double *P, BasisFunc_t *bfns, int M);
 
 void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 {
@@ -81,7 +81,7 @@ void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 			
 		memcpy(P0, P, nbytes);  // store actual P
 		
-		rhf_makefock(F, H, P, bfns, M);
+		rhf_makefock_direct(F, H, P, bfns, M);
 		
 		// in fact, now we have Fi and Di, used to contruct this Fi
 		ErrM = (double *) qalloc(nbytes);
@@ -218,6 +218,13 @@ double rhf_energy(double *P, double *F, double *H, int M)
 	return E0;
 }
 
+
+/***********************************************************************
+ * rhf_makefock_direct
+ * 
+ * Constructs Fock matrix -- direct algorithm (2e integrals are
+ * evaluated just-in-time).
+ **********************************************************************/
 /*
 F(m, n) += D(p, q) * I(m, n, p, q)
 F(n, m) += D(p, q) * I(n, m, p, q)
@@ -237,7 +244,7 @@ F(q, m) -= 0.5 * D(p, n) * I(q, p, m, n)
 F(n, q) -= 0.5 * D(m, p) * I(n, m, q, p)
 F(q, n) -= 0.5 * D(p, m) * I(q, p, n, m)
 */
-void rhf_makefock(double *F, double *H, double *P, BasisFunc_t *bfns, int M)
+void rhf_makefock_direct(double *F, double *H, double *P, BasisFunc_t *bfns, int M)
 {
 	int m, i, j;
 	double t0 = MPI_Wtime();
