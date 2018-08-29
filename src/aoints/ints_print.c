@@ -4,8 +4,8 @@
 #include "aoints.h"
 #include "scf.h"
 
-struct basis_function *basis_funcs;
-int n_of_bfns;
+static struct basis_function *basis_funcs;
+static int n_of_bfns;
 
 /* ignore zero value and elements under diagonal */
 void print_ao1eints(double (*eval_func)(), char *name)

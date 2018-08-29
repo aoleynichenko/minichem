@@ -1,3 +1,12 @@
+/***********************************************************************
+ * molden.c
+ * 
+ * Interface to the MOLDEN visualization program:
+ * http://www.cmbi.ru.nl/molden/
+ * 
+ * 2016-2018 Alexander Oleynichenko
+ **********************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 

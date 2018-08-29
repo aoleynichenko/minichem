@@ -1,6 +1,6 @@
-<> aoints to the separate module
-<> output (like molden) to the separate module
 <> one header in the /include dir = one module
 <> direct scf & aoints-on-disk scf
 <> module linalg => for LAPACK/BLAS wrappers & some other utilities
+<> store norm factor directly in the basis function? (for each exp)
+<> test system
 

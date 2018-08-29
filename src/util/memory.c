@@ -5,7 +5,7 @@
 
 #include "util.h"
 
-int memavail = 200*1024*1014;  /* 200 mb per thread */;
+int memavail = 200*1024*1014;  /* 200 mb per thread */
 int allocated = 0;
 int total_allocated = 0;
 int total_freed = 0;

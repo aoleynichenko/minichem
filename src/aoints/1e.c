@@ -1,15 +1,22 @@
-/*   Molecular integral evaluation module. One-electron integrals.
+/***********************************************************************
+ * 1e.c
+ * ====
  * 
- *   For details, see, for instance,
- *   T. Helgaker, P. Jorgensen, J. Olsen, "Molecular Electronic-Structure Theory".
+ * Molecular integral evaluation module. One-electron integrals.
+ * NOTE: not thread-safe!
+ * 
+ * For details, see, for instance,
+ * T. Helgaker, P. Jorgensen, J. Olsen, "Molecular Electronic-Structure Theory".
  *
- */
+ * 2016-2018 Alexander Oleynichenko
+ **********************************************************************/
+
+#include <math.h>
 
 #include "aoints.h"
 #include "basis.h"
 #include "util.h"
 
-#include <math.h>
 #ifndef M_PI
   #define M_PI 3.14159265358979323846
 #endif
@@ -453,120 +460,5 @@ double aoint_multipole(struct basis_function *fi, struct basis_function *fj, int
 		}
 	return s;
 }
-
-
-////////////////////////////// OLD CODE ////////////////////////////////
-
-
-
-
-
-/***********************************************************************
- ****                 Cartesian Gauss-type Orbitals                 ****
- ****                       Overlap integrals                       ****
- ***********************************************************************/
-
-/* Cartesian GTO - overlap integal over two S-orbitals (i = 0, j = 0) */
-double cS00(double *A, double *B, double a, double b)
-{
-	return pow(M_PI/(a+b), 1.5) * exp(-a*b/(a+b)*dist2(A, B));
-}
-
-/*  pm:
- *    px -> 0
- *    py -> 1
- *    pz -> 2
- */
-double cS10(double *A, double *B, double a, double b, int pm)
-{
-	double S00 = pow(M_PI/(a+b), 1.5) * exp(-a*b/(a+b)*dist2(A, B));
-	double Xab = A[pm] - B[pm];
-	return -b/(a+b)*Xab*S00;
-}
-
-double cS11(double *A, double *B, double a, double b, int m1, int m2)
-{
-	double S00 = pow(M_PI/(a+b), 1.5) * exp(-a*b/(a+b)*dist2(A, B));
-	if (m1 == m2) {
-		double Xab = A[m1] - B[m1];
-		double mu = a*b/(a+b);
-		return 1.0/(a+b)*(0.5 - Xab*Xab*mu)*S00;
-	}
-	else {
-		double Xab = A[m1] - B[m1];
-		double Yab = A[m2] - B[m2];
-		return b*b/((a+b)*(a+b))*Xab*Yab*S00;
-	}
-}
-
-/***********************************************************************
- ****                   Kinetic energy integrals                    ****
- ***********************************************************************/
-/*  mu = ab/(a+b)
- *  R2 = (A-B)^2
- *  <s|T|s> = mu*(3-2*mu*R2)*(pi/(a+b))^1.5*exp(-mu*R2)
- */
-double cT00(double *A, double *B, double a, double b)
-{
-	double mu = a*b/(a+b);
-	double R2 = dist2(A, B);
-	return mu*(3.0-2.0*mu*R2)*pow(M_PI/(a+b), 1.5)*exp(-mu*R2);
-}
-
-/*  <s|T|p>, s ~ a, p ~ b
- *  Это ни разу не оптимальное решение. Но формулы такие громоздкие,
- *  что выписывать все вручную и сокращать лень.
- */
-double cT01(double *A, double *B, double a, double b, int pm)
-{
-	double mu = a*b/(a+b);
-	double p = a + b;
-	double X = A[pm] - B[pm];
-	double Xab = A[0]-B[0], Yab = A[1]-B[1], Zab = A[2]-B[2];
-	double c = sqrt(M_PI/p);
-	double S00x = c*exp(-mu*Xab*Xab);
-	double S00y = c*exp(-mu*Yab*Yab);
-	double S00z = c*exp(-mu*Zab*Zab);
-	double S01x = a/p*X*S00x;
-	double T00x = (a - 2*a*a*(b*b/(p*p)*Xab*Xab + 0.5/p)) * S00x;
-	double T00y = (a - 2*a*a*(b*b/(p*p)*Yab*Yab + 0.5/p)) * S00y;
-	double T00z = (a - 2*a*a*(b*b/(p*p)*Zab*Zab + 0.5/p)) * S00z;
-	double T01x = a/p*X*T00x + 2*a*b/p*S01x;
-	return T01x*S00y*S00z + S01x*T00y*S00z + S01x*S00y*T00z; 
-}
-
-/*  <p|T|p>
- */
-double cT11(double *A, double *B, double a, double b, int m1, int m2)
-{
-	//if (m1 == m2) {
-		double mu = a*b/(a+b);
-		double p = a + b;
-		double X = A[m1] - B[m1];
-		double Xab = A[0]-B[0], Yab = A[1]-B[1], Zab = A[2]-B[2];
-		double c = sqrt(M_PI/p);
-		double S00x = c*exp(-mu*Xab*Xab);
-		double S00y = c*exp(-mu*Yab*Yab);
-		double S00z = c*exp(-mu*Zab*Zab);
-		double S01x = a/p*X*S00x;
-		double S11x = 1.0/(a+b)*(0.5-mu*X*X)*S00x;
-		double T00x = (a - 2*a*a*(b*b/(p*p)*Xab*Xab + 0.5/p)) * S00x;
-		double T00y = (a - 2*a*a*(b*b/(p*p)*Yab*Yab + 0.5/p)) * S00y;
-		double T00z = (a - 2*a*a*(b*b/(p*p)*Zab*Zab + 0.5/p)) * S00z;
-		double T01x = a/p*X*T00x + 2*a*b/p*S01x;
-		double T11x = -b/p*X*T01x+0.5/p*T00x+2*a*b/p*S11x;
-		return T11x*S00y*S00z + S11x*T00y*S00z + S11x*S00y*T00z; 
-	//}
-	//else
-		//return 0.0;
-}
-
-/***********************************************************************
- ****                 Spherical Gauss-type Orbitals                 ****
- ****                       Overlap integrals                       ****
- ***********************************************************************/
-
-
-
 
 
