@@ -99,7 +99,7 @@ void scf_guess_inp()
 	if (ttype != TT_WORD)
 		errquit("unexpected input in scf:guess");
 	
-	if (!strcmp(sval, "bare"))
+	if (!strcmp(sval, "core"))
 		scf_options.guess = GUESS_BARE;
 	else if (!strcmp(sval, "eht"))
 		scf_options.guess = GUESS_EHT;

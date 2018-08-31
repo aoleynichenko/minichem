@@ -1,4 +1,5 @@
 #include <cblas.h>
+#include <math.h>
 #include <mpi.h>
 #include <omp.h>
 #include <stdio.h>
@@ -11,6 +12,7 @@
 #include "visual.h"
 #include "scf.h"
 #include "util.h"
+#include "sys.h"
 
 void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M);
 void uhf_guess(double *Fa, double *Fb, double *H, double *Pa, double *Pb,
@@ -18,6 +20,7 @@ void uhf_guess(double *Fa, double *Fb, double *H, double *Pa, double *Pb,
 			   double *Ea, double *Eb, Molecule_t *molecule,
 			   BasisFunc_t *bfns, int M);
 double uhf_energy(double *Pa, double *Pb, double *Fa, double *Fb, double *H, int M);
+void uhf_makefock(double *Fa, double *Fb, double *H, double *Pa, double *Pb, int M);
 void uhf_makefock_direct(double *Fa, double *Fb, double *H, double *Pa, double *Pb, BasisFunc_t *bfns, int M);
 void uhf_makedensity(double *P, double *C, int nelec, int dim);
 double exact_S2(int Nalpha, int Nbeta);
@@ -93,6 +96,15 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 			
 		memcpy(P0a, Pa, nbytes);  // store actual P
 		memcpy(P0b, Pb, nbytes);
+		
+		if (scf_options.direct) {
+			// integral-direct
+			uhf_makefock_direct(Fa, Fb, H, Pa, Pb, bfns, M);
+		}
+		else {
+			// conventional scf (2e int-s from disk)
+			uhf_makefock(Fa, Fb, H, Pa, Pb, M);
+		}
 		
 		uhf_makefock_direct(Fa, Fb, H, Pa, Pb, bfns, M);
 		
@@ -192,6 +204,197 @@ double uhf_energy(double *Pa, double *Pb, double *Fa, double *Fb, double *H, int
 
 
 /***********************************************************************
+ * uhf_makefock
+ * 
+ * Constructs alpha and beta Fock matrices -- conventional algorithm
+ * (2e integrals from disk).
+ **********************************************************************/
+/*
+F(m, n) += D(p, q) * I(m, n, p, q)
+F(n, m) += D(p, q) * I(n, m, p, q)
+F(m, n) += D(q, p) * I(m, n, q, p)
+F(n, m) += D(q, p) * I(n, m, q, p)
+F(p, q) += D(m, n) * I(p, q, m, n)
+F(p, q) += D(n, m) * I(p, q, n, m)
+F(q, p) += D(m, n) * I(q, p, m, n)
+F(q, p) += D(n, m) * I(q, p, n, m)
+
+F(m, p) -= 0.5 * D(n, q) * I(m, n, p, q)
+F(p, m) -= 0.5 * D(q, n) * I(p, q, m, n)
+F(n, p) -= 0.5 * D(m, q) * I(n, m, p, q)
+F(p, n) -= 0.5 * D(q, m) * I(p, q, n, m)
+F(m, q) -= 0.5 * D(n, p) * I(m, n, q, p)
+F(q, m) -= 0.5 * D(p, n) * I(q, p, m, n)
+F(n, q) -= 0.5 * D(m, p) * I(n, m, q, p)
+F(q, n) -= 0.5 * D(p, m) * I(q, p, n, m)
+*/
+void uhf_makefock(double *Fa, double *Fb, double *H, double *Pa, double *Pb, int M)
+{
+	int m, i, j, n, p, q;
+	double t0 = MPI_Wtime();
+	int fd;
+	typedef struct {
+		double val;
+		int i1, i2, i3, i4;
+	} integral_t;
+	integral_t *tmpi;
+	const int BATCH_SIZE = 4096;
+	integral_t buf[BATCH_SIZE];
+	int n_read;  // bytes
+	int n_int_read;
+	double Int;
+	double *Pt = (double *) qalloc(M*M*sizeof(double));
+		
+	for (m = 0; m < M*M; m++)
+		Pt[m] = Pa[m] + Pb[m];
+	
+	memcpy(Fa, H, M*M*sizeof(double));
+	memcpy(Fb, H, M*M*sizeof(double));
+	
+	fd = fastio_open("AOINTS2", "r");
+	while ((n_read = fastio_read(fd, buf, sizeof(integral_t)*BATCH_SIZE)) > 0) {
+		n_int_read = n_read / sizeof(integral_t);
+		
+		for (i = 0; i < n_int_read; i++) {
+			tmpi = &buf[i];
+			Int = tmpi->val;
+			m = tmpi->i1;
+			n = tmpi->i2;
+			p = tmpi->i3;
+			q = tmpi->i4;
+		
+			if (m == n && m == p && m == q) {  // (mm|mm) - 1
+				Fa[m*M+m] += Pt[m*M+m] * Int;
+				Fb[m*M+m] += Pt[m*M+m] * Int;
+				
+				Fa[m*M+m] -= Pa[m*M+m] * Int;
+				Fb[m*M+m] -= Pb[m*M+m] * Int;
+			}
+			else if (n == m && p == q) {  // (mm|pp) - 2
+				Fa[m*M+m] += Pt[p*M+p] * Int;
+				Fa[p*M+p] += Pt[m*M+m] * Int;
+				Fb[m*M+m] += Pt[p*M+p] * Int;
+				Fb[p*M+p] += Pt[m*M+m] * Int;
+
+				Fa[m*M+p] -= Pa[m*M+p] * Int;
+				Fa[p*M+m] -= Pa[p*M+m] * Int;
+				Fb[m*M+p] -= Pb[m*M+p] * Int;
+				Fb[p*M+m] -= Pb[p*M+m] * Int;
+			}
+			else if (m == p && n == q) { // (mn|mn) - 4
+				Fa[m*M+n] += Pt[m*M+n] * Int;
+				Fa[n*M+m] += Pt[m*M+n] * Int;
+				Fa[m*M+n] += Pt[n*M+m] * Int;
+				Fa[n*M+m] += Pt[n*M+m] * Int;
+				
+				Fb[m*M+n] += Pt[m*M+n] * Int;
+				Fb[n*M+m] += Pt[m*M+n] * Int;
+				Fb[m*M+n] += Pt[n*M+m] * Int;
+				Fb[n*M+m] += Pt[n*M+m] * Int;
+				
+				// exchange
+				Fa[m*M+m] -= Pa[n*M+n] * Int;
+				Fa[n*M+m] -= Pa[m*M+n] * Int;
+				Fa[m*M+n] -= Pa[n*M+m] * Int;
+				Fa[n*M+n] -= Pa[m*M+m] * Int;
+				
+				Fb[m*M+m] -= Pb[n*M+n] * Int;
+				Fb[n*M+m] -= Pb[m*M+n] * Int;
+				Fb[m*M+n] -= Pb[n*M+m] * Int;
+				Fb[n*M+n] -= Pb[m*M+m] * Int;
+			}
+			else if (n == m) { // (mm|pq) - 4
+				Fa[m*M+m] += Pt[p*M+q] * Int;
+				Fa[m*M+m] += Pt[q*M+p] * Int;
+				Fa[p*M+q] += Pt[m*M+m] * Int;
+				Fa[q*M+p] += Pt[m*M+m] * Int;
+				
+				Fb[m*M+m] += Pt[p*M+q] * Int;
+				Fb[m*M+m] += Pt[q*M+p] * Int;
+				Fb[p*M+q] += Pt[m*M+m] * Int;
+				Fb[q*M+p] += Pt[m*M+m] * Int;
+				
+				Fa[m*M+p] -= Pa[m*M+q] * Int;
+				Fa[p*M+m] -= Pa[q*M+m] * Int;
+				Fa[m*M+q] -= Pa[m*M+p] * Int;
+				Fa[q*M+m] -= Pa[p*M+m] * Int;
+				
+				Fb[m*M+p] -= Pb[m*M+q] * Int;
+				Fb[p*M+m] -= Pb[q*M+m] * Int;
+				Fb[m*M+q] -= Pb[m*M+p] * Int;
+				Fb[q*M+m] -= Pb[p*M+m] * Int;
+			}
+			else if (p == q) {  // (mn|pp) - 4
+				Fa[m*M+n] += Pt[p*M+p] * Int;
+				Fa[n*M+m] += Pt[p*M+p] * Int;
+				Fa[p*M+p] += Pt[m*M+n] * Int;
+				Fa[p*M+p] += Pt[n*M+m] * Int;
+				
+				Fb[m*M+n] += Pt[p*M+p] * Int;
+				Fb[n*M+m] += Pt[p*M+p] * Int;
+				Fb[p*M+p] += Pt[m*M+n] * Int;
+				Fb[p*M+p] += Pt[n*M+m] * Int;
+				
+				Fa[m*M+p] -= Pa[n*M+p] * Int;
+				Fa[p*M+m] -= Pa[p*M+n] * Int;
+				Fa[n*M+p] -= Pa[m*M+p] * Int;
+				Fa[p*M+n] -= Pa[p*M+m] * Int;
+				
+				Fb[m*M+p] -= Pb[n*M+p] * Int;
+				Fb[p*M+m] -= Pb[p*M+n] * Int;
+				Fb[n*M+p] -= Pb[m*M+p] * Int;
+				Fb[p*M+n] -= Pb[p*M+m] * Int;
+			}
+			else {  // (mn|pq) - 8
+				// coulomb
+				Fa[m*M+n] += Pt[p*M+q] * Int;
+				Fa[n*M+m] += Pt[p*M+q] * Int;
+				Fa[m*M+n] += Pt[q*M+p] * Int;
+				Fa[n*M+m] += Pt[q*M+p] * Int;
+				Fa[p*M+q] += Pt[m*M+n] * Int;
+				Fa[p*M+q] += Pt[n*M+m] * Int;
+				Fa[q*M+p] += Pt[m*M+n] * Int;
+				Fa[q*M+p] += Pt[n*M+m] * Int;
+				
+				Fb[m*M+n] += Pt[p*M+q] * Int;
+				Fb[n*M+m] += Pt[p*M+q] * Int;
+				Fb[m*M+n] += Pt[q*M+p] * Int;
+				Fb[n*M+m] += Pt[q*M+p] * Int;
+				Fb[p*M+q] += Pt[m*M+n] * Int;
+				Fb[p*M+q] += Pt[n*M+m] * Int;
+				Fb[q*M+p] += Pt[m*M+n] * Int;
+				Fb[q*M+p] += Pt[n*M+m] * Int;
+				
+				// exchange
+				Fa[m*M+p] -= Pa[n*M+q] * Int;
+				Fa[p*M+m] -= Pa[q*M+n] * Int;
+				Fa[n*M+p] -= Pa[m*M+q] * Int;
+				Fa[p*M+n] -= Pa[q*M+m] * Int;
+				Fa[m*M+q] -= Pa[n*M+p] * Int;
+				Fa[q*M+m] -= Pa[p*M+n] * Int;
+				Fa[n*M+q] -= Pa[m*M+p] * Int;
+				Fa[q*M+n] -= Pa[p*M+m] * Int;
+				
+				Fb[m*M+p] -= Pb[n*M+q] * Int;
+				Fb[p*M+m] -= Pb[q*M+n] * Int;
+				Fb[n*M+p] -= Pb[m*M+q] * Int;
+				Fb[p*M+n] -= Pb[q*M+m] * Int;
+				Fb[m*M+q] -= Pb[n*M+p] * Int;
+				Fb[q*M+m] -= Pb[p*M+n] * Int;
+				Fb[n*M+q] -= Pb[m*M+p] * Int;
+				Fb[q*M+n] -= Pb[p*M+m] * Int;
+			}
+		}
+	} // end loop
+	
+	fastio_close(fd);
+	qfree(Pt, M*M*sizeof(double));
+	
+	scf_timing.time_fock += MPI_Wtime() - t0;
+}
+
+
+/***********************************************************************
  * uhf_makefock_direct
  * 
  * Constructs alpha and beta Fock matrices -- direct algorithm
@@ -253,6 +456,8 @@ void uhf_makefock_direct(double *Fa, double *Fb, double *H, double *Pa, double *
 		fp = &bfns[p];
 		fq = &bfns[q];
 		Int = aoint_eri(fm, fn, fp, fq);
+		
+		if (fabs(Int) < 1e-14) continue;
 		
 		if (m == n && m == p && m == q) {  // (mm|mm) - 1
 			fa[m*M+m] += Pt[m*M+m] * Int;

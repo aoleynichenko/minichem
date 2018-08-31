@@ -31,7 +31,7 @@ end
 
 scf
   diis 6
-#  direct
+  direct
   maxiter 100
 end
 

@@ -1,4 +1,5 @@
 #include <cblas.h>
+#include <math.h>
 #include <mpi.h>
 #include <omp.h>
 #include <stdio.h>
@@ -281,6 +282,8 @@ void rhf_makefock(double *F, double *H, double *P, int M)
 			n = tmpi->i2;
 			p = tmpi->i3;
 			q = tmpi->i4;
+			
+			if (fabs(Int) < 1e-14) continue;
 			
 			double Dmm = P[m*M+m];
 			double Dnn = P[n*M+n];

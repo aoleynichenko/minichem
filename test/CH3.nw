@@ -30,6 +30,7 @@ end
 
 scf
   uhf
+#  direct
   doublet
 end
 
