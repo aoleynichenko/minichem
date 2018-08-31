@@ -40,10 +40,10 @@ C    P
       0.2222899              0.39195739    
 end
 
-scf
-  print "overlap"
+#scf
+#  print "overlap"
  # diis 5
-end
+#end
 
 #out
 #  molden

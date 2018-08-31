@@ -29,6 +29,8 @@ struct scf_opt {
 	int diisbas;
 	double conv_dens;
 	double conv_en;
+	// direct/conventional scf
+	int direct;
 };
 
 struct scf_timing_t {

@@ -113,6 +113,7 @@ void scf_energy(struct cart_mol *molecule)
 	printf("             Max iterations : %d\n", scf_options.maxiter);
 	printf("               Density conv : %g\n", scf_options.conv_dens);
 	printf("                Energy conv : %g\n", scf_options.conv_en);
+	printf("            Integral direct : %s\n", scf_options.direct ? "on" : "off");
 	printf("                       DIIS : %s\n", scf_options.diis ? "on" : "off");
 	if (scf_options.diis) {
 		printf("                    diisbas : %d\n", scf_options.diisbas);
@@ -180,6 +181,8 @@ void scf_init()
 	scf_options.diisbas = 5;
 	scf_options.conv_dens = 1e-6;
 	scf_options.conv_en = 1e-7;
+	// direct/conventional scf
+	scf_options.direct = 0;   // conventional
 }
 
 

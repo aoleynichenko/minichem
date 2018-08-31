@@ -64,6 +64,9 @@ void directive_scf()
 			}
 			else if (!strcmp(sval, "nodiis"))
 				scf_options.diis = 0;
+			// conventional/direct
+			else if (!strcmp(sval, "direct"))
+				scf_options.direct = 1;
 			else
 				errquit("unknown keyword in scf section");
 		}

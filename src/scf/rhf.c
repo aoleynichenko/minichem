@@ -11,6 +11,7 @@
 #include "visual.h"
 #include "scf.h"
 #include "util.h"
+#include "sys.h"
 
 /* Prototypes of locally used functions */
 void   rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M);
@@ -19,6 +20,7 @@ void   rhf_guess(double *F, double *H, double *P, double *S, double *X,
 			   BasisFunc_t *bfns, int M);
 void   rhf_makedensity(double *P, double *C, int nelec, int M);
 double rhf_energy(double *P, double *F, double *H, int M);
+void   rhf_makefock(double *F, double *H, double *P, int M);
 void   rhf_makefock_direct(double *F, double *H, double *P, BasisFunc_t *bfns, int M);
 
 void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
@@ -68,8 +70,6 @@ void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	rhf_guess(F, H, P, S, X, C, E, molecule, bfns, M);
 	olde = rhf_energy(P, F, H, M) + Enuc;
 	
-	printf("#bfns = %d\n", M);
-	printf("#eris = %d\n\n", (M*M*M*M+2*M*M*M+3*M*M+2*M)/8);
 	printf(" iter.       Energy         Delta E       RMS-Dens       DIIS-Err     time\n");
 	printf("----------------------------------------------------------------------------\n");
 	while (1) {
@@ -81,7 +81,14 @@ void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 			
 		memcpy(P0, P, nbytes);  // store actual P
 		
-		rhf_makefock_direct(F, H, P, bfns, M);
+		if (scf_options.direct) {
+			// integral-direct
+			rhf_makefock_direct(F, H, P, bfns, M);
+		}
+		else {
+			// conventional scf (2e int-s from disk)
+			rhf_makefock(F, H, P, M);
+		}
 		
 		// in fact, now we have Fi and Di, used to contruct this Fi
 		ErrM = (double *) qalloc(nbytes);
@@ -216,6 +223,149 @@ double rhf_energy(double *P, double *F, double *H, int M)
 		for (j = 0; j < M; j++)
 			E0 += 0.5*P[i*M+j]*(H[i*M+j] + F[i*M+j]);
 	return E0;
+}
+
+
+
+/***********************************************************************
+ * rhf_makefock
+ * 
+ * Constructs Fock matrix; 2e integrals are stored on disk.
+ **********************************************************************/
+/*
+F(m, n) += D(p, q) * I(m, n, p, q)
+F(n, m) += D(p, q) * I(n, m, p, q)
+F(m, n) += D(q, p) * I(m, n, q, p)
+F(n, m) += D(q, p) * I(n, m, q, p)
+F(p, q) += D(m, n) * I(p, q, m, n)
+F(p, q) += D(n, m) * I(p, q, n, m)
+F(q, p) += D(m, n) * I(q, p, m, n)
+F(q, p) += D(n, m) * I(q, p, n, m)
+
+F(m, p) -= 0.5 * D(n, q) * I(m, n, p, q)
+F(p, m) -= 0.5 * D(q, n) * I(p, q, m, n)
+F(n, p) -= 0.5 * D(m, q) * I(n, m, p, q)
+F(p, n) -= 0.5 * D(q, m) * I(p, q, n, m)
+F(m, q) -= 0.5 * D(n, p) * I(m, n, q, p)
+F(q, m) -= 0.5 * D(p, n) * I(q, p, m, n)
+F(n, q) -= 0.5 * D(m, p) * I(n, m, q, p)
+F(q, n) -= 0.5 * D(p, m) * I(q, p, n, m)
+*/
+void rhf_makefock(double *F, double *H, double *P, int M)
+{
+	int m, i, j;
+	int n, p, q;
+	double t0 = MPI_Wtime();
+	int fd;
+	typedef struct {
+		double val;
+		int i1, i2, i3, i4;
+	} integral_t;
+	integral_t *tmpi;
+	const int BATCH_SIZE = 4096;
+	integral_t buf[BATCH_SIZE];
+	int n_read;  // bytes
+	int n_int_read;
+	double Int;
+
+	memcpy(F, H, M*M*sizeof(double));
+	
+	fd = fastio_open("AOINTS2", "r");
+	while ((n_read = fastio_read(fd, buf, sizeof(integral_t)*BATCH_SIZE)) > 0) {
+		n_int_read = n_read / sizeof(integral_t);
+		
+		for (i = 0; i < n_int_read; i++) {
+			tmpi = &buf[i];
+			Int = tmpi->val;
+			m = tmpi->i1;
+			n = tmpi->i2;
+			p = tmpi->i3;
+			q = tmpi->i4;
+			
+			double Dmm = P[m*M+m];
+			double Dnn = P[n*M+n];
+			double Dpp = P[p*M+p];
+			//double Dqq = P[q*M+q];
+			
+			double Dpq = P[p*M+q];
+			double Dqp = P[q*M+p];
+			double Dmn = P[m*M+n];
+			double Dnm = P[n*M+m];
+			
+			double Dnq = P[n*M+q];
+			double Dqn = P[q*M+n];
+			double Dmq = P[m*M+q];
+			double Dqm = P[q*M+m];
+			double Dnp = P[n*M+p];
+			double Dpn = P[p*M+n];
+			double Dmp = P[m*M+p];
+			double Dpm = P[p*M+m];
+			
+			if (m == n && m == p && m == q) {  // (mm|mm) - 1
+				F[m*M+m] += 0.5 * Dmm * Int;
+			}
+			else if (n == m && p == q) {  // (mm|pp) - 2
+				F[m*M+m] += Dpp * Int;
+				F[p*M+p] += Dmm * Int;
+					
+				F[m*M+p] -= 0.5 * Dmp * Int;
+				F[p*M+m] -= 0.5 * Dpm * Int;
+			}
+			else if (m == p && n == q) { // (mn|mn) - 4
+				F[m*M+n] += Int * (Dmn + 0.5*Dnm);
+				F[n*M+m] += Int * (Dnm + 0.5*Dmn);
+				
+				F[n*M+n] -= 0.5 * Dmm * Int;
+				F[m*M+m] -= 0.5 * Dnn * Int;
+			}
+			else if (n == m) { // (mm|pq) - 4
+				F[m*M+m] += Dpq * Int;
+				F[m*M+m] += Dqp * Int;
+				F[p*M+q] += Dmm * Int;
+				F[q*M+p] += Dmm * Int;
+				
+				F[m*M+p] -= 0.5 * Dmq * Int;
+				F[p*M+m] -= 0.5 * Dqm * Int;
+				F[m*M+q] -= 0.5 * Dmp * Int;
+				F[q*M+m] -= 0.5 * Dpm * Int;
+			}
+			else if (p == q) {  // (mn|pp) - 4
+				F[m*M+n] += Dpp * Int;
+				F[n*M+m] += Dpp * Int;
+				F[p*M+p] += Dmn * Int;
+				F[p*M+p] += Dnm * Int;
+				
+				F[m*M+p] -= 0.5 * Dnp * Int;
+				F[p*M+m] -= 0.5 * Dpn * Int;
+				F[n*M+p] -= 0.5 * Dmp * Int;
+				F[p*M+n] -= 0.5 * Dpm * Int;
+			}
+			else {  // (mn|pq) - 8
+				F[m*M+n] += Dpq * Int;
+				F[n*M+m] += Dpq * Int;
+				F[m*M+n] += Dqp * Int;
+				F[n*M+m] += Dqp * Int;
+				F[p*M+q] += Dmn * Int;
+				F[p*M+q] += Dnm * Int;
+				F[q*M+p] += Dmn * Int;
+				F[q*M+p] += Dnm * Int;
+					
+				F[m*M+p] -= 0.5 * Dnq * Int;
+				F[p*M+m] -= 0.5 * Dqn * Int;
+				F[n*M+p] -= 0.5 * Dmq * Int;
+				F[p*M+n] -= 0.5 * Dqm * Int;
+				F[m*M+q] -= 0.5 * Dnp * Int;
+				F[q*M+m] -= 0.5 * Dpn * Int;
+				F[n*M+q] -= 0.5 * Dmp * Int;
+				F[q*M+n] -= 0.5 * Dpm * Int;
+			}
+		}
+	}
+	
+	
+	fastio_close(fd);
+	
+	scf_timing.time_fock += MPI_Wtime() - t0;
 }
 
 
