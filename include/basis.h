@@ -37,8 +37,10 @@ struct basis_set {
 /* atom-centered basis-function */
 struct basis_function {
 	int m;
+	int ijk[3];  // for gaussian function: x^i y^j z^k * exp(...)
 	struct atom *a;
 	struct cgtf *f;
+	double norm[MAX_BASIS_SIZE];  // precomputed normalization factors
 };
 typedef struct basis_function BasisFunc_t;
 

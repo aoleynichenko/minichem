@@ -17,6 +17,7 @@
 #include "lexer.h"
 #include "util.h"
 
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -38,7 +39,7 @@ struct basis_function *bfns;
 struct shell *shells;
 
 void estimate_principal_numbers(struct basis_set *);
-
+double cart_norm(double a, int *ijk);
 
 /***********************************************************************
  * directive_basis
@@ -181,7 +182,8 @@ void directive_basis()
  * */
 void form_atom_centered_bfns(struct cart_mol *molecule, struct basis_function **bfns, struct shell **shs, int *M, int *nsh)
 {
-	int i, j;
+	int i, j, k;
+	int powx, powy, powz;
 	int K = 0;
 	int shn = 0;
 	struct basis_function *p;
@@ -210,14 +212,37 @@ void form_atom_centered_bfns(struct cart_mol *molecule, struct basis_function **
 			int L = e->bas->cgtfs[j].L;
 			int m;
 			
-			(*s).size = 2*L+1;
+			//(*s).size = 2*L+1;
+			(*s).size = (L+1)*(L+2)/2;
 			(*s).start = p;
-			for (m = 0; m < 2*L+1; m++) {
+			// spherical version:
+			/*for (m = 0; m < 2*L+1; m++) {
 				(*p).m = m;
 				(*p).f = &e->bas->cgtfs[j];
 				(*p).a = &molecule->atoms[i];
 				p++;
+			}*/
+			// cartesian version:
+			for (powx = 0; powx <= L; powx++)
+			for (powy = 0; powy <= L; powy++)
+			for (powz = 0; powz <= L; powz++) {
+				if (powx + powy + powz == L) {
+					(*p).ijk[0] = powx;
+					(*p).ijk[1] = powy;
+					(*p).ijk[2] = powz;
+					(*p).m = 0;
+					(*p).f = &e->bas->cgtfs[j];
+					(*p).a = &molecule->atoms[i];
+					// precompute normalization factors
+					int nprim = e->bas->cgtfs[j].nprim;
+					for (k = 0; k < nprim; k++) {
+						double alpha = e->bas->cgtfs[j].exp[k];
+						(*p).norm[k] = cart_norm(alpha, (*p).ijk);
+					}
+					p++;
+				}
 			}
+			
 			s++;
 		}
 	}
@@ -299,6 +324,27 @@ void print_basis_summary()
 
 
 
+// general function -- for any i,j,k (i+j+k = L)
+// a = exponent
+// Ni = (2a/PI)^1/4 * sqrt( (4a)^i / (2i-1)!! )
+double cart_norm(double a, int *ijk)
+{
+	// double factorials
+	// n!! for n  =  0  1  2  3  4   5   6    7    8    9    10
+	static int dfac[] = {1, 1, 2, 3, 8, 15, 48, 105, 384, 945, 3840};
+	static double inv_dfac[] = {1.0, 1.0, 1/2.0, 1/3.0, 1/8.0, 1/15.0,
+		1/48.0, 1/105.0, 1/384.0, 1/945.0, 1/3840.0};
+	static const double PI = 3.14159265358979323846;
+	
+	int i = ijk[0];
+	int j = ijk[1];
+	int k = ijk[2];
+	double ni = pow(2.0*a/PI, 0.25) * sqrt(pow(4.0*a, i) * inv_dfac[i]);
+	double nj = pow(2.0*a/PI, 0.25) * sqrt(pow(4.0*a, j) * inv_dfac[j]);
+	double nk = pow(2.0*a/PI, 0.25) * sqrt(pow(4.0*a, k) * inv_dfac[k]);
+	
+	return ni * nj * nk;
+}
 
 
 

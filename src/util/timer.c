@@ -35,13 +35,9 @@ void timer_new_entry(char *key, char *label)
 {
 	int i;
 	
-	// cut key and label
-	//key[MAX_TIMER_KEY-1] = '\0';
-	//label[MAX_TIMER_LABEL-1] = '\0';
-	
 	for (i = 0; i < n_entries; i++) {
 		// found old entry
-		if (strcmp(timer_entries[i].key, key) == 0) {
+		if (strncmp(timer_entries[i].key, key, MAX_TIMER_KEY) == 0) {
 			return;
 		}
 	}
@@ -50,11 +46,15 @@ void timer_new_entry(char *key, char *label)
 	if (n_entries == MAX_TIMER_ENTRIES) {
 		errquit("max number of timer entries exceeded (see macro MAX_TIMER_ENTRIES in src/util/timer.c)");
 	}
-	strcpy(timer_entries[n_entries].key, key);
-	strcpy(timer_entries[n_entries].label, label);
+
+	strncpy(timer_entries[n_entries].key, key, MAX_TIMER_KEY);
+	timer_entries[n_entries].key[MAX_TIMER_KEY-1] = '\0';
+	strncpy(timer_entries[n_entries].label, label, MAX_TIMER_LABEL);
+	timer_entries[n_entries].label[MAX_TIMER_LABEL-1] = '\0';
 	timer_entries[n_entries].on = 0;
 	timer_entries[n_entries].t0 = 0.0;
 	timer_entries[n_entries].total = 0.0;
+
 	n_entries++;
 }
 
@@ -99,6 +99,7 @@ void timer_stop(char *key)
 }
 
 
+// returns total time in this entry
 double timer_get(char *key)
 {
 	int i;

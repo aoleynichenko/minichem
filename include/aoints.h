@@ -32,23 +32,7 @@ void compute_aoints();
 
 double boys(int n, double x);
 
-double cS00(double *A, double *B, double a, double b);
-double sS00(double *A, double *B, double a, double b);
-double cS10(double *A, double *B, double a, double b, int pm);
-double cS11(double *A, double *B, double a, double b, int m1, int m2);
-double cT00(double *A, double *B, double a, double b);
-double cT01(double *A, double *B, double a, double b, int pm);
-double cT11(double *A, double *B, double a, double b, int m1, int m2);
-
-double N00(double a, double b);
-double N01(double a, double b);
-double N10(double a, double b);
-double N11(double a, double b);
-
 double dist2(double *A, double *B);
-
-double N0(double a);
-double N1(double a);
 
 double aoint_multipole(struct basis_function *fi,
 					   struct basis_function *fj,

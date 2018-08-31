@@ -1,3 +1,16 @@
+/***********************************************************************
+ * 1e.c
+ * ====
+ * 
+ * Molecular integral evaluation module. Two-electron integrals.
+ * Algorithm: Obara-Saika
+ * 
+ * For details, see, for instance,
+ * T. Helgaker, P. Jorgensen, J. Olsen, "Molecular Electronic-Structure Theory".
+ *
+ * 2016-2018 Alexander Oleynichenko
+ **********************************************************************/
+ 
 #include <math.h>
 
 #include "aoints.h"
@@ -11,6 +24,7 @@
  * see 1e.c for definitions
  ***********************************************************************/
 
+// for thread safety
 struct eri_data {
 	double alpha;
 	double p;
@@ -218,29 +232,24 @@ double aoint_eri(struct basis_function *fi,
 	int jnprim = fj->f->nprim;
 	int knprim = fk->f->nprim;
 	int lnprim = fl->f->nprim;
-	int set[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	                   /* i  j  k  l  */
+	int set[] = { /* X */ 0, 0, 0, 0, /* Y */ 0, 0, 0, 0, /* Z */ 0, 0, 0, 0};
 	
-	Li = fi->f->L;
-	Lj = fj->f->L;
-	Lk = fk->f->L;
-	Ll = fl->f->L;
-	double (*Ni)(double) = N0, (*Nj)(double) = N0, (*Nk)(double) = N0, (*Nl)(double) = N0;
-	if (Li == BFN_P) {
-		Ni = N1;
-		set[4*fi->m] = 1;
-	}
-	if (Lj == BFN_P) {
-		Nj = N1;
-		set[4*fj->m+1] = 1;
-	}
-	if (Lk == BFN_P) {
-		Nk = N1;
-		set[4*fk->m+2] = 1;
-	}
-	if (Ll == BFN_P) {
-		Nl = N1;
-		set[4*fl->m+3] = 1;
-	}
+	// X
+	set[0] = fi->ijk[0];
+	set[1] = fj->ijk[0];
+	set[2] = fk->ijk[0];
+	set[3] = fl->ijk[0];
+	// Y
+	set[4] = fi->ijk[1];
+	set[5] = fj->ijk[1];
+	set[6] = fk->ijk[1];
+	set[7] = fl->ijk[1];
+	// Z
+	set[8] = fi->ijk[2];
+	set[9] = fj->ijk[2];
+	set[10] = fk->ijk[2];
+	set[11] = fl->ijk[2];
 	
 	for (a = 0; a < inprim; a++)
 		for (b = 0; b < jnprim; b++)
@@ -250,7 +259,11 @@ double aoint_eri(struct basis_function *fi,
 					double expb = fj->f->exp[b];
 					double expc = fk->f->exp[c];
 					double expd = fl->f->exp[d];
-					double N = Ni(expa)*Nj(expb)*Nk(expc)*Nl(expd);
+					/*double N = cart_norm(expa, fi->ijk) *
+					           cart_norm(expb, fj->ijk) *
+					           cart_norm(expc, fk->ijk) *
+					           cart_norm(expd, fl->ijk);*/
+					double N = fi->norm[a] * fj->norm[b] * fk->norm[c] * fl->norm[d];
 					double coeff = fi->f->c[a] * fj->f->c[b] * fk->f->c[c] * fl->f->c[d];
 					eri += N * coeff * ERI(set, fi->a->r, fj->a->r, fk->a->r, fl->a->r,
 						expa, expb, expc, expd);
