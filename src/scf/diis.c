@@ -134,7 +134,7 @@ void diis_extrapolate(double *F, DIISList_t *diislist, int diisbas)
 	
 	// compute Bij
 	// максимально неэкономная схема
-	// собираем сначала указатели на все матрицы ошибокc
+	// собираем сначала указатели на все матрицы ошибок
 	double **errmats = (double **) qalloc(diislen * sizeof(double*));
 	DIISList_t *p = diislist;
 	i = 0;

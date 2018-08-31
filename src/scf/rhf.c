@@ -122,14 +122,6 @@ void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	printf("  Nuclear repulsion energy =%15.8f\n", Enuc);
 	
 	printf("\n\n");
-	printf("      Time for:           sec\n");
-	printf("---------------------------------\n");
-	printf("  Orthogonalization  %9.3f\n", scf_timing.time_ortho);
-	printf("  Initial guess      %9.3f\n", scf_timing.time_guess);
-	printf("  Density matrix     %9.3f\n", scf_timing.time_dens);
-	printf("  Fock matrix        %9.3f\n", scf_timing.time_fock);
-	printf("  Diagonalization    %9.3f\n", scf_timing.time_diag);
-	printf("---------------------------------\n\n");
 	
 	// Освобождение ресурсов, которые были заняты DIIS
 	if (scf_options.diis && diislist)
@@ -178,10 +170,12 @@ void rhf_guess(double *F, double *H, double *P, double *S, double *X,
 			   BasisFunc_t *bfns, int M)
 {
 	int Nelecs = nelec(molecule);
-	double t = MPI_Wtime();
 	
 	printf("\nInitial guess: %s\n", scf_options.guess == GUESS_EHT ?
 		"extended Huckel theory" : "bare nuclei");
+	
+	timer_new_entry("guess", "Initial guess");
+	timer_start("guess");
 	
 	if (scf_options.guess == GUESS_EHT)
 		guess_F_eht(F, S, bfns, M);
@@ -192,16 +186,17 @@ void rhf_guess(double *F, double *H, double *P, double *S, double *X,
 
 	rhf_makedensity(P, C, Nelecs, M);  // generate initial density guess
 	
-	printf("Initial energy = %.8f\n", rhf_energy(P, F, H, M));
-	printf("Initial guess done in %.6f sec\n\n", MPI_Wtime()-t);
-	
-	scf_timing.time_guess += MPI_Wtime() - t;
+	timer_stop("guess");
+	printf("Initial energy = %.8f\n\n", rhf_energy(P, F, H, M));
 }
 
 void rhf_makedensity(double *P, double *C, int nelec, int M)
 {
 	int i, j, a;
-	double p, t0 = MPI_Wtime();
+	double p;
+	
+	timer_new_entry("dens", "Density matrix construction");
+	timer_start("dens");
 	
 	#pragma omp parallel for private(p,j,a)
 	for (i = 0; i < M; i++)
@@ -211,8 +206,8 @@ void rhf_makedensity(double *P, double *C, int nelec, int M)
 				p += C[a*M+i] * C[a*M+j];
 			P[i*M+j] = p * 2.0;
 		}
-	
-	scf_timing.time_dens += MPI_Wtime() - t0;
+
+	timer_stop("dens");
 }
 
 double rhf_energy(double *P, double *F, double *H, int M)
@@ -256,7 +251,6 @@ void rhf_makefock(double *F, double *H, double *P, int M)
 {
 	int m, i, j;
 	int n, p, q;
-	double t0 = MPI_Wtime();
 	int fd;
 	typedef struct {
 		double val;
@@ -268,6 +262,9 @@ void rhf_makefock(double *F, double *H, double *P, int M)
 	int n_read;  // bytes
 	int n_int_read;
 	double Int;
+	
+	timer_new_entry("makefock", "Fock matrix construction");
+	timer_start("makefock");
 
 	memcpy(F, H, M*M*sizeof(double));
 	
@@ -368,7 +365,7 @@ void rhf_makefock(double *F, double *H, double *P, int M)
 	
 	fastio_close(fd);
 	
-	scf_timing.time_fock += MPI_Wtime() - t0;
+	timer_stop("makefock");
 }
 
 
@@ -400,9 +397,11 @@ F(q, n) -= 0.5 * D(p, m) * I(q, p, n, m)
 void rhf_makefock_direct(double *F, double *H, double *P, BasisFunc_t *bfns, int M)
 {
 	int m, i, j;
-	double t0 = MPI_Wtime();
 	int maxthreads = omp_get_max_threads();
 	double **Fi = (double **) qalloc(maxthreads * sizeof(double *));
+	
+	timer_new_entry("makefock", "Fock matrix construction");
+	timer_start("makefock");
 	
 	for (i = 0; i < maxthreads; i++) {
 		Fi[i] = (double *) qalloc(M*M*sizeof(double));
@@ -520,7 +519,7 @@ void rhf_makefock_direct(double *F, double *H, double *P, BasisFunc_t *bfns, int
 	for (i = 0; i < maxthreads; i++)
 		qfree(Fi[i], M*M*sizeof(double));
 	qfree(Fi, maxthreads * sizeof(double *));
-	
-	scf_timing.time_fock += MPI_Wtime() - t0;
+
+	timer_stop("makefock");
 }
 

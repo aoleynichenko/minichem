@@ -1,5 +1,6 @@
 add_library(sys
     fastio.c
+    time.c
 )
 
 set(C_STANDARD_REQUIRED ON)

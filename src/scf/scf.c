@@ -69,9 +69,6 @@ double *E;		/* energies of orbitals, F's eigenvalues */
 double *OLDP;
 
 
-struct scf_timing_t scf_timing;
-
-
 void scf_energy(struct cart_mol *molecule)
 {
 	int izero = 0;
@@ -92,11 +89,6 @@ void scf_energy(struct cart_mol *molecule)
 	printf("          *      Parallel SCF Module     *\n");
 	printf("          ********************************\n\n");
 	
-	scf_timing.time_dens  = 0.0;
-	scf_timing.time_diag  = 0.0;
-	scf_timing.time_fock  = 0.0;
-	scf_timing.time_guess = 0.0;
-	scf_timing.time_ortho = 0.0;
 	omp_set_num_threads(calc_info.nproc);
 		
 	Nelecs = nalphabeta(molecule, &Nalpha, &Nbeta);
@@ -129,6 +121,9 @@ void scf_energy(struct cart_mol *molecule)
 		rhf_loop(geom, bfns, M);
 	else
 		uhf_loop(geom, bfns, M);
+	
+	// print timing
+	timer_stats();
 }
 
 
@@ -142,6 +137,9 @@ void orthobasis(double *S, double *X, int dim)
 	double thresh = 1e-8;
 	double t0 = MPI_Wtime();
 	double *val;
+	
+	timer_new_entry("ortho", "Basis set orthogonalization");
+	timer_start("ortho");
 	
 	printf("Basis orthogonalization algorithm: canonical\n");
 	printf("Basis functions elimination threshold: %g\n", thresh);
@@ -162,7 +160,7 @@ void orthobasis(double *S, double *X, int dim)
 	
 	qfree(val, vbytes);
 	
-	scf_timing.time_ortho = MPI_Wtime() - t0;
+	timer_stop("ortho");
 	printf("AO basis orthogonalization done in %.6f sec\n", MPI_Wtime()-t0);
 }
 
@@ -271,6 +269,10 @@ void diag_fock(double *F, double *X, double *C, double *en, int M)
 	
 	double *Temp = (double *) qalloc(M*M*sizeof(double));
 	double *TempF = (double *) qalloc(M*M*sizeof(double));
+	
+	timer_new_entry("diagfock", "Fock matrix diagonalization");
+	timer_start("diagfock");
+	
 	memcpy(TempF, F, M*M*sizeof(double));
 	
 	// F = X*F*X', X stored in transposed form
@@ -287,7 +289,8 @@ void diag_fock(double *F, double *X, double *C, double *en, int M)
 	
 	qfree(Temp, M*M*sizeof(double));
 	qfree(TempF, M*M*sizeof(double));
-	scf_timing.time_diag += MPI_Wtime() - t0;
+	
+	timer_stop("diagfock");
 }
 
 

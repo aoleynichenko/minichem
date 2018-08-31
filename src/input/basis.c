@@ -37,9 +37,7 @@ int nshells;
 struct basis_function *bfns;
 struct shell *shells;
 
-
-// TODO: remove ths function
-void determine_principal_numbers(struct basis_set *);
+void estimate_principal_numbers(struct basis_set *);
 
 
 /***********************************************************************
@@ -172,7 +170,7 @@ void directive_basis()
 	for (; *p->sym; p++) {
 		if (!p->bas)
 			continue;
-		determine_principal_numbers(p->bas);
+		estimate_principal_numbers(p->bas);
 	}
 }
 
@@ -226,50 +224,30 @@ void form_atom_centered_bfns(struct cart_mol *molecule, struct basis_function **
 }
 
 
-// TODO: delete this function (together with the implementation of the EHT)
-// estimates principal quantum number n for every GTO in set 'bs'
-// работает кое-как, но пока и ладно, сойдет
-void determine_principal_numbers(struct basis_set *bs)
+/***********************************************************************
+ * estimate_principal_numbers
+ * 
+ * Estimates principal quantum number n for every GTO in set 'bs'
+ * n = number_of_radial_nodes + L + 1
+ * NOTE: it will work not good for uncontracted basis sets
+ * TODO: sort primitives of the cGTO by exponent in descending order
+ **********************************************************************/
+void estimate_principal_numbers(struct basis_set *bs)
 {
 	int i, j;
-	double maxs = 0.0, maxp = 0.0;
+	int nn;    // # nodes
 	
 	for (i = 0; i < bs->size; i++) {
 		struct cgtf *orb = &bs->cgtfs[i];
 		int L = orb->L;
-		double maxalpha = 0.0;
-		for (j = 0; j < orb->nprim; j++)
-			if (orb->exp[j] > maxalpha)
-				maxalpha = orb->exp[j];
-		if (L == BFN_S && maxalpha > maxs)
-			maxs = maxalpha;
-		else if (L == BFN_P && maxalpha > maxs)
-			maxp = maxalpha;
-	}
-	
-	// мы нашли максимальные альфы для каждого типа орбиталей
-	// теперь попробуем оценить главные квантовые числа, считая, что для
-	// каждого следующего n альфы отличаются на 1-2 порядка
-	for (i = 0; i < bs->size; i++) {
-		struct cgtf *orb = &bs->cgtfs[i];
-		int L = orb->L;
-		double maxalpha = 0.0;
-		double ratio;
-		
-		for (j = 0; j < orb->nprim; j++)
-			if (orb->exp[j] > maxalpha)
-				maxalpha = orb->exp[j];
-		if (L == BFN_S)
-			ratio = maxs / maxalpha;
-		else if (L == BFN_P)
-			ratio = maxp / maxalpha;
-		
-		if (ratio < 2)
-			orb->n = L + 1;
-		else if (ratio < 70)
-			orb->n = L + 1 + 1;
-		else  // > 70
-			orb->n = L + 1 + 2;
+		nn = 0;
+		// loop over primitives
+		for (j = 1; j < orb->nprim; j++) {
+			if (sgn(orb->c[j]) != sgn(orb->c[j-1])) {
+				nn++;  // node!
+			}
+		}
+		orb->n = nn + orb->L + 1;
 	}
 }
 

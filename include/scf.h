@@ -33,17 +33,7 @@ struct scf_opt {
 	int direct;
 };
 
-struct scf_timing_t {
-	double time_diag;
-	double time_fock;
-	double time_ortho;
-	double time_guess;
-	double time_dens;
-};
-
-extern struct scf_timing_t scf_timing;
 extern struct scf_opt scf_options;
-
 
 void directive_scf();
 void scf_init();

@@ -69,6 +69,9 @@ void compute_1e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
 	double *A;   // temporary matrix
 	int err;
 	
+	timer_new_entry("1e", "One-electron integrals");
+	timer_start("1e");
+	
 	// prepare
 	A = (double *) malloc(nbas*nbas * sizeof(double));
 	fd = fastio_open(filename, "w");
@@ -102,9 +105,11 @@ void compute_1e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
 			A[nbas*i+j] = aoint_potential(fi, fj);
 		}
 	fastio_write_doubles(fd, A, nbas*nbas);
-	
+
 	fastio_close(fd);
 	free(A);
+	
+	timer_stop("1e");
 	printf("done\n");
 }
 
@@ -132,6 +137,9 @@ void compute_2e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
 	integral_t buf[BATCH_SIZE];
 	integral_t tmp;
 	int n_uniq = 0, n_nonzero = 0;
+	
+	timer_new_entry("2e", "Two-electron integrals");
+	timer_start("2e");
 	
 	printf("begin 2e integrals...\n");
 	printf("  sizeof buf (bytes) = %d\n", sizeof(buf));
@@ -172,6 +180,8 @@ void compute_2e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
 	printf("  # non-zero ERIs = %d\n", n_nonzero);
 	
 	fastio_close(fd);
+	
+	timer_stop("2e");
 	printf("done\n");
 }
 

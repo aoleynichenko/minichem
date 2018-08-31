@@ -97,7 +97,7 @@ int main(int argc, char **argv)
 	memstats();  // memory usage statistics
 	if (rank == 0) {
 		t2 = MPI_Wtime();
-		printf("Total time: %.2f sec\n", t2 - t1);
+		printf("Total time: %.3f sec\n", t2 - t1);
 	}
 	
 	MPI_Finalize();

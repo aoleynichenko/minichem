@@ -164,7 +164,9 @@ void uhf_guess(double *Fa, double *Fb, double *H, double *Pa, double *Pb,
 			   BasisFunc_t *bfns, int M)
 {
 	int Na, Nb;
-	double t = MPI_Wtime();
+
+	timer_new_entry("guess", "Initial guess");
+	timer_start("guess");
 	
 	printf("\nInitial guess: %s\n", scf_options.guess == GUESS_EHT ?
 		"extended Huckel theory" : "bare nuclei");
@@ -185,10 +187,9 @@ void uhf_guess(double *Fa, double *Fb, double *H, double *Pa, double *Pb,
 	uhf_makedensity(Pa, Ca, Na, M);
 	uhf_makedensity(Pb, Cb, Nb, M);
 	
-	printf("Initial energy = %.8f\n", uhf_energy(Pa, Pb, Fa, Fb, H, M));
-	printf("Initial guess done in %.6f sec\n\n", MPI_Wtime()-t);
+	printf("Initial energy = %.8f\n\n", uhf_energy(Pa, Pb, Fa, Fb, H, M));
 	
-	scf_timing.time_guess += MPI_Wtime() - t;
+	timer_stop("guess");
 }
 
 double uhf_energy(double *Pa, double *Pb, double *Fa, double *Fb, double *H, int M)
@@ -244,6 +245,9 @@ void uhf_makefock(double *Fa, double *Fb, double *H, double *Pa, double *Pb, int
 	int n_int_read;
 	double Int;
 	double *Pt = (double *) qalloc(M*M*sizeof(double));
+	
+	timer_new_entry("makefock", "Fock matrix construction");
+	timer_start("makefock");
 		
 	for (m = 0; m < M*M; m++)
 		Pt[m] = Pa[m] + Pb[m];
@@ -390,7 +394,7 @@ void uhf_makefock(double *Fa, double *Fb, double *H, double *Pa, double *Pb, int
 	fastio_close(fd);
 	qfree(Pt, M*M*sizeof(double));
 	
-	scf_timing.time_fock += MPI_Wtime() - t0;
+	timer_stop("makefock");
 }
 
 
@@ -427,6 +431,9 @@ void uhf_makefock_direct(double *Fa, double *Fb, double *H, double *Pa, double *
 	double **Fai = (double **) qalloc(maxthreads * sizeof(double *));
 	double **Fbi = (double **) qalloc(maxthreads * sizeof(double *));
 	double *Pt = (double *) qalloc(M*M*sizeof(double));
+	
+	timer_new_entry("makefock", "Fock matrix construction");
+	timer_start("makefock");
 	
 	for (i = 0; i < maxthreads; i++) {
 		Fai[i] = (double *) qalloc(M*M*sizeof(double));
@@ -603,7 +610,7 @@ void uhf_makefock_direct(double *Fa, double *Fb, double *H, double *Pa, double *
 	qfree(Fbi, maxthreads * sizeof(double *));
 	qfree(Pt, M*M*sizeof(double));
 	
-	scf_timing.time_fock += MPI_Wtime() - t0;
+	timer_stop("makefock");
 }
 
 // Calpha ---> Palpha
@@ -611,7 +618,10 @@ void uhf_makefock_direct(double *Fa, double *Fb, double *H, double *Pa, double *
 void uhf_makedensity(double *P, double *C, int nelec, int dim)
 {
 	int i, j, a;
-	double p, t0 = MPI_Wtime();
+	double p;
+	
+	timer_new_entry("dens", "Density matrix construction");
+	timer_start("dens");
 	
 	#pragma omp parallel for private(p,j,a)
 	for (i = 0; i < dim; i++)
@@ -622,7 +632,7 @@ void uhf_makedensity(double *P, double *C, int nelec, int dim)
 			P[i*dim+j] = p;
 		}
 	
-	scf_timing.time_dens += MPI_Wtime() - t0;
+	timer_stop("dens");
 }
 
 double exact_S2(int Nalpha, int Nbeta)
