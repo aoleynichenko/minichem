@@ -1,0 +1,87 @@
+\documentclass[a4paper, 12pt]{report}
+
+%\usepackage[a4paper, includefoot,
+%			left=2.5cm,
+%			right=1.5cm,
+%			top=2cm,
+%			bottom=2cm,			
+%			headsep=1cm,
+%			footskip=1cm]{geometry}
+
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{indentfirst}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage[pdftex]{graphicx}
+\usepackage[14pt]{extsizes}
+\usepackage[left=2cm,right=2cm,top=3cm,bottom=3cm]{geometry}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{bold-extra}
+\usepackage{titling}
+\usepackage{graphicx}
+\usepackage{braket}
+
+% for left eigenvectors
+\newcommand{\Perp}{{\perp\perp}}
+
+% for keywords description lists
+\usepackage{scrextend}
+\addtokomafont{labelinglabel}{\ttfamily}
+
+\newcommand{\subtitle}[1]{%
+  \posttitle{%
+    \par\end{center}
+    \begin{center}\large#1\end{center}
+    \vskip0.5em}%
+}
+
+
+% programming languages highlighting
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\definecolor{lightlightgray}{gray}{0.93}
+\lstset{
+	backgroundcolor = \color{lightlightgray},
+	basicstyle=\footnotesize\ttfamily
+}
+
+% for italic captions
+\usepackage[format=plain,
+            labelfont={bf,it},
+            textfont=it]{caption}
+
+% advanced tables
+\usepackage{tabularx}
+\newcolumntype{L}{>{\arraybackslash}m{10cm}}
+
+
+
+%\bibliographystyle{}
+
+%\title{An Ab Initio Electronic Structure Package \\ \bigskip \Large Version 0.1.0 }
+%\author{Alexander Oleynichenko}
+%\subtitle{\textit{User Manual}}
+
+\begin{document}
+
+Мохнатый кот на запушистке
+
+Сидит. Говнится, недоволен
+
+%\maketitle
+
+%\tableofcontents
+
+
+%\bibliographystyle{unsrt}
+%\bibliography{manual-refs}{}
+
+\end{document}

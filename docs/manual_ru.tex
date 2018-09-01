@@ -1,0 +1,414 @@
+\documentclass[a4paper, 12pt]{article}
+
+%\usepackage[a4paper, includefoot,
+%			left=2.5cm,
+%			right=1.5cm,
+%			top=2cm,
+%			bottom=2cm,			
+%			headsep=1cm,
+%			footskip=1cm]{geometry}
+
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{indentfirst}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage[pdftex]{graphicx}
+\usepackage[14pt]{extsizes}
+\usepackage[left=2cm,right=2cm,top=3cm,bottom=3cm]{geometry}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{bold-extra}
+\usepackage{titling}
+\usepackage{graphicx}
+\usepackage{braket}
+\usepackage{bold-extra}   % bold TT font
+
+% for left eigenvectors
+\newcommand{\Perp}{{\perp\perp}}
+
+% for keywords description lists
+\usepackage{scrextend}
+\addtokomafont{labelinglabel}{\ttfamily}
+
+\newcommand{\subtitle}[1]{%
+  \posttitle{%
+    \par\end{center}
+    \begin{center}\large#1\end{center}
+    \vskip0.5em}%
+}
+
+
+% programming languages highlighting
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\definecolor{lightlightgray}{gray}{0.93}
+\lstset{
+	backgroundcolor = \color{lightlightgray},
+	basicstyle=\small\ttfamily
+}
+
+% for italic captions
+\usepackage[format=plain,
+            labelfont={bf,it},
+            textfont=it]{caption}
+
+% advanced tables
+\usepackage{tabularx}
+\newcolumntype{L}{>{\arraybackslash}m{10cm}}
+
+
+
+%\bibliographystyle{}
+
+\title{{\bf minichem} \\ \bigskip \normalsize Версия 1.0 }
+\author{Александр Олейниченко}
+\subtitle{\textit{Руководство пользователя}}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Общие сведения}
+
+\texttt{minichem} -- это небольшая учебная квантовохимическая программа, разработанная с целью поближе познакомиться с техническими аспектами реализации различных методов решения электронного уравнения Шредингера. В ходе работы над программой автор опирался как на учебные пособия, так и на оригинальные работы и (к сожалению, немногочисленные) веб-ресурсы (см. список литературы). Среди использованных материалов два учебных пособия представляются наиболее полно отражающими сложности и особенности алгоритмической реализации методов квантовой химии, а потому особенно важными:
+
+\begin{itemize}
+\item A. Szabo, N. Ostlund, "Modern Quantim Chemistry";
+\item T. Helgaker, P. Jorgensen, J. Olsen, "Molecular Electronic-Structure Theory".
+\end{itemize}
+
+Исходный текст программы полностью написан на языке программирования С (стандарт C99). В настоящий момент программа ориентирована на Unix-подобные операционные системы; тем не менее, в будущем программа может быть портирована и на другие платформы.
+
+Ниже перечислены основные возможности программы, предоставляемые пользователю:
+
+\begin{itemize}
+\item расчет энергии системы (атома или молекулы) при заданной геометрии;
+\item ограниченный (RHF) и неограниченный (UHF) методы Хартри-Фока-Рутаана;
+\item техника DIIS улучшения сходимости процедуры решения уравнений ССП;
+\item распараллеливание на основе технологии OpenMP;
+\item доступные химические элементы: вся периодическая система (внимание: программа никак не учитывает релятивистские эффекты!);
+\item базисные наборы: декартовы, с произвольным угловым моментом базисных функций.
+\end{itemize}
+
+Исходный код проекта доступен на Github:
+
+\url{https://github.com/aoleynichenko/minichem}
+
+\bigskip
+
+Автор будет рад любым замечаниям, вопросам и предложениям:
+
+\href{mailto:alexvoleynichenko@gmail.com}{\nolinkurl{alexvoleynichenko@gmail.com}}.
+
+
+\section{Компиляция и тестирование программы}
+
+Перед началом сборки необходимо убедиться, что на Вашей машине установлены следующие библиотеки:
+
+\begin{itemize}
+\item \texttt{libc} -- стандартная библиотека языка C;
+\item \texttt{MPI} -- библиотека для параллельных вычислений для систем с распределенной памятью;
+\item \texttt{OpenMP} -- библиотека для параллельных вычислений для систем с общей памятью;
+\item \texttt{BLAS} и \texttt{LAPACK} -- библиотеки линейной алгебры.
+\end{itemize}
+
+Для непосредственно сборки потребуются инструменты \texttt{CMake} и \texttt{make}, а также компиляторы языка C (рекомендованы компиляторы GNU или Intel).
+
+Для компиляции зайдите в домашний каталог \texttt{minichem} и выполните следующие команды:
+
+\begin{lstlisting}
+$ mkdir build && cd build
+$ cmake ..
+$ make [-jN]
+\end{lstlisting}
+
+В случае успешной компиляции в каталоге \texttt{build} появится исполняемый файл \texttt{minichem.x}.
+
+Тесты размещены в папке \texttt{test}. Система тестирования написана на языке Python2 (должен быть предустановлен). Для тестирования выполните команды:
+
+\begin{lstlisting}
+$ cd test
+$ python test.py
+\end{lstlisting}
+
+
+\section{Структура входных файлов и запуск задач}
+
+Запуск программы \texttt{minichem}:
+\begin{lstlisting}
+$ minichem.x <input-file.inp>
+\end{lstlisting}
+
+Программа направляет результаты работы в стандартный поток вывода, поэтому удобнее сразу перенаправлять его в файл командой \texttt{tee}:
+\begin{lstlisting}
+$ minichem.x <input-file.inp> | tee <output-file.out>
+\end{lstlisting}
+
+Дизайн языка входных файлов позаимствован у программы NWChem \cite{nwchem2010}. Так же как и NWChem, \texttt{minichem} работает как интерпретатор, <<исполняя>> входной файл как программу, написанную на очень простом скриптовом языке. Язык \texttt{minichem} во многом совпадает с языком NWChem; везде, где это было возможно, названия директив и секций были выбраны так, чтобы входной файл мог быть интерпретирован обоими квантовохимическими программами без дополнительных правок.
+
+Входные файлы \texttt{minichem} строятся из директив и секций. Директивы -- это однострочные команды, секции объединяют наборы директив. Как правило, секции задают параметры для работы какого-либо модуля (например, параметры сходимости процедуры ССП). \texttt{minichem} последовательно считывает строки входного файла и соответственно заданным в нем параметрам изменяет свои внутренние переменные. Как только \texttt{minichem} доходит до директивы \texttt{task}, исполнение входного файла останавливается и начинается расчет. В одном входном файле допустимы несколько директив \texttt{task}; между ними пользователь может менять параметры расчетов, организовывая, таким образом, каскад вычислений.
+
+Язык \texttt{minichem} также поддерживает однострочные комментарии, начинающиеся со знака \texttt{'\#'}. Язык нечувствителен к регистру.
+
+В качестве примера входного файла приведем файл, составленный для молекулы бензола в базисе STO-3G. Пояснения ко всем директивам содержатся в комментариях.
+Подробные описания всех директив и секций даны в разделе. Несколько других примеров можно найти в разделе \ref{sec:details}.
+
+\begin{lstlisting}
+# C6H6 single-point energy
+#
+# RHF molecular orbitals will be written to the molden-format
+# file c6h6.mos
+
+# name for the task
+start C6H6
+
+# allowed memory usage
+memory 10 mb
+
+# print input file before executing it
+echo
+
+# number of OpenMP threads
+nproc 8
+
+# geometry (cartesian)
+# default: charge = 0
+geometry
+  C    0.000    1.396    0.000
+  C    1.209    0.698    0.000
+  C    1.209   -0.698    0.000
+  C    0.000   -1.396    0.000
+  C   -1.209   -0.698    0.000
+  C   -1.209    0.698    0.000
+  H    0.000    2.479    0.000
+  H    2.147    1.240    0.000
+  H    2.147   -1.240    0.000
+  H    0.000   -2.479    0.000
+  H   -2.147   -1.240    0.000
+  H   -2.147    1.240    0.000
+end
+
+# basis set specification
+# (keyword SPHERICAL -- only for compatibility with NWChem)
+basis "ao basis" SPHERICAL
+H    S
+      3.42525091             0.15432897       
+      0.62391373             0.53532814       
+      0.16885540             0.44463454  
+C    S
+     71.6168370              0.15432897       
+     13.0450960              0.53532814       
+      3.5305122              0.44463454       
+C    S
+      2.9412494             -0.09996723
+      0.6834831              0.39951283    
+      0.2222899              0.70011547            
+C    P
+      2.9412494              0.15591627       
+      0.6834831              0.60768372       
+      0.2222899              0.39195739    
+end
+
+# options for the SCF module
+# by default: singlet
+scf
+  print "overlap"   # print AO overlap integrals
+  diis 5            # enable DIIS, max subspace dim = 5
+  maxiter 20        # max number of SCF iterations
+end
+
+# export calculated data (molecular orbitals)
+out
+  molden   # to the MOLDEN .mos format
+end
+
+# do RHF calculation
+task scf
+\end{lstlisting}
+
+
+\section{Директивы входных файлов}\label{sec:details}
+
+\subsection{start}
+
+Синтаксис:
+
+\begin{lstlisting}
+start <string name>
+\end{lstlisting}
+
+Директива \texttt{start} задает небольшой не содержащий пробелов идентификатор задачи. Этот идентификатор используется затем в названиях временных и выходных файлов.
+
+\subsection{echo}
+
+Синтаксис:
+
+\begin{lstlisting}
+echo
+\end{lstlisting}
+
+Если директива \texttt{echo} встречается во входном файле, \texttt{minichem} направляет содержимое входного файла в стандартный вывод. Рекомендуется всегда использовать эту директиву.
+
+\subsection{memory}
+
+Синтаксис:
+
+\begin{lstlisting}
+memory <integer> <string units>
+# <units>: one of b (bytes), kb, mb, mw (megawords), gb
+\end{lstlisting}
+
+Максимальное количество оперативной памяти, которое может быть выделено и использовано программой.
+
+\subsection{nproc}
+
+Синтаксис:
+
+\begin{lstlisting}
+nproc <integer>
+\end{lstlisting}
+
+Число OpenMP-нитей (для параллельного исполнения).
+
+\subsection{task}
+
+Синтаксис:
+
+\begin{lstlisting}
+task <string theory>
+\end{lstlisting}
+
+Директива задает квантовохимический метод, который должен быть использован для решения электронной задачи.
+
+Поскольку в настоящее время в программе реализован только метод Хартри-Фока, директива \texttt{task} может вызываться только с аргументом \texttt{scf}:
+\begin{lstlisting}
+task scf
+\end{lstlisting}
+
+\subsection{geometry}
+
+Синтаксис:
+
+\begin{lstlisting}
+geometry [units <string units default angstroms>]
+  [charge <integer default 0>]
+  [mult <integer default 1>]
+  <string elem> <real x y z>
+  . . .
+end
+\end{lstlisting}
+
+Сложная директива \texttt{geometry} задает декартовы координаты входящих в молекулу атомов, единицы измерения расстояний (бор или ангстрем), заряд молекулы и спиновую мультиплетность. По заданным значениям заряда и мультиплетности программа может автоматически выбрать, какой вариант метода Хартри-Фока необходимо использовать.
+
+\subsection{charge}
+Синтаксис:
+
+\begin{lstlisting}
+charge <integer>
+\end{lstlisting}
+
+Директива задает общий заряд системы (в атомных единицах). Добавлена для совместимости с NWChem.
+
+\subsection{basis}
+\subsection{scf}
+\begin{labeling}{alligator}
+\item [print]
+\item [noprint]
+\item [guess]
+\item [rhf/uhf]
+\item [singlet/doublet/triplet/quartet/quintet]
+\item [maxiter]
+\item [diis]
+\item [nodiis]
+\item [direct]
+\end{labeling}
+\subsection{out}
+\begin{labeling}{alligator}
+\item [molden]
+\end{labeling}
+\section{Примеры входных файлов для типовых задач}\label{sec:examples}
+
+UHF-расчет атома лития в базисе STO-3G:
+\begin{lstlisting}
+start Li
+echo
+
+geometry units atomic
+  Li 0 0 0
+end
+
+basis "ao basis" SPHERICAL
+Li    S
+     16.1195750              0.15432897       
+      2.9362007              0.53532814       
+      0.7946505              0.44463454       
+Li    SP
+      0.6362897             -0.09996723             0.15591627       
+      0.1478601              0.39951283             0.60768372       
+      0.0480887              0.70011547             0.39195739       
+end
+
+scf
+  uhf
+  diis
+  doublet
+end
+
+task scf
+\end{lstlisting}
+
+\bigskip
+
+UHF-расчет дублетной частицы $\rm CH_3$:
+\begin{lstlisting}
+start CH3
+echo
+
+geometry
+C     0.08745162    -0.08744725    -0.08742186
+H     0.52503428     0.78909888    -0.52508604
+H    -0.78884450    -0.52530342    -0.52536318
+H     0.52530257    -0.52529218     0.78892712
+end
+
+# STO-3G
+basis "ao basis" SPHERICAL
+H    S
+      3.42525091             0.15432897       
+      0.62391373             0.53532814       
+     0.16885540             0.44463454  
+C    S
+     71.6168370              0.15432897       
+     13.0450960              0.53532814       
+      3.5305122              0.44463454       
+C    S
+      2.9412494             -0.09996723
+      0.6834831              0.39951283    
+      0.2222899              0.70011547            
+C    P
+      2.9412494              0.15591627       
+      0.6834831              0.60768372       
+      0.2222899              0.39195739    
+end
+
+scf
+  uhf
+  doublet
+end
+
+task scf
+\end{lstlisting}
+
+\bibliographystyle{unsrt}
+\bibliography{manual-refs}{}
+
+\end{document}

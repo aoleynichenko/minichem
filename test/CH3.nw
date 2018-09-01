@@ -30,8 +30,6 @@ end
 
 scf
   uhf
-#  nodiis
-#  direct
   doublet
 end
 
