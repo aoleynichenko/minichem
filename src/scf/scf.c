@@ -19,7 +19,6 @@
 
 void print_blacs_grid_info();
 void config_grid(int nprocs, int *nprow, int *npcol);
-//void form_atom_centered_bfns(struct cart_mol *molecule, struct basis_function **bfns, struct shell **shs, int *M, int *nshells);
 void print_matrix(char *annot, double *A, int dim);
 
 static int mpi_rank = -1;
@@ -265,7 +264,6 @@ double maxerr(double *errmatrix, int n)
 void diag_fock(double *F, double *X, double *C, double *en, int M)
 {
 	int i, j;
-	double t0 = MPI_Wtime();
 	
 	double *Temp = (double *) qalloc(M*M*sizeof(double));
 	double *TempF = (double *) qalloc(M*M*sizeof(double));

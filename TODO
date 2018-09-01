@@ -1,6 +1,9 @@
 <> one header in the /include dir = one module
-<> store norm factor directly in the basis function? (for each exp)
 <> test system
-<> timing routines in util
 <> cube file with density
+<> AREP integrals
+<> molecular symmetry using libmsym
+<> DIIS in UHF
+<> conv criteria in SCF
+<> molden output for uhf
 

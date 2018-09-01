@@ -44,6 +44,7 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	double hfe, olde, deltap_a, deltap_b;
 	int nbytes;   // bytes in matrix to allocate
 	double Enuc;  // nuclei repulsion energy
+	double s2;    // current UHF <S^2>
 	
 	double *H;    // core Hamiltonian
 	double *S;    // overlap
@@ -54,13 +55,23 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	double *P0a,*P0b;  // stored density matrices from previous step
 	double *Ca, *Cb;   // AO coefficients in MO with respect to spin part
 	double *Ea, *Eb;   // orbital energies, alpha & beta
+
+	// for DIIS
+	double *ErrMa, *ErrMb;  // error matrix, e=FDS-SDF
+	int diisbas;            // diis subspace dimension
+	DIISList_t *diislist_a, *diislist_b; // list with stored Fock and error matrices
+	double diiserror_a, diiserror_b;
+	
 	
 	n = 1;  // iteration number 1
 	t0 = MPI_Wtime();
 	nbytes = M * M * sizeof(double);
 	Enuc = enuc(molecule);
 	nalphabeta(molecule, &Nalpha, &Nbeta);
-	
+	diisbas = scf_options.diisbas;
+	diislist_a = NULL;
+	diislist_b = NULL;
+		
 	H =  (double *) qalloc(nbytes);
 	S =  (double *) qalloc(nbytes);
 	X =  (double *) qalloc(nbytes);
@@ -82,14 +93,14 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	olde = uhf_energy(Pa, Pb, Fa, Fb, H, M) + Enuc;
 	
 	// scf loop
-	printf("Nalpha = %d\nNbeta = %d\n", Nalpha, Nbeta);
-	printf("#bfns = %d\n", M);
-	printf("#eris = %d\n\n", (M*M*M*M+2*M*M*M+3*M*M+2*M)/8);
-	printf(" iter.       Energy         Delta E       RMS-Dens       time\n");
-	printf("---------------------------------------------------------------\n");
+	printf("Nalpha = %d\nNbeta = %d\n\n", Nalpha, Nbeta);
+	//printf("#bfns = %d\n", M);
+	//printf("#eris = %d\n\n", (M*M*M*M+2*M*M*M+3*M*M+2*M)/8);
+	printf(" iter.       Energy         Delta E       RMS-Dens      <S^2>       time\n");
+	printf("--------------------------------------------------------------------------\n");
 	while (1) {
 		if (n > scf_options.maxiter) {
-			printf("---------------------------------------------------------------\n");
+			printf("--------------------------------------------------------------------------\n");
 			printf("      not converged!\n");
 			errquit("no convergence of SCF equations! Try to increase scf:maxiter\n");
 		}
@@ -106,7 +117,30 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 			uhf_makefock(Fa, Fb, H, Pa, Pb, M);
 		}
 		
-		uhf_makefock_direct(Fa, Fb, H, Pa, Pb, bfns, M);
+		// in fact, now we have Fi and Di, used to contruct this Fi
+		// alpha
+		ErrMa = (double *) qalloc(nbytes);
+		make_error_matrix(ErrMa, Fa, Pa, S, M);  // Pa or P = Pa + Pb?
+		diiserror_a = maxerr(ErrMa, M);
+		// beta
+		ErrMb = (double *) qalloc(nbytes);
+		make_error_matrix(ErrMb, Fb, Pb, S, M);
+		diiserror_b = maxerr(ErrMb, M);
+		
+		// if DIIS is enabled
+		if (scf_options.diis && diisbas != 0) {
+			if (!diislist_a) {
+				diislist_a = newDIISList(ErrMa, Fa, M);
+				diislist_b = newDIISList(ErrMb, Fb, M);
+			}
+			else {
+				diis_store(diislist_a, ErrMa, Fa, M, diisbas);
+				diis_store(diislist_b, ErrMb, Fb, M, diisbas);
+			}
+			// extrapolate new Fa and Fb:
+			diis_extrapolate(Fa, diislist_a, diisbas);
+			diis_extrapolate(Fb, diislist_b, diisbas);
+		}
 		
 		diag_fock(Fa, X, Ca, Ea, M);
 		diag_fock(Fb, X, Cb, Eb, M);
@@ -116,14 +150,15 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 		deltap_a = rmsdens(Pa, P0a, M);
 		deltap_b = rmsdens(Pb, P0b, M);
 		hfe = uhf_energy(Pa, Pb, Fa, Fb, H, M) + Enuc;
-		printf("%4d%17.8f%15.8f%15.8f%8.2f\n", n, hfe, hfe-olde, deltap_a, MPI_Wtime()-t0);
+		s2 = uhf_S2(Nalpha, Nbeta, Ca, Cb, S, M);
+		printf("%4d%17.8f%15.8f%15.8f%10.4f%11.2f\n", n, hfe, hfe-olde, deltap_a, s2, MPI_Wtime()-t0);
 		printf("                                    %15.8f\n", deltap_b);
 		if (deltap_a < 1e-6 && deltap_b < 1e-6)
 			break;
 		olde = hfe;
 		n++;
 	}
-	printf("---------------------------------------------------------------\n");
+	printf("--------------------------------------------------------------------------\n");
 	printf("          Total SCF energy =%15.8f\n", hfe);
 	printf("  Nuclear repulsion energy =%15.8f\n", Enuc);
 	printf("                 UHF <S^2> =%11.4f\n", uhf_S2(Nalpha, Nbeta, Ca, Cb, S, M));
@@ -148,6 +183,13 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	printf("  +-----+-----+----------------+----------+\n");
 	
 	
+	// cleanup DIIS
+	if (scf_options.diis && diislist_a) {
+		removeDIISList(diislist_a);
+		removeDIISList(diislist_b);
+	}
+	
+	// cleanup
 	qfree(H, nbytes);
 	qfree(S, nbytes);
 	qfree(X, nbytes);

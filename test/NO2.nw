@@ -28,6 +28,7 @@ end
 
 scf
   uhf
+  nodiis
   doublet
 end
 
