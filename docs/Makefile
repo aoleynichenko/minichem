@@ -9,8 +9,8 @@ all: MAN_EN MAN_RU
 
 MAN_EN:
 	$(TEX) $(MAN_EN).tex
-#	$(BIB) $(MAN_EN).aux
-#	$(TEX) $(MAN_EN).tex
+	$(BIB) $(MAN_EN).aux
+	$(TEX) $(MAN_EN).tex
 	$(TEX) $(MAN_EN).tex
 
 MAN_RU:

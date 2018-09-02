@@ -1,4 +1,4 @@
-\documentclass[a4paper, 12pt]{report}
+\documentclass[a4paper, 12pt]{article}
 
 %\usepackage[a4paper, includefoot,
 %			left=2.5cm,
@@ -27,6 +27,7 @@
 \usepackage{titling}
 \usepackage{graphicx}
 \usepackage{braket}
+\usepackage{bold-extra}   % bold TT font
 
 % for left eigenvectors
 \newcommand{\Perp}{{\perp\perp}}
@@ -50,7 +51,7 @@
 \definecolor{lightlightgray}{gray}{0.93}
 \lstset{
 	backgroundcolor = \color{lightlightgray},
-	basicstyle=\footnotesize\ttfamily
+	basicstyle=\small\ttfamily
 }
 
 % for italic captions
@@ -66,20 +67,426 @@
 
 %\bibliographystyle{}
 
-%\title{An Ab Initio Electronic Structure Package \\ \bigskip \Large Version 0.1.0 }
-%\author{Alexander Oleynichenko}
-%\subtitle{\textit{User Manual}}
+\title{{\bf minichem} \\ \bigskip \normalsize Version 1.0 }
+\author{Alexander Oleynichenko}
+\subtitle{\textit{User Manual}}
 
 \begin{document}
 
-text
+\maketitle
 
-%\maketitle
+\tableofcontents
 
-%\tableofcontents
+\section{General considerations}
+
+\texttt{minichem} is a tiny quantum chemistry program written in educational purposes. It is based mainly on two textbooks:
+
+\begin{itemize}
+\item \cite{szabo1996} A. Szabo, N. Ostlund, "Modern Quantim Chemistry";
+\item \cite{helgaker2008} T. Helgaker, P. Jorgensen, J. Olsen, "Molecular Electronic-Structure Theory".
+\end{itemize}
+
+The source code is written in the C99 programming language. Currently \texttt{minichem} is oriented on the Unix-like operation systems.
+
+Features:
+
+\begin{itemize}
+\item single-point energy calculations;
+\item restricted (RHF) and unrestricted (UHF) Hartree-Fock theories;
+\item DIIS convergence technique;
+\item OpenMP parallelization;
+\item Available elements: all periodic table (but only non-relativistic treatment is available!);
+\item cartesian basis sets, arbitrary angular momentum of basis functions.
+\end{itemize}
+
+The source code is available on Github:
+
+\url{https://github.com/aoleynichenko/minichem}
+
+\bigskip
+
+Authos is looking forward to any comments and questions!
+
+\href{mailto:alexvoleynichenko@gmail.com}{\nolinkurl{alexvoleynichenko@gmail.com}}.
 
 
-%\bibliographystyle{unsrt}
-%\bibliography{manual-refs}{}
+\section{Compilation and testing}
+
+Required libraries:
+
+\begin{itemize}
+\item \texttt{libc} -- the C standard library;
+\item \texttt{MPI} -- Message Passing Interface (higher-level routines for the distributed-memory communication environment);
+\item \texttt{OpenMP} -- Open Multi-Processing (API for shared memory multiprocessing programming);
+\item \texttt{BLAS} и \texttt{LAPACK} -- numerical linear algebra libraries.
+\end{itemize}
+
+Tools needed to compile the source code:
+\begin{itemize}
+\item \texttt{CMake}
+\item \texttt{make}
+\item C compiler (GNU or Intel are recommended)
+\end{itemize}
+
+How to compile:
+
+\begin{lstlisting}
+$ mkdir build && cd build
+$ cmake ..
+$ make [-jN]
+\end{lstlisting}
+
+Test set can be found in the \texttt{test} folder. The testing system requires the Python2 programming language environment to be installed on your system. How to test:
+
+\begin{lstlisting}
+$ cd test
+$ python test.py
+\end{lstlisting}
+
+
+\section{Getting started}
+
+How to run \texttt{minichem}:
+\begin{lstlisting}
+$ minichem.x <input-file.inp>
+\end{lstlisting}
+
+Executable \texttt{minichem.x} sends the output to the stdout, hence it is more convenient to redirect it to file:
+
+\begin{lstlisting}
+$ minichem.x <input-file.inp> | tee <output-file.out>
+\end{lstlisting}
+
+The input language design resembles the NWChem input files language \cite{nwchem2010}. As well as NWChem, \texttt{minichem} works as an interpreter: it executes input files written in a very simple scripting language. The \texttt{minichem} scripting language largely coincides with the NWChem language; 
+wherever possible, the names of directives and sections have been chosen in that way that the input file can be interpreted by both quantum-chemical programs without some extra edits.
+
+\texttt{minichem} input files consist of simple (top-level) directives and sections (compound directives). Directives are single-line commands; sections combine sets of directives. Usually sections specify control parameters for the separate modules (for example, convergence parameters of the SCF procedure). \texttt{minichem} reads the input file sequentially, line by line, and changes its internal variables according to the given values of the parameters specified in it. Once \texttt{minichem} reaches the \texttt{task} directive, the execution of the input file stops and calculation begins.
+Several \texttt{task} directives are allowed in one input file; between them the user can change any parameters, thus organizing a cascade of calculations.
+
+The \texttt{minichem} language also supports single-line comments beginning with \#. Language is case insensitive.
+
+Let us consider the RHF/STO-3G calculation of a benzene molecule. Some explanations to all the directives encountered are given in the comments.
+Detailed descriptions of all possible directives and sections are given in Section \ref{sec:details}. A few other examples can be found in Section \ref{sec:examples}.
+
+\begin{lstlisting}
+# C6H6 single-point energy
+#
+# RHF molecular orbitals will be written to the molden-format
+# file c6h6.mos
+
+# name for the task
+start C6H6
+
+# allowed memory usage
+memory 10 mb
+
+# print input file before executing it
+echo
+
+# number of OpenMP threads
+nproc 8
+
+# geometry (cartesian)
+# default: charge = 0
+geometry
+  C    0.000    1.396    0.000
+  C    1.209    0.698    0.000
+  C    1.209   -0.698    0.000
+  C    0.000   -1.396    0.000
+  C   -1.209   -0.698    0.000
+  C   -1.209    0.698    0.000
+  H    0.000    2.479    0.000
+  H    2.147    1.240    0.000
+  H    2.147   -1.240    0.000
+  H    0.000   -2.479    0.000
+  H   -2.147   -1.240    0.000
+  H   -2.147    1.240    0.000
+end
+
+# basis set specification
+# (keyword SPHERICAL -- only for compatibility with NWChem)
+basis "ao basis" SPHERICAL
+H    S
+      3.42525091             0.15432897       
+      0.62391373             0.53532814       
+      0.16885540             0.44463454  
+C    S
+     71.6168370              0.15432897       
+     13.0450960              0.53532814       
+      3.5305122              0.44463454       
+C    S
+      2.9412494             -0.09996723
+      0.6834831              0.39951283    
+      0.2222899              0.70011547            
+C    P
+      2.9412494              0.15591627       
+      0.6834831              0.60768372       
+      0.2222899              0.39195739    
+end
+
+# options for the SCF module
+# by default: singlet
+scf
+  print "overlap"   # print AO overlap integrals
+  diis 5            # enable DIIS, max subspace dim = 5
+  maxiter 20        # max number of SCF iterations
+end
+
+# export calculated data (molecular orbitals)
+out
+  molden   # to the MOLDEN .mos format
+end
+
+# do RHF calculation
+task scf
+\end{lstlisting}
+
+
+\section{Input files format}\label{sec:details}
+
+\subsection{start}
+
+Syntax:
+
+\begin{lstlisting}
+start <string name>
+\end{lstlisting}
+
+The start directive specifies a short task identifier (no whitespaces are allowed). This identifier is used in the names of some temporary and output files.
+
+\subsection{echo}
+
+Syntax:
+
+\begin{lstlisting}
+echo
+\end{lstlisting}
+
+If the \texttt{echo} directive is specified in the input file, \texttt{minichem} redirects the contents of the input file to standard output. It is recommended always to use this directive.
+
+\subsection{memory}
+
+Syntax:
+
+\begin{lstlisting}
+memory <integer> <string units>
+# <units>: one of b (bytes), kb, mb, mw (megawords), gb
+\end{lstlisting}
+
+The maximum amount of RAM that can be allocated and used by the program.
+
+\subsection{nproc}
+
+Syntax:
+
+\begin{lstlisting}
+nproc <integer>
+\end{lstlisting}
+
+Number of OpenMP threads (for parallel execution).
+
+\subsection{task}
+
+Syntax:
+
+\begin{lstlisting}
+task <string theory>
+\end{lstlisting}
+
+The directive specifies which quantum chemical method is to be used to solve an electronic problem.
+
+Since currently only the HF method is implemented, the \texttt{task} directive can be called only with the \texttt{scf} argument:
+
+\begin{lstlisting}
+task scf
+\end{lstlisting}
+
+\subsection{geometry}
+
+Syntax:
+
+\begin{lstlisting}
+geometry [units <string units default angstroms>]
+  [charge <integer default 0>]
+  [mult <integer default 1>]
+  <string elem> <real x y z>
+  . . .
+end
+\end{lstlisting}
+
+The \texttt{geometry} compound directive specifies the cartesian coordinates of the atoms, distance units (boron or angstrom), total system charge spin multiplicity. Given the charge and multiplicity values, the program can automatically choose which version of the Hartree-Fock method shoukd be used.
+
+\subsection{charge}
+Syntax:
+
+\begin{lstlisting}
+charge <integer>
+\end{lstlisting}
+
+The directive sets the total charge of the system (a.u.). Added for compatibility with NWChem.
+
+\subsection{basis}
+
+Syntax:
+
+\begin{lstlisting}
+basis [<string name default "ao basis">] [spherical|cartesian]
+  <string elem> <string shell_L>
+    <real exponent> <real list_of_coefficients>
+    . . .
+  . . .
+end
+\end{lstlisting}
+
+Gaussian basis set definition. Currently only cartesian basis sets are implemented (the \texttt{cartesian} keyword), so the \texttt{spherical} keyword is useful only for compatibility with NWChem.
+
+The coefficients of the contracted basis functions are arranged in columns; the first column contains the exponents of primitive gaussian functions.
+
+The angular momentum (\texttt{<string shell\_L>}) of the block of basic functions is denoted, as usual, by the letters \texttt{S}, \texttt{P}, \texttt{D} ... The \texttt{SP} notation (one compressed function of type s, the second is of type p) is also allowed. Basis functions with arbitrary $L$ are supported.
+
+\subsection{scf}
+
+Syntax:
+
+\begin{lstlisting}
+scf
+  [rhf | uhf]
+  [singlet | doublet | triplet | quartet | quintet]
+  [guess (core | eht)]
+  [direct | nodirect]
+  [maxiter <integer max_no_of_iterations default 50>]
+  [diis [<integer subspace_dim default 5>] | nodiis]
+  [print <string what>]
+  [noprint <string what>]
+end
+\end{lstlisting}
+
+The \texttt{scf} compound directive is used to configure the SCF procedure. It may contain one or more directives from the following list:
+
+\begin{labeling}{alligator}
+\item [guess] MO initial guess. Possible values:
+	\begin{itemize}
+	\item \texttt{core} -- bare nuclei guess: all two-electron (electron-repulsion) integrals are neglected. Works well only for small systems with few electrons;
+	\item \texttt{eht} -- (default) extended H\"uckel theory \cite{hoffmann1963} (uses the Wolfsberg-Helmholtz formula \cite{wolfsberg1952}).
+	\end{itemize}
+\item [rhf/uhf] Hartee-Fock theory type (\texttt{rhf} -- restricted, \texttt{uhf} -- unrestricted).
+\item [singlet/doublet/triplet/quartet/quintet] spin multiplicity.
+\item [maxiter] Max number of SCF iterations. Default value: 50.
+\item [diis] использовать технику DIIS \cite{pulay1980,pulay1981} для ускорения сходимости уравнений ССП. Необязательный аргумент директивы -- максимальная размерность пространства итераций, которые используются для экстраполяции (значение по умолчанию: 5). Использование DIIS может быть рекомендовано практически во всех случаях и поэтому включено по умолчанию.
+\item [nodiis] не использовать технику DIIS.
+\item [direct] использовать <<прямой>> вариант метода ССП (двухэлектронные интегралы рассчитываются на ходу на каждой итерации, а не считываются из предварительно подготовленного файла). <<Прямой>> ССП может работать на порядок медленнее <<обычного>>. Иногда может быть полезен в случае нехватки дискового пространства.
+\item [nodirect] использовать <<обычный>> вариант метода ССП (хранение интегралов на диске) (по умолчанию).
+\item [print] какая дополнительная информация должна быть напечатана (но не печатается по умолчанию). Тип аргумента -- строка в двойных кавычках. Возможные аргументы директивы \texttt{print} приведены в таблице:
+
+{
+\small
+\begin{tabular}{|l|l|}
+\hline
+\texttt{"final vectors analysis"} & коэффициенты разложения МО \\
+\texttt{"overlap"}   & интегралы перекрывания в АО-базисе \\
+\texttt{"kinetic"}   & интегралы оператора кинетической энергии \\
+                     & энергии \\
+\texttt{"potential"} & интегралы оператора электрон-ядерной \\
+                     & потенциальной энергии \\
+\texttt{"eri"}       & двухэлектронные кулоновские интегралы \\
+\hline
+\end{tabular}
+}
+\item [noprint] работает прямо противоположно директиве \texttt{print} (запрещает печать дополнительной информации). Аргументы такие же, как у \texttt{print} (см. выше).
+\end{labeling}
+
+\subsection{out}
+
+Синтаксис:
+
+\begin{lstlisting}
+out
+  [molden]
+end
+\end{lstlisting}
+
+Составная директива \texttt{out} позволяет экспортировать результаты расчетов для дальнейшей их обработки другими программами. Может содержать следующие директивы:
+
+\begin{labeling}{alligator}
+\item [molden] экспортировать информацию о базисном наборе и молекулярные орбитали в файл формата MOLDEN (\texttt{.mos}) \cite{molden2000,molden2017,MoldenFormat}. В настоящий момент экспорт реализован только для метода RHF.
+\end{labeling}
+
+\section{Примеры входных файлов для типовых задач}\label{sec:examples}
+
+UHF-расчет атома лития в базисе STO-3G:
+\begin{lstlisting}
+start Li
+echo
+
+geometry units atomic
+  Li 0 0 0
+end
+
+basis "ao basis" SPHERICAL
+Li    S
+     16.1195750              0.15432897       
+      2.9362007              0.53532814       
+      0.7946505              0.44463454       
+Li    SP
+      0.6362897             -0.09996723             0.15591627       
+      0.1478601              0.39951283             0.60768372       
+      0.0480887              0.70011547             0.39195739       
+end
+
+scf
+  uhf
+  diis
+  doublet
+end
+
+task scf
+\end{lstlisting}
+
+\bigskip
+
+UHF-расчет дублетной частицы $\rm CH_3$:
+\begin{lstlisting}
+start CH3
+echo
+
+geometry
+C     0.08745162    -0.08744725    -0.08742186
+H     0.52503428     0.78909888    -0.52508604
+H    -0.78884450    -0.52530342    -0.52536318
+H     0.52530257    -0.52529218     0.78892712
+end
+
+# STO-3G
+basis "ao basis" SPHERICAL
+H    S
+      3.42525091             0.15432897       
+      0.62391373             0.53532814       
+     0.16885540             0.44463454  
+C    S
+     71.6168370              0.15432897       
+     13.0450960              0.53532814       
+      3.5305122              0.44463454       
+C    S
+      2.9412494             -0.09996723
+      0.6834831              0.39951283    
+      0.2222899              0.70011547            
+C    P
+      2.9412494              0.15591627       
+      0.6834831              0.60768372       
+      0.2222899              0.39195739    
+end
+
+scf
+  uhf
+  doublet
+end
+
+task scf
+\end{lstlisting}
+
+\clearpage
+
+\bibliographystyle{unsrt}
+\bibliography{manual-refs}{}
 
 \end{document}
