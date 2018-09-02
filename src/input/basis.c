@@ -58,7 +58,7 @@ void directive_basis()
 	if (ttype == '"')
 		strcpy(basis_name, sval);
 	else {
-		strcpy(basis_name, "user defined");
+		strcpy(basis_name, "ao basis");
 		lexerPushBack();
 	}
 	nextToken();

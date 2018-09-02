@@ -67,6 +67,8 @@ void directive_scf()
 			// conventional/direct
 			else if (!strcmp(sval, "direct"))
 				scf_options.direct = 1;
+            else if (!strcmp(sval, "nodirect"))
+                scf_options.direct = 0;
 			else
 				errquit("unknown keyword in scf section");
 		}
