@@ -11,7 +11,7 @@
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8x]{inputenc}
-\usepackage[english,russian]{babel}
+%\usepackage[english,russian]{babel}
 \usepackage{indentfirst}
 \usepackage{amssymb}
 \usepackage{amsfonts}
@@ -118,7 +118,7 @@ Required libraries:
 \item \texttt{libc} -- the C standard library;
 \item \texttt{MPI} -- Message Passing Interface (higher-level routines for the distributed-memory communication environment);
 \item \texttt{OpenMP} -- Open Multi-Processing (API for shared memory multiprocessing programming);
-\item \texttt{BLAS} и \texttt{LAPACK} -- numerical linear algebra libraries.
+\item \texttt{BLAS} and \texttt{LAPACK} -- numerical linear algebra libraries.
 \end{itemize}
 
 Tools needed to compile the source code:
@@ -371,33 +371,34 @@ The \texttt{scf} compound directive is used to configure the SCF procedure. It m
 	\end{itemize}
 \item [rhf/uhf] Hartee-Fock theory type (\texttt{rhf} -- restricted, \texttt{uhf} -- unrestricted).
 \item [singlet/doublet/triplet/quartet/quintet] spin multiplicity.
-\item [maxiter] Max number of SCF iterations. Default value: 50.
-\item [diis] использовать технику DIIS \cite{pulay1980,pulay1981} для ускорения сходимости уравнений ССП. Необязательный аргумент директивы -- максимальная размерность пространства итераций, которые используются для экстраполяции (значение по умолчанию: 5). Использование DIIS может быть рекомендовано практически во всех случаях и поэтому включено по умолчанию.
-\item [nodiis] не использовать технику DIIS.
-\item [direct] использовать <<прямой>> вариант метода ССП (двухэлектронные интегралы рассчитываются на ходу на каждой итерации, а не считываются из предварительно подготовленного файла). <<Прямой>> ССП может работать на порядок медленнее <<обычного>>. Иногда может быть полезен в случае нехватки дискового пространства.
-\item [nodirect] использовать <<обычный>> вариант метода ССП (хранение интегралов на диске) (по умолчанию).
-\item [print] какая дополнительная информация должна быть напечатана (но не печатается по умолчанию). Тип аргумента -- строка в двойных кавычках. Возможные аргументы директивы \texttt{print} приведены в таблице:
+\item [maxiter] max number of SCF iterations. Default value: 50.
+\item [diis] enable DIIS convergence technique \cite{pulay1980,pulay1981}.
+The optional argument of the directive is the maximum dimension of the iterative subspace that is used for extrapolation (default value: 5). DIIS can be recommended in almost all cases and is therefore included by default.
+\item [nodiis] disable DIIS.
+\item [direct] enable direct SCF method (two-electron AO integrals are recomputed on each iteration without storage on disk).
+Direct SCF can work an order of magnitude slower than the conventional one. May be useful in case of lack of disk space.
+\item [nodirect] conventinal SCF -- read precomputed two-electron AO integrals from disk (default).
+\item [print]
+what additional information should be printed (but not printed by default). The type of the argument is a string in double quotes. Possible arguments of the \texttt{print} directive are listed below:
 
 {
 \small
 \begin{tabular}{|l|l|}
 \hline
-\texttt{"final vectors analysis"} & коэффициенты разложения МО \\
-\texttt{"overlap"}   & интегралы перекрывания в АО-базисе \\
-\texttt{"kinetic"}   & интегралы оператора кинетической энергии \\
-                     & энергии \\
-\texttt{"potential"} & интегралы оператора электрон-ядерной \\
-                     & потенциальной энергии \\
-\texttt{"eri"}       & двухэлектронные кулоновские интегралы \\
+\texttt{"final vectors analysis"} & MO expansion coefficients \\
+\texttt{"overlap"}   & AO overlap integrals \\
+\texttt{"kinetic"}   & AO kinetic energy integrals \\
+\texttt{"potential"} & AO nuclear-attraction integrals \\
+\texttt{"eri"}       & AO two-electron (repulsion) integrals \\
 \hline
 \end{tabular}
 }
-\item [noprint] работает прямо противоположно директиве \texttt{print} (запрещает печать дополнительной информации). Аргументы такие же, как у \texttt{print} (см. выше).
+\item [noprint] disables printing of additional information. Arguments are the same as for \texttt{print} (see above).
 \end{labeling}
 
 \subsection{out}
 
-Синтаксис:
+Syntax:
 
 \begin{lstlisting}
 out
@@ -405,15 +406,16 @@ out
 end
 \end{lstlisting}
 
-Составная директива \texttt{out} позволяет экспортировать результаты расчетов для дальнейшей их обработки другими программами. Может содержать следующие директивы:
+Export data for further processing by other programs. May contain one or more directives from the following list:
 
 \begin{labeling}{alligator}
-\item [molden] экспортировать информацию о базисном наборе и молекулярные орбитали в файл формата MOLDEN (\texttt{.mos}) \cite{molden2000,molden2017,MoldenFormat}. В настоящий момент экспорт реализован только для метода RHF.
+\item [molden] export information about the basis set and molecular orbitals to the MOLDEN format (\texttt{.mos}) \cite{molden2000,molden2017,MoldenFormat}. At the moment, is implemented only for the RHF method.
 \end{labeling}
 
-\section{Примеры входных файлов для типовых задач}\label{sec:examples}
+\section{Typical calculations}\label{sec:examples}
 
-UHF-расчет атома лития в базисе STO-3G:
+Li atom, UHF/STO-3G:
+
 \begin{lstlisting}
 start Li
 echo
@@ -444,7 +446,8 @@ task scf
 
 \bigskip
 
-UHF-расчет дублетной частицы $\rm CH_3$:
+$\rm CH_3$ radical, UHF/STO-3G
+
 \begin{lstlisting}
 start CH3
 echo
