@@ -103,6 +103,9 @@ void scf_energy(struct cart_mol *molecule)
 	
 	// print timing
 	timer_stats();
+	
+	// all data stored in the rtdb
+	rtdb_print_meta();
 }
 
 

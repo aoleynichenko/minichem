@@ -6,6 +6,9 @@
 <> DIIS in UHF
 <> conv criteria in SCF
 <> molden output for uhf
+<> properties for uhf
 <> qfree without nbytes argument (additional memory metainfo?) [nbytes, =malloc()]
 <> validate DIIS in UHF again -- it works wrong
+<> all settings in rtdb
+<> rtdb log
 

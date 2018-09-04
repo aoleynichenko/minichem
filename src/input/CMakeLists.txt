@@ -3,6 +3,7 @@ add_library(input
     chem.c
     inp.c
     lexer.c
+    rtdb.c
 )
 target_link_libraries(input scf)
 

@@ -148,6 +148,7 @@ void directive_start()
 	if (ttype != TT_WORD)
 		errquit("in input file: identifier expected");
 	strcpy(calc_info.name, sval);
+	rtdb_set("top:short_name", "%s", sval);
 }
 
 
@@ -167,8 +168,10 @@ void directive_out()
 		else if (ttype == TT_EOF)
 			errquit("reached unexpected end of input file in section 'out'");
 		else if (ttype == TT_WORD) {
-			if (!strcmp(sval, "molden"))
+			if (!strcmp(sval, "molden")) {
 				calc_info.out_molden_vectors = 1;
+				rtdb_set("visual:molden", "%i", 1);
+			}
 			else
 				errquit("unknown keyword in 'out' section");
 		}
@@ -190,6 +193,7 @@ void directive_nproc()
 	match(TT_NUMBER);
 	nproc = (int) nval;
 	calc_info.nproc = nproc;
+	rtdb_set("top:nproc", "%i", nproc);
 	omp_set_num_threads(nproc);
 	
 	switch (_OPENMP) {
@@ -239,6 +243,8 @@ void directive_memory()
 		calc_info.memory = memsize*1024*1024*1024;
 	else
 		errquit("memory directive: one of keywords b, kb, mb, mw, gb expected");
+	
+	rtdb_set("top:memory", "%i", calc_info.memory);
 	setmemavail(calc_info.memory);
 }
 
@@ -251,6 +257,7 @@ void directive_memory()
 void directive_echo()
 {
 	calc_info.echo = 1;
+	rtdb_set("top:echo", "%i", 1);
 }
 
 
@@ -266,6 +273,7 @@ void directive_charge()
 {
 	match(TT_NUMBER);
 	calc_info.molecule.charge = nval;
+	rtdb_set("geom:charge", "%i", nval);
 }
 
 
@@ -285,10 +293,14 @@ void directive_geometry()
 				nextToken();
 				if (ttype != TT_WORD)
 					errquit("in geometry input: expected 'angstroms' or 'atomic' after 'units' keyword");
-				if (!strcmp(sval, "atomic"))
+				if (!strcmp(sval, "atomic")) {
 					calc_info.geom_units = UNITS_ATOMIC;
-				else if (!strcmp(sval, "angstroms"))
+					rtdb_set("geom:units", "%i", UNITS_ATOMIC);
+				}
+				else if (!strcmp(sval, "angstroms")) {
 					calc_info.geom_units = UNITS_ANGSTROMS;
+					rtdb_set("geom:units", "%i", UNITS_ANGSTROMS);
+				}
 				else
 					errquit("in geometry input: expected 'angstroms' or 'atomic' after 'units' keyword");
 			}
@@ -300,6 +312,7 @@ void directive_geometry()
 			else if (!strcmp(sval, "mult")) {
 				match(TT_NUMBER);
 				calc_info.molecule.mult = nval;
+				rtdb_set("geom:mult", "%i", nval);
 			}
 			else {
 				double x, y, z;
@@ -373,6 +386,19 @@ void calc_info_defaults()
 	calc_info.molecule.mult     = 1; /* singlet */
 	/* output */
 	calc_info.out_molden_vectors = 0;
+	
+	// and the same to the RTDB
+	/* top-level */
+	rtdb_set("top:echo", "%i", 0);
+	rtdb_set("top:short_name", "%s", "John-A-Pople");
+	rtdb_set("top:nproc", "%i", 1);
+	rtdb_set("top:memory", "%i", 200*1024*1024);
+	/* molecule */
+	rtdb_set("geom:units",  "%i", UNITS_ANGSTROMS);
+	rtdb_set("geom:charge", "%i", 0);  /* neutral */
+	rtdb_set("geom:mult",   "%i", 1);  /* singlet */
+	/* output */
+	rtdb_set("visual:molden", "%i", 0);
 }
 
 

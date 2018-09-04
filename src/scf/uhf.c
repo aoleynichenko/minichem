@@ -172,6 +172,10 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	printf("                 UHF <S^2> =%11.4f\n", uhf_S2(Nalpha, Nbeta, Ca, Cb, S, M));
 	printf("               Exact <S^2> =%11.4f\n", exact_S2(Nalpha, Nbeta));
 	
+	/* save results to rtdb */
+	rtdb_set("scf:etot", "%d", hfe);
+	rtdb_set("scf:enuc", "%d", Enuc);
+	
 	// MO analysis
 	printf("\n");
 	printf("      Alpha Molecular Orbitals Summary\n");

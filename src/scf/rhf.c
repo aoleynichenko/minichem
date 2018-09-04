@@ -131,6 +131,10 @@ void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	
 	printf("\n\n");
 	
+	/* save results to rtdb */
+	rtdb_set("scf:etot", "%d", hfe);
+	rtdb_set("scf:enuc", "%d", Enuc);
+	
 	// Освобождение ресурсов, которые были заняты DIIS
 	if (scf_options.diis && diislist)
 		removeDIISList(diislist);
