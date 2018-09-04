@@ -1,4 +1,12 @@
-#include <cblas.h>
+/***********************************************************************
+ * uhf.c
+ * =====
+ * 
+ * Unrestricted Hartree-Fock method.
+ * 
+ * 2016-2018 Alexander Oleynichenko
+ **********************************************************************/
+
 #include <math.h>
 #include <mpi.h>
 #include <omp.h>
@@ -71,7 +79,7 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	diisbas = scf_options.diisbas;
 	diislist_a = NULL;
 	diislist_b = NULL;
-		
+	
 	H =  (double *) qalloc(nbytes);
 	S =  (double *) qalloc(nbytes);
 	X =  (double *) qalloc(nbytes);
@@ -83,7 +91,7 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	Eb = (double *) qalloc(M*sizeof(double));
 	
 	// compute core Hamiltonian and overlap matrices
-	compute_1e(H, S, bfns, M);
+	read_1e_integrals(H, S, bfns, M);
 	
 	// basis orthogonalization
 	orthobasis(S, X, M);

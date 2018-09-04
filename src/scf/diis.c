@@ -1,12 +1,22 @@
-/* DIIS.
- * Идея: будем сохранять матрицы ошибок E[i] и Фока F[i] для каждого шага i
- * в односвязном списке. Новые матрицы будем добавлять в начало. Если
- * список достиг заданной длины (5-10 результатов итераций), то последний
- * его элемент освобождается. То есть, чем "старее" матрица, тем дальше она
- * от начала в этом списке.
+/***********************************************************************
+ * diis.c
+ * ======
  * 
- * Лучше всего эту часть алгоритма переписать на C++!
- */
+ * DIIS implementation.
+ * 2016-2018 Alexander Oleynichenko
+ * 
+ * Algorithm notes:
+ * Error E[i] and Fock F[i] matrices for each iteration "i" are stored
+ * in the single-linked list. New matrices are appended to the beginning
+ * of the list. If len(list) > dim(diis subspace), last element of the
+ * list is popped out. So:
+ * head -> <new matrices> ... <old matrices>
+ * 
+ * More on DIIS:
+ *  - Pulay's papers;
+ *  - http://sirius.chem.vt.edu/wiki/doku.php?id=crawdad:programming:project8
+ * 
+ **********************************************************************/
 
 #include <cblas.h>
 #include <stdio.h>
@@ -165,7 +175,8 @@ void diis_extrapolate(double *F, DIISList_t *diislist, int diisbas)
 	for (i = 0; i < bdim; i++)
 		right[i] = 0.0;
 	right[bdim-1] = -1;
-	
+		
+		// solve linear system
         info = LAPACKE_dgesv(LAPACK_ROW_MAJOR, bdim, 1, B, bdim, ipiv, right, 1);
         // Check for the exact singularity
         if( info > 0 ) {

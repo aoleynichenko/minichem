@@ -14,6 +14,7 @@ void echo(char *filename);
 void errquit(char *errmessage);
 void line_separator();
 int sgn(double x);
+double distance(double *A /* A[3] */, double *B /* B[3] */);
 
 /* memory management */
 void setmemavail(int bytes);

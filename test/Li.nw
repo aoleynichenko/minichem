@@ -19,7 +19,7 @@ end
 
 scf
   uhf
-  diis
+  nodiis
   doublet
 end
 

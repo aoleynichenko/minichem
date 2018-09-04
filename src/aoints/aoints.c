@@ -65,9 +65,10 @@ void compute_aoints()
  **********************************************************************/
 void compute_1e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
 {
-	int i, j, fd;
+	int i, j, k, fd;
 	double *A;   // temporary matrix
 	int err;
+	int xyz_pow[] = {0, 0, 0};
 	
 	timer_new_entry("1e", "One-electron integrals");
 	timer_start("1e");
@@ -105,6 +106,19 @@ void compute_1e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
 			A[nbas*i+j] = aoint_potential(fi, fj);
 		}
 	fastio_write_doubles(fd, A, nbas*nbas);
+
+	printf("  X Y Z integrals\n");
+	for (k = 0; k < 3; k++) {
+		xyz_pow[0] = xyz_pow[1] = xyz_pow[2] = 0;
+		xyz_pow[k] = 1;
+		for (i = 0; i < nbas; i++)
+			for (j = 0; j < nbas; j++) {
+				struct basis_function *fi = &bfns[i];
+				struct basis_function *fj = &bfns[j];
+				A[nbas*i+j] = aoint_multipole(fi, fj, xyz_pow);
+			}
+		fastio_write_doubles(fd, A, nbas*nbas);
+	}
 
 	fastio_close(fd);
 	free(A);

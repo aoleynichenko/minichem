@@ -1,29 +1,27 @@
-#include <cblas.h>
+/***********************************************************************
+ * analysis.c
+ * ==========
+ * 
+ * Very simple analysis of SCF function:
+ *  - Mulliken and Loewdin population analysis
+ *  - dx, dy, dz dipole moments
+ * 
+ * 2016-2018 Alexander Oleynichenko
+ **********************************************************************/
+
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include <lapacke.h>
-
-#include "scf.h"
 #include "aoints.h"
-#include "util.h"
-#include "chem.h"
 #include "basis.h"
+#include "chem.h"
+#include "linalg.h"
+#include "scf.h"
+#include "util.h"
+#include "sys.h"
 
-int double_eq(double a, double b)
-{
-	return fabs(a - b) < 1e-14;
-}
-
-int atoms_are_equal(struct atom *a, struct atom *b)
-{
-	return (a->Z == b->Z &&
-			double_eq(a->r[0], b->r[0]) &&
-			double_eq(a->r[1], b->r[1]) &&
-			double_eq(a->r[2], b->r[2]));
-}
 
 // Loewdin and Mulliken algorithms only contains different matrices,
 // PS for Mulliken's and S12PS12 for Loewdin's. But the formula is the
@@ -54,7 +52,7 @@ void mulliken(struct cart_mol *geom, struct basis_function *bfns, double *P, dou
 	double alpha = 1.0, beta  = 0.0;
 	double *PS = (double *) qalloc(bytes);
 	
-	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, dim, dim, dim, alpha, P, dim, S, dim, beta, PS, dim);
+	linalg_square_dgemm(P, 'N', S, 'N', PS, dim);
 	
 	printf("\n");
 	printf("        Mulliken population analysis\n");
@@ -74,23 +72,13 @@ void loewdin(struct cart_mol *geom, struct basis_function *bfns, double *P, doub
 {
 	int i, j;
 	int bytes = dim * dim * sizeof(double);
-	int info, lwork, lda = dim, alpha = 1.0, beta = 0.0;
-	double *val, *X, *S12, *work, wkopt, *T;
+	double *val, *X, *S12, *T;
 	double *S12PS12;
 	
 	// first, compute eigenvalues of S
-	val = (double *) qalloc(sizeof(double) * dim);
-	X   = (double *) qalloc(bytes);
-	memcpy(X, S, bytes);
-	lwork = -1;
-	dsyev_("V", "U", &dim, X, &lda, val, &wkopt, &lwork, &info);
-	lwork = (int) wkopt;
-    work = (double*) qalloc(lwork * sizeof(double));
-    dsyev_("V", "U", &dim, X, &lda, val, work, &lwork, &info);
-    
-    if(info > 0)   // Check for convergence
-		errquit("in Loewdin population analysis: LAPACK failed to orthogonalize overlap matrix");
-	qfree(work, lwork * sizeof(double));
+	val = (double *) qalloc(sizeof(double) * dim);  // eigenvalues
+	X   = (double *) qalloc(bytes);                 // eigenvectors
+	linalg_dsyev(S, val, X, dim);
 	
 	// now, val contains overlap matrix' eigenvalues
 	// form s^1/2 [diagonal]
@@ -108,20 +96,21 @@ void loewdin(struct cart_mol *geom, struct basis_function *bfns, double *P, doub
 	// S12 = X*s12*X'  --->  S12 = X'*s12*X
 	// T is temporary matrix for intermediate result  -  s12*X
 	T = (double *) qalloc(bytes);
-	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, dim, dim, dim, alpha, S12, dim, X, dim, beta, T, dim);
-	cblas_dgemm(CblasRowMajor, CblasTrans,   CblasNoTrans, dim, dim, dim, alpha, X, dim, T, dim, beta, S12, dim);
+	linalg_square_dgemm(S12, 'N', X, 'N', T,   dim);
+	linalg_square_dgemm(X,   'T', T, 'N', S12, dim);
 	
 	// now S12 contains S^1/2, we can calculate S12*P*S12
 	// T <- P*S12
 	// S12PS12 <- S12*T
 	S12PS12 = X;
-	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, dim, dim, dim, alpha, P, dim, S12, dim, beta, T, dim);
-	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, dim, dim, dim, alpha, S12, dim, T, dim, beta, S12PS12, dim);
+	linalg_square_dgemm(P,   'N', S12, 'N', T,       dim);
+	linalg_square_dgemm(S12, 'N', T,   'N', S12PS12, dim);
 	
 	printf("\n");
 	printf("        Loewdin population analysis\n");
 	printf("        ---------------------------\n\n");
 	printf("      Atom     Population     Charge\n");
+
 	general_pop_analysis(geom, bfns, S12PS12, dim);
 	
 	qfree(T,       bytes);
@@ -129,24 +118,49 @@ void loewdin(struct cart_mol *geom, struct basis_function *bfns, double *P, doub
 	qfree(S12PS12, bytes);
 }
 
-void multipole_moments(struct cart_mol *geom, struct basis_function *bfns, double *P, int dim)
+
+/***********************************************************************
+ * multipole_moments
+ * 
+ * the simplest implementation of properties:
+ * we don't use P is Hermitian matrix and permut symmetry of integrals.
+ * TODO: XX, XY ... (quadrupole) moments
+ **********************************************************************/
+void multipole_moments(struct cart_mol *geom, double *P, int dim)
 {
 	int i, j, k;
+	int fd;
 	double D;
 	double d[] = {0, 0, 0};
-	//double q[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-	int e[] = {0, 0, 0};
+	double *coord[3];  // array of three coord matrices (X, Y, Z)
+	int nbytes = sizeof(double) * dim * dim;
 	
-	// the simplest implementation, we don't use P is Hermitian matrix and
-	// symmetry of dipole moments integrals
+	// alloc coord matrices
+	coord[0] = (double *) qalloc(nbytes);
+	coord[1] = (double *) qalloc(nbytes);
+	coord[2] = (double *) qalloc(nbytes);
+	
+	// read integrals from disk (as square matrices)
+	fd = fastio_open("AOINTS1", "r");
+	fastio_read_int(fd, &dim);
+	// skip S, T, V
+	fastio_read_doubles(fd, coord[0], dim*dim);
+	fastio_read_doubles(fd, coord[0], dim*dim);
+	fastio_read_doubles(fd, coord[0], dim*dim);	
+	// read X, Y, Z
+	fastio_read_doubles(fd, coord[0], dim*dim);
+	fastio_read_doubles(fd, coord[1], dim*dim);
+	fastio_read_doubles(fd, coord[2], dim*dim);
+	fastio_close(fd);
+	
+	// electronic contribution:
 	for (i = 0; i < dim; i++)
 		for (j = 0; j < dim; j++) {
-			for (k = 0; k < 3; k++) {
-				e[0] = e[1] = e[2] = 0;
-				e[k] = 1;
-				d[k] -= P[i*dim+j] * aoint_multipole(&bfns[j], &bfns[i], e);
+			for (k = 0; k < 3; k++) {  // loop over X, Y, Z
+				d[k] -= P[i*dim+j] * coord[k][j*dim+i];
 			}
 		}
+	// nuclear contribution:
 	for (i = 0; i < geom->size; i++)
 		for (k = 0; k < 3; k++)
 			d[k] += geom->atoms[i].Z * geom->atoms[i].r[k];
@@ -161,6 +175,11 @@ void multipole_moments(struct cart_mol *geom, struct basis_function *bfns, doubl
 	printf("\n");
 	printf("  |D| = %.8f a.u. = %.8f Debye\n", D, D*2.541746230211);
 	printf("\n");
+	
+	// cleanup
+	qfree(coord[0], nbytes);
+	qfree(coord[1], nbytes);
+	qfree(coord[2], nbytes);
 }
 
 

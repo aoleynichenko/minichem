@@ -39,7 +39,7 @@ void directive_scf();
 void scf_init();
 void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M);
 void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M);
-void compute_1e(double *Hcore, double *S, struct basis_function *bfns, int dim);
+void read_1e_integrals(double *Hcore, double *S, struct basis_function *bfns, int dim);
 void diag_fock(double *F, double *X, double *C, double *en, int M);
 void orthobasis(double *S, double *X, int dim);
 double enuc(Molecule_t *geom);
@@ -63,7 +63,7 @@ void guess_F_eht(double *F, double *S, struct basis_function *bfn, int n);
 // properties
 void mulliken(struct cart_mol *geom, struct basis_function *bfns, double *P, double *S, int dim);
 void loewdin(struct cart_mol *geom, struct basis_function *bfns, double *P, double *S, int dim);
-void multipole_moments(struct cart_mol *geom, struct basis_function *bfns, double *P, int dim);
+void multipole_moments(struct cart_mol *geom, double *P, int dim);
 
 
 // DIIS API

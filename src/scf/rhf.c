@@ -1,4 +1,12 @@
-#include <cblas.h>
+/***********************************************************************
+ * rhf.c
+ * =====
+ * 
+ * Restricted Hartree-Fock method.
+ * 
+ * 2016-2018 Alexander Oleynichenko
+ **********************************************************************/
+
 #include <math.h>
 #include <mpi.h>
 #include <omp.h>
@@ -62,7 +70,7 @@ void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	E = (double *) qalloc(M*sizeof(double));
 	
 	// compute core Hamiltonian and overlap matrices
-	compute_1e(H, S, bfns, M);
+	read_1e_integrals(H, S, bfns, M);
 	
 	// basis orthogonalization
 	orthobasis(S, X, M);
@@ -149,11 +157,12 @@ void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 		qfree(occ, sizeof(int) * M);
 	}
 	
-	// Анализ заселенностей
+	// population analysis
 	mulliken(molecule, bfns, P, S, M);
 	loewdin (molecule, bfns, P, S, M);
-	// Расчет мультипольных моментов
-	multipole_moments(molecule, bfns, P, M);
+
+	// properties
+	multipole_moments(molecule, P, M);
 	
 	qfree(H, nbytes);
 	qfree(S, nbytes);

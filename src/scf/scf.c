@@ -1,3 +1,12 @@
+/***********************************************************************
+ * scf.c
+ * =====
+ * 
+ * Hartree-Fock method -- general routines for RHF and UHF.
+ * 
+ * 2016-2018 Alexander Oleynichenko
+ **********************************************************************/
+
 #include <float.h>
 #include <limits.h>
 #include <math.h>
@@ -17,10 +26,6 @@
 #include "scf.h"
 #include "aoints.h"
 
-void print_blacs_grid_info();
-void config_grid(int nprocs, int *nprow, int *npcol);
-void print_matrix(char *annot, double *A, int dim);
-
 static int mpi_rank = -1;
 static int mpi_size = -1;
 
@@ -30,44 +35,19 @@ struct scf_opt scf_options;
 /* task size - number of basis functions */
 int M;
 
-/* general BLACS variables */
-int ictxt;   /* BLACS context */
-int iam;     /* my number in BLACS grid */
-int nprocs;  /* number of processes, invoked in BLACS grid */
-
-/* process grid parameters */
-int nprow;   /* number of rows */
-int npcol;   /* number of columns */
-int myrow;   /* my position in process grid - "y" */
-int mycol;   /* my position in process grid - "x" */
-
-/* size of submatrices */
-int vb = 64; /* preferred vertical size of the block */
-int hb = 64; /* horizontal size */
-int vsize;   /* actual vertical size of submatrices */
-int hsize;   /* actual horizontal size */
-
-/* parameters for MPI scattering/gathering operations */
-int *counts = 0;
-int *displs = 0;
-
-/* molecule */
+/* molecular data */
 struct cart_mol *geom;
 int Nelecs;
 int Nalpha;
 int Nbeta;
 
-/* matrices */
-double *S;      /* overlap matrix */
-double *X;		/* transformation matrix */
-double *P;      /* density matrix */
-double *Hcore;  /* core Hamiltonian */
-double *F;      /* Fock matrix */
-double *C;      /* vectors */
-double *E;		/* energies of orbitals, F's eigenvalues */
-double *OLDP;
 
-
+/***********************************************************************
+ * scf_energy
+ * 
+ * "main" function of the SCF module.
+ * performs SCF calculation (RHF or UHF).
+ **********************************************************************/
 void scf_energy(struct cart_mol *molecule)
 {
 	int izero = 0;
@@ -126,8 +106,16 @@ void scf_energy(struct cart_mol *molecule)
 }
 
 
-// Ортогонализация базиса
-// Непараллельная реализация с использованием LAPACK
+/***********************************************************************
+ * orthobasis
+ * 
+ * AO basis set orthogonalization. Canonical algorithm is employed.
+ *
+ * Arguments:
+ * S   -- [input]  AO overlap matrix (square)
+ * X   -- [output] transformation matrix (square)
+ * dim -- [input]  dimension of matrices
+ **********************************************************************/
 void orthobasis(double *S, double *X, int dim)
 {
 	int i, j;
@@ -163,6 +151,12 @@ void orthobasis(double *S, double *X, int dim)
 	printf("AO basis orthogonalization done in %.6f sec\n", MPI_Wtime()-t0);
 }
 
+
+/***********************************************************************
+ * scf_init
+ * 
+ * Sets default values for the SCF options.
+ ***********************************************************************/
 void scf_init()
 {
 	scf_options.wavefuntype = SCF_RHF;
@@ -183,25 +177,34 @@ void scf_init()
 }
 
 
-void compute_1e(double *Hcore, double *S, struct basis_function *bfns, int dim)
+/***********************************************************************
+ * read_1e_integrals 
+ * 
+ * Reads 1e integrals from disk (they are ALWAYS stored on disk)
+ ***********************************************************************/
+void read_1e_integrals(double *Hcore, double *S, struct basis_function *bfns, int dim)
 {
 	int i, j;
 	double t1;
 	double *T, *V;
 	int fd;
+	int nbytes;
+	
+	nbytes = sizeof(double) * dim * dim;
+	T = (double *) qalloc(nbytes);
+	V = (double *) qalloc(nbytes);
 	
 	t1 = MPI_Wtime();
-		
+	
+	// read integrals as square matrices
 	fd = fastio_open("AOINTS1", "r");
 	fastio_read_int(fd, &dim);
-	T = (double *) malloc(sizeof(double) * dim * dim);
-	V = (double *) malloc(sizeof(double) * dim * dim);
 	fastio_read_doubles(fd, S, dim*dim);
 	fastio_read_doubles(fd, T, dim*dim);
 	fastio_read_doubles(fd, V, dim*dim);	
 	fastio_close(fd);
 	
-	// Hcore = T + V
+	// construct Hcore = T + V
 	for (i = 0; i < dim; i++)
 		for (j = 0; j < dim; j++) {
 			Hcore[dim*i+j] = T[dim*i+j] + V[dim*i+j];
@@ -209,31 +212,43 @@ void compute_1e(double *Hcore, double *S, struct basis_function *bfns, int dim)
 	
 	printf("One-electron integrals read in %.6f sec\n", (MPI_Wtime()-t1)/1000);
 	
+	// TODO: remove
 	print_ints(bfns, dim);
-	free(T);
-	free(V);
+	
+	// cleanup
+	qfree(T, nbytes);
+	qfree(V, nbytes);
 }
 
 
-double distance(double *A, double *B)
-{
-	return sqrt((A[0] - B[0])*(A[0] - B[0]) +
-				(A[1] - B[1])*(A[1] - B[1]) +
-				(A[2] - B[2])*(A[2] - B[2]));
-}
-
+/***********************************************************************
+ * enuc
+ * 
+ * Calculates nuclear-repulsion energy for the given molecular geometry.
+ **********************************************************************/
 double enuc(Molecule_t *geom)
 {
 	double e = 0.0;
+	double r_ij;
 	int i, j;
+	int n_at = geom->size;
+	Atom_t *atoms = geom->atoms;
 	
-	for (i = 0; i < geom->size; i++)
-		for (j = i+1; j < geom->size; j++)
-			e += geom->atoms[i].Z*geom->atoms[j].Z/distance(geom->atoms[i].r, geom->atoms[j].r);
+	for (i = 0; i < n_at; i++)
+		for (j = i+1; j < n_at; j++) {
+			r_ij = distance(geom->atoms[i].r, geom->atoms[j].r);
+			e += atoms[i].Z * atoms[j].Z / r_ij;
+		}
 	
 	return e;
 }
 
+
+/***********************************************************************
+ * rmsdens
+ * 
+ * "root mean square" of two [density] matrices
+ **********************************************************************/
 double rmsdens(double *P1, double *P2, int M)
 {
 	int i, j;
@@ -248,6 +263,15 @@ double rmsdens(double *P1, double *P2, int M)
 	return sqrt(s/4.0);
 }
 
+
+/***********************************************************************
+ * maxerr
+ * 
+ * returns max element of the [error] matrix.
+ * 
+ * TODO: move to the linalg module as a general routine.
+ * can be rewritten without some knowledge about matrix representation
+ **********************************************************************/
 double maxerr(double *errmatrix, int n)
 {
 	int i, j;
@@ -261,6 +285,20 @@ double maxerr(double *errmatrix, int n)
 }
 
 
+/***********************************************************************
+ * diag_fock
+ * 
+ * Fock matrix diagonalization routine.
+ * 
+ * Agruments:
+ * [input]
+ *  F  -- non-transformed Fock matrix in AO basis
+ *  X  -- transformation matrix (was used to orthogonalize the AO basis)
+ *  M  -- dimensions of all matrices
+ * [output]
+ *  C  -- (MxM matrix) MO expansion coefficients (row-wise?)
+ *  en -- (len=M vector) eigenvalues (orbital energies)
+ **********************************************************************/
 void diag_fock(double *F, double *X, double *C, double *en, int M)
 {
 	int i, j;
@@ -290,109 +328,5 @@ void diag_fock(double *F, double *X, double *C, double *en, int M)
 	
 	timer_stop("diagfock");
 }
-
-
-/**********************************************************************/
-/**********************************************************************/
-/**********************************************************************/
-
-
-/* This function prints information about BLACS process grid and
- * submatrices to stdout. This function is important for debugging. */
-void print_blacs_grid_info()
-{
-	// от каждого потока нам надо:
-	//  x - положение в сетке процессов по горизонтали
-	//  y - положение в сетке процессов по вертикали
-	//  h - вертикальная   размерность подматрицы
-	//  v - горизонтальная размерность подматрицы
-
-	if (mpi_rank == 0) {
-		int i, j;
-		int *info = (int *) malloc(4 * mpi_size * sizeof(int));
-		int *map =  (int *) malloc(mpi_size * sizeof(int));
-		MPI_Request *reqs = (MPI_Request *) malloc((mpi_size-1)*sizeof(MPI_Request));
-		MPI_Status *stats = (MPI_Status *)  malloc((mpi_size-1)*sizeof(MPI_Status));
-
-		info[0] = myrow;
-		info[1] = mycol;
-		info[2] = vsize;
-		info[3] = hsize;
-
-		for (i = 0; i < mpi_size-1; i++)  // receive data from all other processes
-			MPI_Irecv(&info[4*(i+1)], 4, MPI_INT, i+1, 0, MPI_COMM_WORLD, &reqs[i]);
-		MPI_Waitall(mpi_size-1, reqs, stats);
-
-		printf("\nBLACS grid information:\n");
-		printf("  nprocs = %d\n", nprocs);
-		printf("  nprow x npcol: %d x %d\n", nprow, npcol);
-		printf("  preferred submatrix size (vert x hor): %d x %d\n", vb, hb);
-		//for (i = 0; i < mpi_size; i++)
-			//printf("%d: (%d,%d), %dx%d\n", i, info[4*i], info[4*i+1], info[4*i+2], info[4*i+3]);
-		printf("\n                    PROCESS GRID\n");
-
-		for (i = 0; i < mpi_size; i++) { /* for more beautiful table */
-			int y = info[4*i];
-			int x = info[4*i+1];
-			map[y*npcol+x] = i;
-		}
-		printf("        ");
-		for (i = 0; i < npcol; i++)
-			printf("   %-3d   ", i);
-		printf("\n");
-		printf("       -");
-		for (i = 0; i < npcol; i++)
-			printf("---------");
-		printf("-\n");
-		for (i = 0; i < nprow; i++) {
-			printf("   %-3d |", i);
-			for (j = 0; j < npcol; j++)
-				printf("   %-3d   ", map[i*npcol+j]); //print process number
-			printf("|\n");
-			printf("       |");
-			for (j = 0; j < npcol; j++) {
-				int n = map[i*npcol+j];
-				printf(" %3dx%-3d ", info[4*n+2], info[4*n+3]);  //print submatrices size, v x h
-			}
-			printf("|\n");
-		}
-		printf("       -");
-		for (i = 0; i < npcol; i++)
-			printf("---------");
-		printf("-\n\n");  /* end of this decorative table */
-
-
-		free(info);
-		free(map);
-		free(reqs);
-		free(stats);
-	}
-	else {  // send 4 integers to master-process
-		int info[4];
-
-		info[0] = myrow;  // proc's y
-		info[1] = mycol;  // x
-		info[2] = vsize;  // actual vertical size of submatrix
-		info[3] = hsize;  // horizontal size
-		MPI_Send(info, 4, MPI_INT, 0, 0, MPI_COMM_WORLD);
-	}
-}
-
-void config_grid(int nprocs, int *nprow, int *npcol)
-{
-	int _nprow = (int) sqrt(mpi_size);
-	int _npcol = mpi_size / _nprow;
-	while (_npcol * _nprow != mpi_size) {
-		_nprow++;
-		_npcol = mpi_size / _nprow;
-	}
-	*nprow = _nprow;
-	*npcol = _npcol;
-}
-
-
-
-
-
 
 

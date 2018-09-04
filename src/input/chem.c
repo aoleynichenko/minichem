@@ -8,15 +8,15 @@
  * 
  **********************************************************************/
 
+#include <ctype.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "chem.h"
 #include "input.h"
 #include "util.h"
-
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define NELEMENTS 120
 
@@ -199,6 +199,22 @@ void append_atom(struct cart_mol *m, int Z, double x, double y, double z)
 	m->atoms[m->size].r[2] = z;
 	//printf(" +  %d %.8f %.8f %.8f\n", Z, m->atoms[m->size].r[0], m->atoms[m->size].r[1], m->atoms[m->size].r[2]);
 	m->size++;
+}
+
+
+/***********************************************************************
+ * atoms_are_equal
+ * 
+ * compares two atoms, returns 1 if equal, 0 otherwise
+ **********************************************************************/
+int atoms_are_equal(Atom_t *a, Atom_t *b)
+{
+	static const double THR = 1e-14;
+	
+	return (a->Z == b->Z &&
+			fabs(a->r[0] - b->r[0]) < THR &&
+			fabs(a->r[1] - b->r[1]) < THR &&
+			fabs(a->r[2] - b->r[2]) < THR);
 }
 
 
