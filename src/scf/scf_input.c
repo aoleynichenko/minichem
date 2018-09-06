@@ -25,50 +25,65 @@ void directive_scf()
 				scf_guess_inp();
 			else if (!strcmp(sval, "noprint"))
 				scf_print_opts(0);
-			else if (!strcmp(sval, "rhf"))
-				scf_options.wavefuntype = SCF_RHF;
-			else if (!strcmp(sval, "uhf"))
-				scf_options.wavefuntype = SCF_UHF;
-			else if (!strcmp(sval, "rohf"))
-				scf_options.wavefuntype = SCF_ROHF;
+			else if (!strcmp(sval, "rhf")) {
+				rtdb_set("scf:wf", "%i", SCF_RHF);
+			}
+			else if (!strcmp(sval, "uhf")) {
+				rtdb_set("scf:wf", "%i", SCF_UHF);
+			}
 			// set multiplicity, NWChem compatible notation
-			else if (!strcmp(sval, "singlet"))
+			else if (!strcmp(sval, "singlet")) {
+				rtdb_set("geom:mult", "%i", 1);
 				calc_info.molecule.mult = 1;
-			else if (!strcmp(sval, "doublet"))
+			}
+			else if (!strcmp(sval, "doublet")) {
+				rtdb_set("geom:mult", "%i", 2);
 				calc_info.molecule.mult = 2;
-			else if (!strcmp(sval, "triplet"))
+			}
+			else if (!strcmp(sval, "triplet")) {
+				rtdb_set("geom:mult", "%i", 3);
 				calc_info.molecule.mult = 3;
-			else if (!strcmp(sval, "quartet"))
+			}
+			else if (!strcmp(sval, "quartet")) {
+				rtdb_set("geom:mult", "%i", 4);
 				calc_info.molecule.mult = 4;
-			else if (!strcmp(sval, "quintet"))
+			}
+			else if (!strcmp(sval, "quintet")) {
+				rtdb_set("geom:mult", "%i", 5);
 				calc_info.molecule.mult = 5;
+			}
 			// convergence options
 			else if (!strcmp(sval, "maxiter")) {
 				match(TT_NUMBER);
-				if (fabs(nval - (int)nval) < 1e-10)
-					scf_options.maxiter = (int) nval;
+				if (fabs(nval - (int)nval) < 1e-10) {
+					rtdb_set("scf:maxiter", "%i", (int) nval);
+				}
 				else
 					errquit("in scf:maxiter: integer value expected in input!");
 			}
 			else if (!strcmp(sval, "diis")) {
 				nextToken();
 				if (ttype == TT_NUMBER) {
-					if (fabs(nval - (int)nval) < 1e-10)
-						scf_options.diisbas = (int) nval;
+					if (fabs(nval - (int)nval) < 1e-10) {
+						rtdb_set("scf:diisbas", "%i", (int) nval);
+					}
 					else
 						errquit("in scf:diis: integer value expected in input!");
 				}
 				else
 					lexerPushBack();
-				scf_options.diis = 1;
+				rtdb_set("scf:diis", "%i", 1);
 			}
-			else if (!strcmp(sval, "nodiis"))
-				scf_options.diis = 0;
+			else if (!strcmp(sval, "nodiis")) {
+				rtdb_set("scf:diis", "%i", 0);
+			}
 			// conventional/direct
-			else if (!strcmp(sval, "direct"))
-				scf_options.direct = 1;
-            else if (!strcmp(sval, "nodirect"))
-                scf_options.direct = 0;
+			else if (!strcmp(sval, "direct")) {
+				rtdb_set("scf:direct", "%i", 1);
+			}
+            else if (!strcmp(sval, "nodirect")) {
+				rtdb_set("scf:direct", "%i", 0);
+			}
 			else
 				errquit("unknown keyword in scf section");
 		}
@@ -83,16 +98,21 @@ void scf_print_opts(int doprint)
 	if (ttype != TT_WORD && ttype != '"')
 		errquit("unexpected input in scf:[no]print");
 	
-	if (!strcmp(sval, "overlap"))
-		scf_options.print_1eov = doprint;
-	else if (!strcmp(sval, "kinetic"))
-		scf_options.print_1eke = doprint;
-	else if (!strcmp(sval, "potential"))
-		scf_options.print_1epe = doprint;
-	else if (!strcmp(sval, "final vectors analysis"))
-		scf_options.print_final_vectors = doprint;
-	else if (!strcmp(sval, "eri") || !strcmp(sval, "ao2eints"))
-		scf_options.print_2eri = doprint;
+	if (!strcmp(sval, "overlap")) {
+		rtdb_set("aoints:print:overlap", "%i", doprint);
+	}
+	else if (!strcmp(sval, "kinetic")) {
+		rtdb_set("aoints:print:kinetic", "%i", doprint);
+	}
+	else if (!strcmp(sval, "potential")) {
+		rtdb_set("aoints:print:potential", "%i", doprint);
+	}
+	else if (!strcmp(sval, "final vectors analysis")) {
+		rtdb_set("scf:print:vectors", "%i", doprint);
+	}
+	else if (!strcmp(sval, "eri") || !strcmp(sval, "ao2eints")) {
+		rtdb_set("aoints:print:eri", "%i", doprint);
+	}
 }
 
 void scf_guess_inp()
@@ -101,10 +121,12 @@ void scf_guess_inp()
 	if (ttype != TT_WORD)
 		errquit("unexpected input in scf:guess");
 	
-	if (!strcmp(sval, "core"))
-		scf_options.guess = GUESS_BARE;
-	else if (!strcmp(sval, "eht"))
-		scf_options.guess = GUESS_EHT;
+	if (!strcmp(sval, "core")) {
+		rtdb_set("scf:guess", "%i", GUESS_BARE);
+	}
+	else if (!strcmp(sval, "eht")) {
+		rtdb_set("scf:guess", "%i", GUESS_EHT);
+	}
 	else
 		errquit("wrong input in scf:guess");
 }

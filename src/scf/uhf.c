@@ -53,6 +53,10 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	int nbytes;   // bytes in matrix to allocate
 	double Enuc;  // nuclei repulsion energy
 	double s2;    // current UHF <S^2>
+	int maxiter;
+	int guess;
+	int direct_scf;
+	int diis;
 	
 	double *H;    // core Hamiltonian
 	double *S;    // overlap
@@ -70,13 +74,18 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	DIISList_t *diislist_a, *diislist_b; // list with stored Fock and error matrices
 	double diiserror_a, diiserror_b;
 	
+	// read scf parameters from the rtdb
+	rtdb_get("scf:maxiter", &maxiter);
+	rtdb_get("scf:guess",   &guess);
+	rtdb_get("scf:direct",    &direct_scf);
+	rtdb_get("scf:diis",    &diis);
+	rtdb_get("scf:diisbas", &diisbas);
 	
 	n = 1;  // iteration number 1
 	t0 = MPI_Wtime();
 	nbytes = M * M * sizeof(double);
 	Enuc = enuc(molecule);
 	nalphabeta(molecule, &Nalpha, &Nbeta);
-	diisbas = scf_options.diisbas;
 	diislist_a = NULL;
 	diislist_b = NULL;
 	
@@ -107,7 +116,7 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	printf(" iter.       Energy         Delta E       RMS-Dens      <S^2>       time\n");
 	printf("--------------------------------------------------------------------------\n");
 	while (1) {
-		if (n > scf_options.maxiter) {
+		if (n > maxiter) {
 			printf("--------------------------------------------------------------------------\n");
 			printf("      not converged!\n");
 			errquit("no convergence of SCF equations! Try to increase scf:maxiter\n");
@@ -116,7 +125,7 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 		memcpy(P0a, Pa, nbytes);  // store actual P
 		memcpy(P0b, Pb, nbytes);
 		
-		if (scf_options.direct) {
+		if (direct_scf) {
 			// integral-direct
 			uhf_makefock_direct(Fa, Fb, H, Pa, Pb, bfns, M);
 		}
@@ -136,7 +145,7 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 		diiserror_b = maxerr(ErrMb, M);
 		
 		// if DIIS is enabled
-		if (scf_options.diis && diisbas != 0) {
+		if (diis && diisbas != 0) {
 			if (!diislist_a) {
 				diislist_a = newDIISList(ErrMa, Fa, M);
 				diislist_b = newDIISList(ErrMb, Fb, M);
@@ -175,6 +184,7 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	/* save results to rtdb */
 	rtdb_set("scf:etot", "%d", hfe);
 	rtdb_set("scf:enuc", "%d", Enuc);
+	rtdb_set("scf:uhf_s2", "%d", s2);
 	
 	// MO analysis
 	printf("\n");
@@ -196,7 +206,7 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	
 	
 	// cleanup DIIS
-	if (scf_options.diis && diislist_a) {
+	if (diis && diislist_a) {
 		removeDIISList(diislist_a);
 		removeDIISList(diislist_b);
 	}
@@ -218,15 +228,18 @@ void uhf_guess(double *Fa, double *Fb, double *H, double *Pa, double *Pb,
 			   BasisFunc_t *bfns, int M)
 {
 	int Na, Nb;
+	int guess_type;
+	
+	rtdb_get("scf:guess", &guess_type);
 
 	timer_new_entry("guess", "Initial guess");
 	timer_start("guess");
 	
-	printf("\nInitial guess: %s\n", scf_options.guess == GUESS_EHT ?
+	printf("\nInitial guess: %s\n", guess_type == GUESS_EHT ?
 		"extended Huckel theory" : "bare nuclei");
 	nalphabeta(molecule, &Na, &Nb);
 	
-	if (scf_options.guess == GUESS_EHT)
+	if (guess_type == GUESS_EHT)
 		guess_F_eht(Fa, S, bfns, M);
 	else
 		memcpy(Fa, H, M*M*sizeof(double));

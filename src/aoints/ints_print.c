@@ -1,6 +1,7 @@
 #include <mpi.h>
 #include <stdio.h>
 
+#include "input.h"
 #include "aoints.h"
 #include "scf.h"
 
@@ -32,13 +33,23 @@ void print_ao1eints(double (*eval_func)(), char *name)
 
 void print_ints(struct basis_function *funcs, int N)
 {
-	int mpi_rank;	
+	int mpi_rank;
+	
+	int print_1eke;
+	int print_1eov;
+	int print_1epe;
+	int print_2eri;
+	
+	rtdb_get("aoints:print:overlap",   &print_1eov);
+	rtdb_get("aoints:print:kinetic",   &print_1eke);
+	rtdb_get("aoints:print:potential", &print_1epe);
+	rtdb_get("aoints:print:eri",       &print_2eri);
 	
 	n_of_bfns = N;
 	basis_funcs = funcs;
 	MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
 	
-	if (scf_options.print_1eov) {
+	if (print_1eov) {
 		MPI_Barrier(MPI_COMM_WORLD);
 		if (mpi_rank == 0) {
 			printf("\n\n    ==============================================\n");
@@ -49,7 +60,7 @@ void print_ints(struct basis_function *funcs, int N)
 		print_ao1eints(aoint_overlap, "1eov");
 	}
 	
-	if (scf_options.print_1eke) {
+	if (print_1eke) {
 		MPI_Barrier(MPI_COMM_WORLD);
 		if (mpi_rank == 0) {
 			printf("\n\n    ==============================================\n");
@@ -60,7 +71,7 @@ void print_ints(struct basis_function *funcs, int N)
 		print_ao1eints(aoint_kinetic, "1eke");
 	}
 	
-	if (scf_options.print_1epe) {
+	if (print_1epe) {
 		MPI_Barrier(MPI_COMM_WORLD);
 		if (mpi_rank == 0) {
 			printf("\n\n    ===============================================\n");
@@ -72,7 +83,7 @@ void print_ints(struct basis_function *funcs, int N)
 	}
 	
 	// recalculation of ERI's on master-node specially for printing out
-	if (scf_options.print_2eri && mpi_rank == 0) {
+	if (print_2eri && mpi_rank == 0) {
 		int i, j, k, l, nzero = 0;
 		int M = n_of_bfns;
 		double eri;

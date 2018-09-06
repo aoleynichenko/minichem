@@ -48,14 +48,22 @@ void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	double *E;   // orbital energies
 	double *ErrM;// error matrix, e=FDS-SDF
 	int nbytes;  // bytes in matrix to allocate
+	int maxiter; // max # scf iterations
+	int direct;  // enable direct scf (1/0)
+	int do_diis; // is diis enabled (0/1)
 	int diisbas; // diis subspace dimension
 	double Enuc; // nuclei repulsion energy
 	DIISList_t *diislist; // list with stored Fock and error matrices
 	
+	// read parameters from the rtdb
+	rtdb_get("scf:maxiter", &maxiter);
+	rtdb_get("scf:direct",  &direct );
+	rtdb_get("scf:diis",    &do_diis);
+	rtdb_get("scf:diisbas", &diisbas);
+	
 	n = 1;  // iteration number 1
 	t0 = MPI_Wtime();
 	nbytes = M * M * sizeof(double);
-	diisbas = scf_options.diisbas;
 	diislist = NULL;
 	Enuc = enuc(molecule);
 	Nelecs = nelec(molecule);
@@ -82,7 +90,7 @@ void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	printf(" iter.       Energy         Delta E       RMS-Dens       DIIS-Err     time\n");
 	printf("----------------------------------------------------------------------------\n");
 	while (1) {
-		if (n > scf_options.maxiter) {
+		if (n > maxiter) {
 			printf("----------------------------------------------------------------------------\n");
 			printf("      not converged!\n");
 			errquit("no convergence of SCF equations! Try to increase scf:maxiter\n");
@@ -90,7 +98,7 @@ void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 			
 		memcpy(P0, P, nbytes);  // store actual P
 		
-		if (scf_options.direct) {
+		if (direct) {
 			// integral-direct
 			rhf_makefock_direct(F, H, P, bfns, M);
 		}
@@ -105,7 +113,7 @@ void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 		diiserror = maxerr(ErrM, M);
 		
 		// if DIIS is enabled
-		if (scf_options.diis && diisbas != 0) {
+		if (do_diis && diisbas != 0) {
 			if (!diislist)
 				diislist = newDIISList(ErrM, F, M);
 			else
@@ -136,7 +144,7 @@ void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	rtdb_set("scf:enuc", "%d", Enuc);
 	
 	// Освобождение ресурсов, которые были заняты DIIS
-	if (scf_options.diis && diislist)
+	if (do_diis && diislist)
 		removeDIISList(diislist);
 	
 	// Вывод результатов
@@ -183,14 +191,17 @@ void rhf_guess(double *F, double *H, double *P, double *S, double *X,
 			   BasisFunc_t *bfns, int M)
 {
 	int Nelecs = nelec(molecule);
+	int guess_type;
 	
-	printf("\nInitial guess: %s\n", scf_options.guess == GUESS_EHT ?
+	rtdb_get("scf:guess", &guess_type);
+	
+	printf("\nInitial guess: %s\n", guess_type == GUESS_EHT ?
 		"extended Huckel theory" : "bare nuclei");
 	
 	timer_new_entry("guess", "Initial guess");
 	timer_start("guess");
 	
-	if (scf_options.guess == GUESS_EHT)
+	if (guess_type == GUESS_EHT)
 		guess_F_eht(F, S, bfns, M);
 	else
 		memcpy(F, H, M*M*sizeof(double));

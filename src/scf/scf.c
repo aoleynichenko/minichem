@@ -29,9 +29,6 @@
 static int mpi_rank = -1;
 static int mpi_size = -1;
 
-/* scf parameters */
-struct scf_opt scf_options;
-
 /* task size - number of basis functions */
 int M;
 
@@ -53,6 +50,15 @@ void scf_energy(struct cart_mol *molecule)
 	int izero = 0;
 	int displ, sqsize, startx, starty;
 	int i, j;
+	
+	// scf options -- we extract the from the RTDB
+	int scf_wf_type;
+	int scf_maxiter;
+	int scf_direct;
+	int scf_diis;
+	int scf_diisbas;
+	double scf_conv_dens;
+	double scf_conv_en;
 
 	MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
 	MPI_Comm_size(MPI_COMM_WORLD, &mpi_size);
@@ -72,22 +78,33 @@ void scf_energy(struct cart_mol *molecule)
 		
 	Nelecs = nalphabeta(molecule, &Nalpha, &Nbeta);
 	// automatically set wavefunction type
-	if (Nalpha == Nbeta)
-		scf_options.wavefuntype = SCF_RHF;
-	else
-		scf_options.wavefuntype = SCF_UHF;
+	if (Nalpha == Nbeta) {
+		rtdb_set("scf:wf", "%i", SCF_RHF);
+	}
+	else {
+		rtdb_set("scf:wf", "%i", SCF_UHF);
+	}
+	
+	// extract SCF options from the RTDB
+	rtdb_get("scf:wf",        &scf_wf_type);
+	rtdb_get("scf:maxiter",   &scf_maxiter);
+	rtdb_get("scf:direct",    &scf_direct);
+	rtdb_get("scf:conv_dens", &scf_conv_dens);
+	rtdb_get("scf:conv_en",   &scf_conv_en);
+	rtdb_get("scf:diisbas",   &scf_diisbas);
+	rtdb_get("scf:diis",      &scf_diis);
 	
 	// print SCF options
 	printf("                    SCF Parameters\n");
 	printf("                    --------------\n");
-	printf("               Wavefunction : %s\n", scf_options.wavefuntype == SCF_RHF ? "RHF" : "UHF");
-	printf("             Max iterations : %d\n", scf_options.maxiter);
-	printf("               Density conv : %g\n", scf_options.conv_dens);
-	printf("                Energy conv : %g\n", scf_options.conv_en);
-	printf("            Integral direct : %s\n", scf_options.direct ? "on" : "off");
-	printf("                       DIIS : %s\n", scf_options.diis ? "on" : "off");
-	if (scf_options.diis) {
-		printf("                    diisbas : %d\n", scf_options.diisbas);
+	printf("               Wavefunction : %s\n", scf_wf_type == SCF_RHF ? "RHF" : "UHF");
+	printf("             Max iterations : %d\n", scf_maxiter);
+	printf("               Density conv : %g\n", scf_conv_dens);
+	printf("                Energy conv : %g\n", scf_conv_en);
+	printf("            Integral direct : %s\n", scf_direct ? "on" : "off");
+	printf("                       DIIS : %s\n", scf_diis ? "on" : "off");
+	if (scf_diis) {
+		printf("                    diisbas : %d\n", scf_diisbas);
 	}
 	printf("\n");
 
@@ -96,7 +113,7 @@ void scf_energy(struct cart_mol *molecule)
 	//form_atom_centered_bfns(molecule, &bfns, &shells, &M, &nshells);  // create atom-centered basis set
 	M = nbfns;
 	
-	if (scf_options.wavefuntype == SCF_RHF)
+	if (scf_wf_type == SCF_RHF)
 		rhf_loop(geom, bfns, M);
 	else
 		uhf_loop(geom, bfns, M);
@@ -162,21 +179,21 @@ void orthobasis(double *S, double *X, int dim)
  ***********************************************************************/
 void scf_init()
 {
-	scf_options.wavefuntype = SCF_RHF;
-	scf_options.guess = GUESS_EHT;
-	scf_options.diis = 1;
+	rtdb_set("scf:wf",    "%i", SCF_RHF);
+	rtdb_set("scf:guess", "%i", GUESS_EHT);
+	rtdb_set("scf:diis",  "%i", 1);
 	// print options
-	scf_options.print_1eov = 0;
-	scf_options.print_1eke = 0;
-	scf_options.print_1epe = 0;
-	scf_options.print_2eri = 0;
+	rtdb_set("aoints:print:overlap",   "%i", 0);
+	rtdb_set("aoints:print:kinetic",   "%i", 0);
+	rtdb_set("aoints:print:potential", "%i", 0);
+	rtdb_set("aoints:print:eri",       "%i", 0);
 	// convergence options
-	scf_options.maxiter = 50;
-	scf_options.diisbas = 5;
-	scf_options.conv_dens = 1e-6;
-	scf_options.conv_en = 1e-7;
+	rtdb_set("scf:maxiter", "%i", 50);
+	rtdb_set("scf:diisbas", "%i", 5);
+	rtdb_set("scf:conv_dens", "%d", 1e-6);
+	rtdb_set("scf:conv_en",   "%d", 1e-7);
 	// direct/conventional scf
-	scf_options.direct = 0;   // conventional
+	rtdb_set("scf:direct", "%i", 0);  // conventional
 }
 
 

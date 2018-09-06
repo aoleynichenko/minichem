@@ -13,28 +13,6 @@
 
 void scf_energy(struct cart_mol *);
 
-
-struct scf_opt {
-	int wavefuntype;
-	int guess;
-	int diis;
-	// print options
-	int print_1eov;
-	int print_1eke;
-	int print_1epe;
-	int print_2eri;
-	int print_final_vectors;
-	// convergence options
-	int maxiter;
-	int diisbas;
-	double conv_dens;
-	double conv_en;
-	// direct/conventional scf
-	int direct;
-};
-
-extern struct scf_opt scf_options;
-
 void directive_scf();
 void scf_init();
 void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M);
@@ -53,9 +31,6 @@ void print_matrix(char *annot, double *A, int dim);
 #define GUESS_BARE 0
 #define GUESS_EHT  1
 
-
-
-void print_scf_options(struct scf_opt *opt);
 
 // for initial guess
 void guess_F_eht(double *F, double *S, struct basis_function *bfn, int n);
