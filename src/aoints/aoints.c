@@ -26,17 +26,25 @@ void compute_2e_aoints(BasisFunc_t *bfns, int nbas, char *filename);
 void compute_aoints()
 {
 	printf("\n");
-	printf("AO integrals evaluation module\n");
+	printf("\t\tAO integrals evaluation module\n");
+	printf("\t\t------------------------------\n\n");
 	printf("Output files:\n");
 	printf("  AOINTS1   one-electron integrals\n");
 	printf("  AOINTS2   two-electron integrals\n");
 	printf("One-electron integrals evaluation algorithm: Obara-Saika\n");
 	printf("Two-electron integrals evaluation algorithm: Obara-Saika\n");
 	
+	// print molecular geometry
+	print_molecule (&calc_info.molecule, calc_info.geom_units);
+	distance_matrix(&calc_info.molecule, calc_info.geom_units);
+	
 	printf("generating atom-centered basis set...\n");
 	form_atom_centered_bfns(&calc_info.molecule, &bfns, &shells, &nbfns, &nshells);
 	printf("  # bfns   = %d\n", nbfns);
 	printf("  # shells = %d\n", nshells);
+	
+	// print detailed info about atom-centered basis
+	print_basis_functions(bfns, nbfns);
 	
 	compute_1e_aoints(bfns, nbfns, "AOINTS1");
 	compute_2e_aoints(bfns, nbfns, "AOINTS2");

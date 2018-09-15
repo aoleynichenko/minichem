@@ -203,6 +203,68 @@ void append_atom(struct cart_mol *m, int Z, double x, double y, double z)
 
 
 /***********************************************************************
+ * print_molecule
+ * 
+ * prints atomic coordinates (XYZ) for the given molecule.
+ * NOTE: coordinates are stored in the Molecule_t structure in bohrs!
+ **********************************************************************/
+void print_molecule(Molecule_t *geom, int units)
+{
+	double fact = 1.0;  // bohr-to-angstroms conversion factor
+	int i;
+	Atom_t *ai;
+	
+	printf("\n\tAtomic coordinates (%s):\n",
+		units == UNITS_ANGSTROMS ? "angstroms" : "atomic units");
+	if (units == UNITS_ANGSTROMS) {
+		fact = 0.52917721092;
+	}
+	
+	for (i = 0; i < geom->size; i++) {
+		ai = &geom->atoms[i];
+		printf("    [%2d]  %-2s%15.8f%15.8f%15.8f\n", i+1,
+			ptable[ai->Z - 1].sym, fact*ai->r[0], fact*ai->r[1], fact*ai->r[2]);
+	}
+	
+	printf("\n");
+}
+
+
+/***********************************************************************
+ * print_molecule
+ * 
+ * prints distance matrix for the given molecule.
+ * NOTE: coordinates are stored in the Molecule_t structure in bohrs!
+ **********************************************************************/
+void distance_matrix(Molecule_t *geom, int units)
+{
+	double fact = 1.0;  // bohr-to-angstroms conversion factor
+	int i, j;
+	Atom_t *ai, *aj;
+	double d;
+	
+	printf("\n\tDistance matrix (%s):\n",
+		units == UNITS_ANGSTROMS ? "angstroms" : "atomic units");
+	if (units == UNITS_ANGSTROMS) {
+		fact = 0.52917721092;
+	}
+	
+	for (i = 0; i < geom->size; i++) {
+		for (j = i+1; j < geom->size; j++) {
+			ai = &geom->atoms[i];
+			aj = &geom->atoms[j];
+			d = fact*distance(ai->r, aj->r);
+			printf("    [%2d] %-2s    [%2d] %-2s%15.8f\n",
+				i+1, ptable[ai->Z - 1].sym,
+				j+1, ptable[aj->Z - 1].sym, d);
+		}
+	}
+	
+	printf("\n");
+}
+
+
+/***********************************************************************
  * atoms_are_equal
  * 
  * compares two atoms, returns 1 if equal, 0 otherwise

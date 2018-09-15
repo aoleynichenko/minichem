@@ -250,6 +250,38 @@ void form_atom_centered_bfns(struct cart_mol *molecule, struct basis_function **
 
 
 /***********************************************************************
+ * print_basis_functions
+ * 
+ * prints atom-centered basis functions.
+ **********************************************************************/
+void print_basis_functions(BasisFunc_t *bfns, int nbf)
+{
+	int i, k, j;
+	Atom_t *last_atom = NULL;
+	char *spd = "spdfghikl";
+	char *xyz = "xyz";
+	int cnt = 1;
+	
+	printf("\n\tBasis functions (atomic units):");
+	for (i = 0; i < nbf; i++) {
+		if (last_atom != bfns[i].a) {
+			printf("\n");
+			printf("    %-2s%8.3f%8.3f%8.3f", searchByZ(bfns[i].a->Z)->sym,
+				bfns[i].a->r[0], bfns[i].a->r[1], bfns[i].a->r[2]);
+			last_atom = bfns[i].a;
+		}
+		printf("  [%d]%c", cnt++, spd[bfns[i].f->L]);
+		for (k = 0; k < 3; k++) {  // x, y, z
+			for (j = 0; j < bfns[i].ijk[k]; j++) {
+				printf("%c", xyz[k]);
+			}
+		}
+	}
+	printf("\n\n");
+}
+
+
+/***********************************************************************
  * estimate_principal_numbers
  * 
  * Estimates principal quantum number n for every GTO in set 'bs'

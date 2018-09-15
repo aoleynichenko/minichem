@@ -66,5 +66,6 @@ void print_basis_summary();
 
 struct cart_mol;   // chem.h for details
 void form_atom_centered_bfns(struct cart_mol *molecule, struct basis_function **bfns, struct shell **shs, int *M, int *nsh);
+void print_basis_functions(BasisFunc_t *bfns, int nbf);
 
 #endif /* BASIS_H_INCLUDED */
