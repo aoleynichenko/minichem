@@ -59,13 +59,14 @@ void scf_energy(struct cart_mol *molecule)
 	int scf_diisbas;
 	double scf_conv_dens;
 	double scf_conv_en;
+	int nproc;
 
 	MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
 	MPI_Comm_size(MPI_COMM_WORLD, &mpi_size);
 	
 	// evaluate AO integrals and write them to disk
 	geom = molecule;
-	compute_aoints();
+	compute_aoints(geom);
 
 	if (mpi_size != 1)
 		errquit("Sorry! Parallel SCF module hasn't implemented yet. Please, run minichem on one node!");
@@ -73,8 +74,9 @@ void scf_energy(struct cart_mol *molecule)
 	printf("          ********************************\n");
 	printf("          *      Parallel SCF Module     *\n");
 	printf("          ********************************\n\n");
-	
-	omp_set_num_threads(calc_info.nproc);
+
+	rtdb_get("top:nproc", &nproc);
+	omp_set_num_threads(nproc);
 		
 	Nelecs = nalphabeta(molecule, &Nalpha, &Nbeta);
 	// automatically set wavefunction type
@@ -108,7 +110,7 @@ void scf_energy(struct cart_mol *molecule)
 	}
 	printf("\n");
 
-	mol_summary(&calc_info.molecule);
+	mol_summary(molecule);
 	
 	//form_atom_centered_bfns(molecule, &bfns, &shells, &M, &nshells);  // create atom-centered basis set
 	M = nbfns;

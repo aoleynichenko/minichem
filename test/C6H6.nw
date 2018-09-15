@@ -45,8 +45,8 @@ end
  # diis 5
 #end
 
-#out
-#  molden
-#end
+out
+  molden
+end
 
 task scf

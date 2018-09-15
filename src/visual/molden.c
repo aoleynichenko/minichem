@@ -16,11 +16,16 @@
 #include "basis.h"
 #include "util.h"
 
-void vectors_molden(struct cart_mol *mol, double *mo, double *en, int *occup, double n, char *name)
+void vectors_molden(struct cart_mol *mol, double *mo, double *en, int *occup, double n)
 {
 	int i, j, k;
 	char filename[256];
 	FILE *f = NULL;
+	int geom_units;
+	char name[64];
+	
+	rtdb_get("geom:units", &geom_units);
+	rtdb_get("top:short_name", name);
 	
 	sprintf(filename, "%s.mos", name);
 	f = fopen(filename, "w");
@@ -28,7 +33,7 @@ void vectors_molden(struct cart_mol *mol, double *mo, double *en, int *occup, do
 		errquit("while writing vectors to molden format file: unable to create file");
 	
 	fprintf(f, "[Molden Format]\n");
-	fprintf(f, "[Atoms] %s\n", calc_info.geom_units == UNITS_ANGSTROMS ? "Angs" : "AU");
+	fprintf(f, "[Atoms] %s\n", geom_units == UNITS_ANGSTROMS ? "Angs" : "AU");
 	
 	for (i = 0; i < mol->size; i++) {
 		int Z = mol->atoms[i].Z;

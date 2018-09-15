@@ -286,23 +286,26 @@ void mol_summary(struct cart_mol *molecule)
 	int i;
 	int nelec = -molecule->charge;
 	double mass = 0.0;
+	int geom_units;
+	
+	rtdb_get("geom:units", &geom_units);
 	
 	for (i = 0; i < molecule->size; i++)
 		el[molecule->atoms[i].Z-1]++;
-	printf("Formula:   ");
+	/*printf("Formula:   ");
 	for (i = 0; i < NELEMENTS; i++)
 		if (el[i] != 0) {
 			struct elem_info *ei = &ptable[i];
 			mass += ei->m*el[i];
 			nelec += ei->Z*el[i];
-		}  // ???
+		}  // ???*/
 	printf("\n");
 	printf("Atoms:     %d\n", molecule->size);
 	printf("Electrons: %d\n", nelec);
 	printf("Mol mass:  %.3f\n", mass);
 	printf("Charge:    %d\n", molecule->charge);
 	printf("Spin mult: %d\n", molecule->mult);
-	printf("Units:     %s\n", calc_info.geom_units == UNITS_ANGSTROMS ? "angstroms" : "atomic");
+	printf("Units:     %s\n", geom_units == UNITS_ANGSTROMS ? "angstroms" : "atomic");
 	/* verify charge & mult */
 	//if (!((nelec % 2 == 0) && (molecule->mult % 2 == 1)))
 		//errquit("illegal charge/multiplicity");

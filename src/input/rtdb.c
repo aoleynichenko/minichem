@@ -310,34 +310,39 @@ void rtdb_print_meta()
 	void *arr;
 	int i, j;
 	
-	printf("\n--------------------------- RTDB ---------------------------\n");
+	printf("\n  --------------------------- RTDB ---------------------------\n");
+	printf("  ------------------------------------------------------------\n");
 	for (p = rtdb; p != NULL; p = p->next) {
-		printf("[%s]\n", p->key);
+		printf("  %-24s", p->key);
 		n_arr = p->n_arr;
 		for (i = 0; i < n_arr; i++) {
+			if (i != 0) { // placeholder
+				printf("  %-24s", "");
+			}
 			switch (p->arrays[i].type) {
 			case RTDB_TYPE_INT:
-				printf("  int[%d] ", p->arrays[i].size);
+				printf("  int[%d]        ", p->arrays[i].size);
 				for (j = 0; j < p->arrays[i].size; j++) {
 					printf("%d ", ((int *)(p->arrays[i].data))[j]);
 				}
 				printf("\n");
 				break;
 			case RTDB_TYPE_DOUBLE:
-				printf("  double[%d] ", p->arrays[i].size);
+				printf("  double[%d]     ", p->arrays[i].size);
 				for (j = 0; j < p->arrays[i].size; j++) {
 					printf("%.8f ", ((double *)(p->arrays[i].data))[j]);
 				}
 				printf("\n");
 				break;
 			case RTDB_TYPE_STRING:
-				printf("  char[%d] ", p->arrays[i].size);
+				printf("  char[%d]       ", p->arrays[i].size);
 				printf("\"%s\"\n", p->arrays[i].data);
 				break;
 			}
 		}
 	}
-	printf("----------------------- END OF RTDB ------------------------\n\n");
+	printf("  ------------------------------------------------------------\n");
+	printf("  ----------------------- END OF RTDB ------------------------\n\n");
 }
 
 

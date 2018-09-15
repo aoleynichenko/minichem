@@ -52,6 +52,7 @@ void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	int direct;  // enable direct scf (1/0)
 	int do_diis; // is diis enabled (0/1)
 	int diisbas; // diis subspace dimension
+	int molden_out; // print vectors to molden format or not
 	double Enuc; // nuclei repulsion energy
 	DIISList_t *diislist; // list with stored Fock and error matrices
 	
@@ -60,6 +61,7 @@ void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	rtdb_get("scf:direct",  &direct );
 	rtdb_get("scf:diis",    &do_diis);
 	rtdb_get("scf:diisbas", &diisbas);
+	rtdb_get("visual:molden", &molden_out);
 	
 	n = 1;  // iteration number 1
 	t0 = MPI_Wtime();
@@ -159,13 +161,13 @@ void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	printf("  +-----+-----+----------------+----------+\n");
 	
 	// Вывод векторов в файл в формате Molden
-	if (calc_info.out_molden_vectors) {
+	if (molden_out) {
 		int i;
 		int *occ = (int *) qalloc(sizeof(int) * M);
 		memset(occ, 0, sizeof(int) * M);
 		for (i = 0; i < Nelecs/2; i++)
 			occ[i] = 2;
-		vectors_molden(molecule, C, E, occ, M, calc_info.name);
+		vectors_molden(molecule, C, E, occ, M);
 		qfree(occ, sizeof(int) * M);
 	}
 	

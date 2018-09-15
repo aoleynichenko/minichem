@@ -28,7 +28,7 @@
 #include "basis.h"
 #include "chem.h"
 
-void compute_aoints();
+void compute_aoints(Molecule_t *mol);
 
 double boys(int n, double x);
 
