@@ -74,10 +74,12 @@ void scf_energy(struct cart_mol *molecule)
 	printf("          ********************************\n");
 	printf("          *      Parallel SCF Module     *\n");
 	printf("          ********************************\n\n");
+	
+	rtdb_print_meta();
 
 	rtdb_get("top:nproc", &nproc);
 	omp_set_num_threads(nproc);
-		
+	
 	Nelecs = nalphabeta(molecule, &Nalpha, &Nbeta);
 	// automatically set wavefunction type
 	if (Nalpha == Nbeta) {

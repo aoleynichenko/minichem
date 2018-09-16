@@ -1,0 +1,280 @@
+Minichem 1.0
+By Alexander Oleynichenko, 2018
+Build date:    Sep 16 2018 12:12:42
+Compiler:      gcc 8.2.1
+Date:          Sun Sep 16 12:13:47 2018
+# MPI threads: 1
+Arguments:  minichem.x H2O.nw 
+------------------------------------------------------------
+>>> H2O.nw
+start H2O
+memory 400 mb
+echo
+
+geometry
+O          0.00000        0.00000        0.11779
+H          0.00000        0.75545       -0.47116
+H          0.00000       -0.75545       -0.47116
+end
+
+basis "ao basis" SPHERICAL
+H    S
+      3.42525091             0.15432897       
+      0.62391373             0.53532814       
+      0.16885540             0.44463454  
+O    S
+    130.7093200              0.15432897       
+     23.8088610              0.53532814       
+      6.4436083              0.44463454       
+O    SP
+      5.0331513             -0.09996723             0.15591627       
+      1.1695961              0.39951283             0.60768372       
+      0.3803890              0.70011547             0.39195739      
+end
+
+scf
+  nodiis
+end
+
+task scf
+------------------------------------------------------------
+                    Basis information
+   H
+  ----
+  1   1S     3.42525091     0.15432897
+             0.62391373     0.53532814
+             0.16885540     0.44463454
+
+
+   O
+  ----
+  1   1S   130.70932000     0.15432897
+            23.80886100     0.53532814
+             6.44360830     0.44463454
+
+  2   2S     5.03315130    -0.09996723
+             1.16959610     0.39951283
+             0.38038900     0.70011547
+
+  3   2P     5.03315130     0.15591627
+             1.16959610     0.60768372
+             0.38038900     0.39195739
+
+
+Spherical basis set summary:
+*---------*-----------------*--------*------------*
+| Element |   Description   | Shells | Primitives |
+*---------*-----------------*--------*------------*
+|   H     | ao basis        |   1    |     3      |
+|   O     | ao basis        |   3    |     9      |
+*---------*-----------------*--------*------------*
+
+------------------------------------------------------------
+
+		AO integrals evaluation module
+		------------------------------
+
+Output files:
+  AOINTS1   one-electron integrals
+  AOINTS2   two-electron integrals
+One-electron integrals evaluation algorithm: Obara-Saika
+Two-electron integrals evaluation algorithm: Obara-Saika
+
+	Atomic coordinates (angstroms):
+    [ 1]  O      0.00000000     0.00000000     0.11778999
+    [ 2]  H      0.00000000     0.75544995    -0.47115997
+    [ 3]  H      0.00000000    -0.75544995    -0.47115997
+
+
+	Distance matrix (angstroms):
+    [ 1] O     [ 2] H      0.95789701
+    [ 1] O     [ 3] H      0.95789701
+    [ 2] H     [ 3] H      1.51089989
+
+generating atom-centered basis set...
+  # bfns   = 7
+  # shells = 5
+
+	Basis functions (atomic units):
+    O    0.000   0.000   0.223  [1]s  [2]s  [3]pz  [4]py  [5]px
+    H    0.000   1.428  -0.890  [6]s
+    H    0.000  -1.428  -0.890  [7]s
+
+begin 1e integrals...
+  overlap
+  kinetic energy
+  nuclear attraction
+  X Y Z integrals
+done
+begin 2e integrals...
+  sizeof buf (bytes) = 98304
+  sizeof integral (bytes) = 24
+  # unique ERIs   = 406
+  # non-zero ERIs = 228
+done
+
+------------------------------------------------------------
+
+          ********************************
+          *      Parallel SCF Module     *
+          ********************************
+
+
+  --------------------------- RTDB ---------------------------
+  ------------------------------------------------------------
+  top:echo                  int[1]        1 
+  top:short_name            char[4]       "h2o"
+  top:nproc                 int[1]        1 
+  top:memory                int[1]        419430400 
+  geom:units                int[1]        0 
+  geom:charge               int[1]        0 
+  geom:mult                 int[1]        1 
+  visual:molden             int[1]        0 
+  scf:wf                    int[1]        0 
+  scf:guess                 int[1]        1 
+  scf:diis                  int[1]        0 
+  aoints:print:overlap      int[1]        0 
+  aoints:print:kinetic      int[1]        0 
+  aoints:print:potential    int[1]        0 
+  aoints:print:eri          int[1]        0 
+  scf:maxiter               int[1]        50 
+  scf:diisbas               int[1]        5 
+  scf:conv_dens             double[1]     0.00000100 
+  scf:conv_en               double[1]     0.00000010 
+  scf:direct                int[1]        0 
+  ------------------------------------------------------------
+  ----------------------- END OF RTDB ------------------------
+
+                    SCF Parameters
+                    --------------
+               Wavefunction : RHF
+             Max iterations : 50
+               Density conv : 1e-06
+                Energy conv : 1e-07
+            Integral direct : off
+                       DIIS : off
+
+
+Atoms:     3
+Electrons: 0
+Mol mass:  0.000
+Charge:    0
+Spin mult: 1
+Units:     angstroms
+One-electron integrals read in 0.000000 sec
+Basis orthogonalization algorithm: canonical
+Basis functions elimination threshold: 1e-08
+Overlap matrix lowest eigenvalue = 0.34263066
+AO basis orthogonalization done in 0.000143 sec
+
+Initial guess: extended Huckel theory
+Initial energy = -84.58476495
+
+ iter.       Energy         Delta E       RMS-Dens       DIIS-Err     time
+----------------------------------------------------------------------------
+   1     -74.76861362     0.62692854     0.76721126     0.51873600    0.00
+   2     -74.78957275    -0.02095913     0.29275091     0.06793651    0.00
+   3     -74.94400673    -0.15443398     0.09863361     0.00402386    0.00
+   4     -74.95785486    -0.01384813     0.03630796     0.00263716    0.00
+   5     -74.96144834    -0.00359348     0.01424623     0.00212829    0.00
+   6     -74.96247527    -0.00102693     0.00585416     0.00114680    0.00
+   7     -74.96286729    -0.00039202     0.00246720     0.00055110    0.00
+   8     -74.96302737    -0.00016008     0.00105361     0.00025186    0.00
+   9     -74.96309518    -0.00006780     0.00045303     0.00011231    0.00
+  10     -74.96312426    -0.00002908     0.00019550     0.00004944    0.00
+  11     -74.96313681    -0.00001255     0.00008453     0.00002162    0.00
+  12     -74.96314223    -0.00000543     0.00003659     0.00000941    0.00
+  13     -74.96314458    -0.00000235     0.00001585     0.00000409    0.00
+  14     -74.96314560    -0.00000102     0.00000687     0.00000178    0.00
+  15     -74.96314604    -0.00000044     0.00000298     0.00000077    0.00
+  16     -74.96314623    -0.00000019     0.00000129     0.00000033    0.00
+  17     -74.96314631    -0.00000008     0.00000056     0.00000014    0.00
+----------------------------------------------------------------------------
+          Total SCF energy =   -74.96314631
+  Nuclear repulsion energy =     9.18922278
+
+
+
+         Molecular Orbitals Summary
+  +-----+-----+----------------+----------+
+  | No  | Occ |     Energy     | Symmetry |
+  +-----+-----+----------------+----------+
+  | 1   |  2  |   -20.24237694 |     ?    |
+  | 2   |  2  |    -1.26853625 |     ?    |
+  | 3   |  2  |    -0.61691249 |     ?    |
+  | 4   |  2  |    -0.45387527 |     ?    |
+  | 5   |  2  |    -0.39150254 |     ?    |
+  | 6   |  0  |     0.60569703 |     ?    |
+  | 7   |  0  |     0.74040737 |     ?    |
+  +-----+-----+----------------+----------+
+
+        Mulliken population analysis
+        ----------------------------
+
+      Atom     Population     Charge
+      1  O     8.36506081  -0.36506081
+      2  H     0.81746960   0.18253040
+      3  H     0.81746960   0.18253040
+
+
+        Loewdin population analysis
+        ---------------------------
+
+      Atom     Population     Charge
+      1  O     8.25254200  -0.25254200
+      2  H     0.87372900   0.12627100
+      3  H     0.87372900   0.12627100
+
+               Multipole moments
+               -----------------
+  D       x            y            z
+    -0.00000000   0.00000000  -0.67964445
+
+  |D| = 0.67964445 a.u. = 1.72748371 Debye
+
+
+ time for (sec):
+ -------------------------------------------------------
+  One-electron integrals                          0.001
+  Two-electron integrals                          0.018
+  Basis set orthogonalization                     0.000
+  Initial guess                                   0.000
+  Fock matrix diagonalization                     0.000
+  Density matrix construction                     0.000
+  Fock matrix construction                        0.000
+ -------------------------------------------------------
+                                                  0.019
+
+
+  --------------------------- RTDB ---------------------------
+  ------------------------------------------------------------
+  top:echo                  int[1]        1 
+  top:short_name            char[4]       "h2o"
+  top:nproc                 int[1]        1 
+  top:memory                int[1]        419430400 
+  geom:units                int[1]        0 
+  geom:charge               int[1]        0 
+  geom:mult                 int[1]        1 
+  visual:molden             int[1]        0 
+  scf:wf                    int[1]        0 
+  scf:guess                 int[1]        1 
+  scf:diis                  int[1]        0 
+  aoints:print:overlap      int[1]        0 
+  aoints:print:kinetic      int[1]        0 
+  aoints:print:potential    int[1]        0 
+  aoints:print:eri          int[1]        0 
+  scf:maxiter               int[1]        50 
+  scf:diisbas               int[1]        5 
+  scf:conv_dens             double[1]     0.00000100 
+  scf:conv_en               double[1]     0.00000010 
+  scf:direct                int[1]        0 
+  scf:etot                  double[1]     -74.96314631 
+  scf:enuc                  double[1]     9.18922278 
+  ------------------------------------------------------------
+  ----------------------- END OF RTDB ------------------------
+
+
+Allocated: 71960 bytes
+Freed:     65296 bytes
+Max usage: 12152 bytes
+Total time: 0.020 sec

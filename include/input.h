@@ -16,6 +16,9 @@ void compute(char *filename);
 #define UNITS_ANGSTROMS 0
 #define UNITS_ATOMIC    1
 
+// molecule under consideration
+extern struct cart_mol molecule;
+
 /* interface to the runtime database (rtdb) */
 int rtdb_set(char *key, char *fmt, ...);
 int rtdb_get(char *key, ...);

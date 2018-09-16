@@ -34,19 +34,23 @@ void directive_scf()
 			// set multiplicity, NWChem compatible notation
 			else if (!strcmp(sval, "singlet")) {
 				rtdb_set("geom:mult", "%i", 1);
-				//calc_info.molecule.mult = 1;
+				molecule.mult = 1;
 			}
 			else if (!strcmp(sval, "doublet")) {
 				rtdb_set("geom:mult", "%i", 2);
+				molecule.mult = 2;
 			}
 			else if (!strcmp(sval, "triplet")) {
 				rtdb_set("geom:mult", "%i", 3);
+				molecule.mult = 3;
 			}
 			else if (!strcmp(sval, "quartet")) {
 				rtdb_set("geom:mult", "%i", 4);
+				molecule.mult = 4;
 			}
 			else if (!strcmp(sval, "quintet")) {
 				rtdb_set("geom:mult", "%i", 5);
+				molecule.mult = 5;
 			}
 			// convergence options
 			else if (!strcmp(sval, "maxiter")) {
