@@ -120,22 +120,28 @@ void loewdin(struct cart_mol *geom, struct basis_function *bfns, double *P, doub
 
 
 /***********************************************************************
- * multipole_moments
+ * scf_properties
  * 
- * the simplest implementation of properties:
+ * properties at SCF level.
  * we don't use P is Hermitian matrix and permut symmetry of integrals.
  * TODO: XX, XY ... (quadrupole) moments
  **********************************************************************/
-void multipole_moments(struct cart_mol *geom, double *P, int dim)
+void scf_properties(struct cart_mol *geom, double *Pa, double *Pb, int dim)
 {
+	double *Ptot;
+	int nbytes = dim * dim * sizeof(double);
 	int i, j, k;
 	int fd;
 	double D;
 	double d[] = {0, 0, 0};
 	double *coord[3];  // array of three coord matrices (X, Y, Z)
-	int nbytes = sizeof(double) * dim * dim;
 	
-	// alloc coord matrices
+	printf("\n");
+	printf("\t\tSCF properties\n");
+	printf("\t\t--------------\n");
+	printf("\n");
+	
+	// alloc coord (X,Y,Z) matrices
 	coord[0] = (double *) qalloc(nbytes);
 	coord[1] = (double *) qalloc(nbytes);
 	coord[2] = (double *) qalloc(nbytes);
@@ -152,12 +158,21 @@ void multipole_moments(struct cart_mol *geom, double *P, int dim)
 	fastio_read_doubles(fd, coord[1], dim*dim);
 	fastio_read_doubles(fd, coord[2], dim*dim);
 	fastio_close(fd);
+
+	// construct "total" density matrix (alpha + beta)
+	Ptot = (double *) qalloc(nbytes);
+	for (i = 0; i < dim; i++) {
+		for (j = 0; j < dim; j++) {
+			Ptot[i*dim+j] = Pa[i*dim+j] + Pb[i*dim+j];
+		}
+	}
 	
+	/* DIPOLE MOMENT */
 	// electronic contribution:
 	for (i = 0; i < dim; i++)
 		for (j = 0; j < dim; j++) {
 			for (k = 0; k < 3; k++) {  // loop over X, Y, Z
-				d[k] -= P[i*dim+j] * coord[k][j*dim+i];
+				d[k] -= Ptot[i*dim+j] * coord[k][j*dim+i];
 			}
 		}
 	// nuclear contribution:
@@ -165,26 +180,19 @@ void multipole_moments(struct cart_mol *geom, double *P, int dim)
 		for (k = 0; k < 3; k++)
 			d[k] += geom->atoms[i].Z * geom->atoms[i].r[k];
 	D = sqrt(d[0]*d[0]+d[1]*d[1]+d[2]*d[2]);
-	
-	// TODO: quadrupole
-	
-	printf("               Multipole moments\n");
-	printf("               -----------------\n");
+	// print
+	printf("  dipole moment:\n");
 	printf("  D       x            y            z\n");
 	printf("  %13.8f%13.8f%13.8f\n", d[0], d[1], d[2]);
-	printf("\n");
 	printf("  |D| = %.8f a.u. = %.8f Debye\n", D, D*2.541746230211);
 	printf("\n");
-	
+
 	// cleanup
 	qfree(coord[0], nbytes);
 	qfree(coord[1], nbytes);
 	qfree(coord[2], nbytes);
+	qfree(Ptot, nbytes);
 }
-
-
-
-
 
 
 

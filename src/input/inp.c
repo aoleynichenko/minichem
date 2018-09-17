@@ -30,6 +30,9 @@ static int rank;
 /* molecule under consideration -- geometry, ... etc */
 struct cart_mol molecule;
 
+/* print level (for the top-level 'print' directive) */
+int print_level = PRINT_MEDIUM;
+
 /* from lexer.c */
 extern char *source; /* input file */
 extern int fsize;
@@ -45,6 +48,7 @@ void directive_charge();
 void directive_out();
 void calc_info_defaults();
 void directive_nproc();
+void directive_print();
 
 
 /***********************************************************************
@@ -111,6 +115,9 @@ void compute(char *filename)
 		case TT_KW_NPROC:
 			directive_nproc();
 			break;
+		case TT_KW_PRINT:
+			directive_print();
+			break;
 		case TT_KW_GEOMETRY:
 			directive_geometry();
 			setbuf(stdout, NULL);
@@ -130,6 +137,7 @@ void compute(char *filename)
 			directive_task();
 			break;
 		}
+		// ??? wrong tokens are simply skipped?
 		nextToken();
 	}
 	
@@ -205,6 +213,35 @@ void directive_nproc()
 	printf("                * Cores available        %2d *\n", omp_get_num_procs());
 	printf("                * OpenMP version      %5s *\n", ompv);
 	printf("                *****************************\n\n");
+}
+
+
+/***********************************************************************
+ * directive_print
+ * 
+ * Sets print level: one of:
+ * none | low | medium | high | debug
+ * default: medium
+ **********************************************************************/
+void directive_print()
+{
+	nextToken();
+	if (ttype != TT_WORD)
+		errquit("print directive: one of keywords none, low, medium, high, debug expected");
+	if (!strcmp(sval, "none"))
+		print_level = PRINT_NONE;
+	else if (!strcmp(sval, "low"))
+		print_level = PRINT_LOW;
+	else if (!strcmp(sval, "medium"))
+		print_level = PRINT_MEDIUM;
+	else if (!strcmp(sval, "high"))
+		print_level = PRINT_HIGH;
+	else if (!strcmp(sval, "debug"))
+		print_level = PRINT_DEBUG;
+	else
+		errquit("print directive: one of keywords none, low, medium, high, debug expected");
+	
+	rtdb_set("top:print", "%i", print_level);
 }
 
 
@@ -379,6 +416,7 @@ void calc_info_defaults()
 	rtdb_set("top:short_name", "%s", "John-A-Pople");
 	rtdb_set("top:nproc", "%i", 1);
 	rtdb_set("top:memory", "%i", 200*1024*1024);
+	rtdb_set("top:print", "%i", PRINT_MEDIUM);
 	/* molecule */
 	rtdb_set("geom:units",  "%i", UNITS_ANGSTROMS);
 	rtdb_set("geom:charge", "%i", 0);  /* neutral */

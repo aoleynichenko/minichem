@@ -434,6 +434,7 @@ static struct kw_mapping {
 	{"memory", TT_KW_MEMORY},
 	{"charge", TT_KW_CHARGE},
 	{"nproc", TT_KW_NPROC},
+	{"print", TT_KW_PRINT},
     {0, 0}
 };
 

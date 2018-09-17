@@ -31,6 +31,7 @@ void   rhf_makedensity(double *P, double *C, int nelec, int M);
 double rhf_energy(double *P, double *F, double *H, int M);
 void   rhf_makefock(double *F, double *H, double *P, int M);
 void   rhf_makefock_direct(double *F, double *H, double *P, BasisFunc_t *bfns, int M);
+void scf_properties_rhf(struct cart_mol *molecule, double *P, int M);
 
 void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 {
@@ -176,7 +177,7 @@ void rhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	loewdin (molecule, bfns, P, S, M);
 
 	// properties
-	multipole_moments(molecule, P, M);
+	scf_properties_rhf(molecule, P, M);
 	
 	qfree(H, nbytes);
 	qfree(S, nbytes);
@@ -247,6 +248,33 @@ double rhf_energy(double *P, double *F, double *H, int M)
 	return E0;
 }
 
+
+/***********************************************************************
+ * scf_properties_rhf
+ * 
+ * wrapper for the 'scf_properties' function.
+ * transforms density matrix into [equal] alpha and beta components.
+ **********************************************************************/
+void scf_properties_rhf(struct cart_mol *molecule, double *P, int M)
+{
+	double *Pa, *Pb;
+	int nbytes = M * M * sizeof(double);
+	int i;
+	
+	Pa = (double *) qalloc(nbytes);
+	Pb = (double *) qalloc(nbytes);
+	
+	// RHF: Pa = Pb = P/2
+	for (i = 0; i < M * M; i++) {
+		Pa[i] = P[i] * 0.5;
+		Pb[i] = P[i] * 0.5;
+	}
+	
+	scf_properties(molecule, Pa, Pb, M);
+	
+	qfree(Pa, nbytes);
+	qfree(Pb, nbytes);
+}
 
 
 /***********************************************************************

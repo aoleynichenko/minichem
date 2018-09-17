@@ -74,8 +74,6 @@ void scf_energy(struct cart_mol *molecule)
 	printf("          ********************************\n");
 	printf("          *      Parallel SCF Module     *\n");
 	printf("          ********************************\n\n");
-	
-	rtdb_print_meta();
 
 	rtdb_get("top:nproc", &nproc);
 	omp_set_num_threads(nproc);
@@ -101,14 +99,23 @@ void scf_energy(struct cart_mol *molecule)
 	// print SCF options
 	printf("                    SCF Parameters\n");
 	printf("                    --------------\n");
-	printf("               Wavefunction : %s\n", scf_wf_type == SCF_RHF ? "RHF" : "UHF");
-	printf("             Max iterations : %d\n", scf_maxiter);
-	printf("               Density conv : %g\n", scf_conv_dens);
-	printf("                Energy conv : %g\n", scf_conv_en);
-	printf("            Integral direct : %s\n", scf_direct ? "on" : "off");
-	printf("                       DIIS : %s\n", scf_diis ? "on" : "off");
+	printf("               print level : ");
+	switch (print_level) {
+		case PRINT_NONE   : printf("none\n")  ; break;
+		case PRINT_LOW    : printf("low\n")   ; break;
+		case PRINT_MEDIUM : printf("medium\n"); break;
+		case PRINT_HIGH   : printf("high\n")  ; break;
+		case PRINT_DEBUG  : printf("debug\n") ; break;
+		default           : printf("\n")      ; break;
+	}
+	printf("              wavefunction : %s\n", scf_wf_type == SCF_RHF ? "RHF" : "UHF");
+	printf("            max iterations : %d\n", scf_maxiter);
+	printf("              density conv : %g\n", scf_conv_dens);
+	printf("               energy conv : %g\n", scf_conv_en);
+	printf("           integral direct : %s\n", scf_direct ? "on" : "off");
+	printf("                      diis : %s\n", scf_diis ? "on" : "off");
 	if (scf_diis) {
-		printf("                    diisbas : %d\n", scf_diisbas);
+		printf("                   diisbas : %d\n", scf_diisbas);
 	}
 	printf("\n");
 
@@ -126,7 +133,9 @@ void scf_energy(struct cart_mol *molecule)
 	timer_stats();
 	
 	// all data stored in the rtdb
-	rtdb_print_meta();
+	if (print_level >= PRINT_HIGH) {
+		rtdb_print_meta();
+	}
 }
 
 

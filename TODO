@@ -1,5 +1,4 @@
 <> one header in the /include dir = one module
-<> test system
 <> cube file with density
 <> AREP integrals
 <> molecular symmetry using libmsym
@@ -9,7 +8,7 @@
 <> properties for uhf
 <> qfree without nbytes argument (additional memory metainfo?) [nbytes, =malloc()]
 <> validate DIIS in UHF again -- it works wrong
-<> all settings in rtdb
 <> rtdb log
 <> rtdb - separate header
+<> test UHF dipole moments and population analysis
 

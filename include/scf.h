@@ -23,6 +23,7 @@ void orthobasis(double *S, double *X, int dim);
 double enuc(Molecule_t *geom);
 double rmsdens(double *P1, double *P2, int M);
 void print_matrix(char *annot, double *A, int dim);
+void scf_properties(struct cart_mol *geom, double *Pa, double *Pb, int dim);
 
 #define SCF_RHF  0
 #define SCF_UHF  1

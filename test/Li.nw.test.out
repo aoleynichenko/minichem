@@ -1,0 +1,246 @@
+Minichem 1.0
+By Alexander Oleynichenko, 2018
+Build date:    Sep 16 2018 12:12:42
+Compiler:      gcc 8.2.1
+Date:          Mon Sep 17 11:43:07 2018
+# MPI threads: 1
+Arguments:  minichem.x Li.nw 
+------------------------------------------------------------
+>>> Li.nw
+start Li
+#nproc 4
+echo
+
+geometry units atomic
+  Li 0 0 0
+end
+
+basis "ao basis" SPHERICAL
+Li    S
+     16.1195750              0.15432897       
+      2.9362007              0.53532814       
+      0.7946505              0.44463454       
+Li    SP
+      0.6362897             -0.09996723             0.15591627       
+      0.1478601              0.39951283             0.60768372       
+      0.0480887              0.70011547             0.39195739       
+end
+
+scf
+  uhf
+  nodiis
+  doublet
+end
+
+task scf
+------------------------------------------------------------
+                    Basis information
+   Li
+  ----
+  1   1S    16.11957500     0.15432897
+             2.93620070     0.53532814
+             0.79465050     0.44463454
+
+  2   2S     0.63628970    -0.09996723
+             0.14786010     0.39951283
+             0.04808870     0.70011547
+
+  3   2P     0.63628970     0.15591627
+             0.14786010     0.60768372
+             0.04808870     0.39195739
+
+
+Spherical basis set summary:
+*---------*-----------------*--------*------------*
+| Element |   Description   | Shells | Primitives |
+*---------*-----------------*--------*------------*
+|   Li    | ao basis        |   3    |     9      |
+*---------*-----------------*--------*------------*
+
+------------------------------------------------------------
+
+		AO integrals evaluation module
+		------------------------------
+
+Output files:
+  AOINTS1   one-electron integrals
+  AOINTS2   two-electron integrals
+One-electron integrals evaluation algorithm: Obara-Saika
+Two-electron integrals evaluation algorithm: Obara-Saika
+
+	Atomic coordinates (atomic units):
+    [ 1]  Li     0.00000000     0.00000000     0.00000000
+
+
+	Distance matrix (atomic units):
+
+generating atom-centered basis set...
+  # bfns   = 5
+  # shells = 3
+
+	Basis functions (atomic units):
+    Li   0.000   0.000   0.000  [1]s  [2]s  [3]pz  [4]py  [5]px
+
+begin 1e integrals...
+  overlap
+  kinetic energy
+  nuclear attraction
+  X Y Z integrals
+done
+begin 2e integrals...
+  sizeof buf (bytes) = 98304
+  sizeof integral (bytes) = 24
+  # unique ERIs   = 120
+  # non-zero ERIs = 33
+done
+
+------------------------------------------------------------
+
+          ********************************
+          *      Parallel SCF Module     *
+          ********************************
+
+
+  --------------------------- RTDB ---------------------------
+  ------------------------------------------------------------
+  top:echo                  int[1]        1 
+  top:short_name            char[3]       "li"
+  top:nproc                 int[1]        1 
+  top:memory                int[1]        209715200 
+  geom:units                int[1]        1 
+  geom:charge               int[1]        0 
+  geom:mult                 int[1]        2 
+  visual:molden             int[1]        0 
+  scf:wf                    int[1]        1 
+  scf:guess                 int[1]        1 
+  scf:diis                  int[1]        0 
+  aoints:print:overlap      int[1]        0 
+  aoints:print:kinetic      int[1]        0 
+  aoints:print:potential    int[1]        0 
+  aoints:print:eri          int[1]        0 
+  scf:maxiter               int[1]        50 
+  scf:diisbas               int[1]        5 
+  scf:conv_dens             double[1]     0.00000100 
+  scf:conv_en               double[1]     0.00000010 
+  scf:direct                int[1]        0 
+  ------------------------------------------------------------
+  ----------------------- END OF RTDB ------------------------
+
+                    SCF Parameters
+                    --------------
+               Wavefunction : UHF
+             Max iterations : 50
+               Density conv : 1e-06
+                Energy conv : 1e-07
+            Integral direct : off
+                       DIIS : off
+
+
+Atoms:     1
+Electrons: 0
+Mol mass:  0.000
+Charge:    0
+Spin mult: 2
+Units:     atomic
+One-electron integrals read in 0.000000 sec
+Basis orthogonalization algorithm: canonical
+Basis functions elimination threshold: 1e-08
+Overlap matrix lowest eigenvalue = 0.75886335
+AO basis orthogonalization done in 0.000104 sec
+
+Initial guess: extended Huckel theory
+Initial energy = -7.39548055
+
+Nalpha = 2
+Nbeta = 1
+
+ iter.       Energy         Delta E       RMS-Dens      <S^2>       time
+--------------------------------------------------------------------------
+   1      -7.30884141     0.08663914     0.00000000    0.7500       0.00
+                                         0.03075206
+   2      -7.31437361    -0.00553220     0.00000000    0.7500       0.00
+                                         0.00464380
+   3      -7.31534839    -0.00097478     0.00000000    0.7500       0.00
+                                         0.00070257
+   4      -7.31549903    -0.00015064     0.00000000    0.7500       0.00
+                                         0.00010631
+   5      -7.31552190    -0.00002287     0.00000000    0.7500       0.00
+                                         0.00001609
+   6      -7.31552536    -0.00000346     0.00000000    0.7500       0.00
+                                         0.00000243
+   7      -7.31552589    -0.00000052     0.00000000    0.7500       0.00
+                                         0.00000037
+--------------------------------------------------------------------------
+          Total SCF energy =    -7.31552589
+  Nuclear repulsion energy =     0.00000000
+                 UHF <S^2> =     0.7500
+               Exact <S^2> =     0.7500
+
+      Alpha Molecular Orbitals Summary
+  +-----+-----+----------------+----------+
+  | No  | Occ |     Energy     | Symmetry |
+  +-----+-----+----------------+----------+
+  | 1   |  1  |    -2.36917117 |     ?    |
+  | 2   |  1  |    -0.18012395 |     ?    |
+  | 3   |  0  |     0.13012628 |     ?    |
+  | 4   |  0  |     0.13012628 |     ?    |
+  | 5   |  0  |     0.13012628 |     ?    |
+  +-----+-----+----------------+----------+
+
+       Beta Molecular Orbitals Summary
+  +-----+-----+----------------+----------+
+  | No  | Occ |     Energy     | Symmetry |
+  +-----+-----+----------------+----------+
+  | 1   |  1  |    -2.33785813 |     ?    |
+  | 2   |  0  |     0.10225266 |     ?    |
+  | 3   |  0  |     0.19091633 |     ?    |
+  | 4   |  0  |     0.19091633 |     ?    |
+  | 5   |  0  |     0.19091633 |     ?    |
+  +-----+-----+----------------+----------+
+
+ time for (sec):
+ -------------------------------------------------------
+  One-electron integrals                          0.000
+  Two-electron integrals                          0.009
+  Basis set orthogonalization                     0.000
+  Initial guess                                   0.000
+  Fock matrix diagonalization                     0.000
+  Density matrix construction                     0.000
+  Fock matrix construction                        0.000
+ -------------------------------------------------------
+                                                  0.010
+
+
+  --------------------------- RTDB ---------------------------
+  ------------------------------------------------------------
+  top:echo                  int[1]        1 
+  top:short_name            char[3]       "li"
+  top:nproc                 int[1]        1 
+  top:memory                int[1]        209715200 
+  geom:units                int[1]        1 
+  geom:charge               int[1]        0 
+  geom:mult                 int[1]        2 
+  visual:molden             int[1]        0 
+  scf:wf                    int[1]        1 
+  scf:guess                 int[1]        1 
+  scf:diis                  int[1]        0 
+  aoints:print:overlap      int[1]        0 
+  aoints:print:kinetic      int[1]        0 
+  aoints:print:potential    int[1]        0 
+  aoints:print:eri          int[1]        0 
+  scf:maxiter               int[1]        50 
+  scf:diisbas               int[1]        5 
+  scf:conv_dens             double[1]     0.00000100 
+  scf:conv_en               double[1]     0.00000010 
+  scf:direct                int[1]        0 
+  scf:etot                  double[1]     -7.31552589 
+  scf:enuc                  double[1]     0.00000000 
+  scf:uhf_s2                double[1]     0.75000000 
+  ------------------------------------------------------------
+  ----------------------- END OF RTDB ------------------------
+
+
+Allocated: 37480 bytes
+Freed:     34680 bytes
+Max usage: 6840 bytes
+Total time: 0.011 sec

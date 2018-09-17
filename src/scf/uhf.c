@@ -65,6 +65,7 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	double *Fa, *Fb;   // Fock matrices
 	double *Pa, *Pb;   // density matrices
 	double *P0a,*P0b;  // stored density matrices from previous step
+	double *Ptot;      // "total" density matrix (alpha + beta)
 	double *Ca, *Cb;   // AO coefficients in MO with respect to spin part
 	double *Ea, *Eb;   // orbital energies, alpha & beta
 
@@ -89,15 +90,16 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	diislist_a = NULL;
 	diislist_b = NULL;
 	
-	H =  (double *) qalloc(nbytes);
-	S =  (double *) qalloc(nbytes);
-	X =  (double *) qalloc(nbytes);
-	Fa = (double *) qalloc(nbytes); Fb = (double *) qalloc(nbytes);
-	Pa = (double *) qalloc(nbytes); Pb = (double *) qalloc(nbytes);
-	P0a= (double *) qalloc(nbytes); P0b= (double *) qalloc(nbytes);
-	Ca = (double *) qalloc(nbytes); Cb = (double *) qalloc(nbytes);
-	Ea = (double *) qalloc(M*sizeof(double));
-	Eb = (double *) qalloc(M*sizeof(double));
+	H   = (double *) qalloc(nbytes);
+	S   = (double *) qalloc(nbytes);
+	X   = (double *) qalloc(nbytes);
+	Fa  = (double *) qalloc(nbytes); Fb = (double *) qalloc(nbytes);
+	Pa  = (double *) qalloc(nbytes); Pb = (double *) qalloc(nbytes);
+	P0a = (double *) qalloc(nbytes); P0b= (double *) qalloc(nbytes);
+	Ptot= (double *) qalloc(nbytes);
+	Ca  = (double *) qalloc(nbytes); Cb = (double *) qalloc(nbytes);
+	Ea  = (double *) qalloc(M*sizeof(double));
+	Eb  = (double *) qalloc(M*sizeof(double));
 	
 	// compute core Hamiltonian and overlap matrices
 	read_1e_integrals(H, S, bfns, M);
@@ -163,6 +165,10 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 		diag_fock(Fb, X, Cb, Eb, M);
 		uhf_makedensity(Pa, Ca, Nalpha, M);
 		uhf_makedensity(Pb, Cb, Nbeta, M);
+		// make total density
+		for (i = 0; i < M*M; i++) {
+			Ptot[i] = Pa[i] + Pb[i];
+		}
 		
 		deltap_a = rmsdens(Pa, P0a, M);
 		deltap_b = rmsdens(Pb, P0b, M);
@@ -210,6 +216,13 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 		removeDIISList(diislist_a);
 		removeDIISList(diislist_b);
 	}
+
+	// population analysis
+	mulliken(molecule, bfns, Ptot, S, M);
+	loewdin (molecule, bfns, Ptot, S, M);
+
+	// properties
+	scf_properties(molecule, Pa, Pb, M);
 	
 	// cleanup
 	qfree(H, nbytes);
@@ -218,6 +231,7 @@ void uhf_loop(Molecule_t *molecule, BasisFunc_t *bfns, int M)
 	qfree(Fa, nbytes);    qfree(Fb, nbytes);
 	qfree(Pa, nbytes);    qfree(Pb, nbytes);
 	qfree(P0a,nbytes);    qfree(P0b,nbytes);
+	qfree(Ptot, nbytes);
 	qfree(Ca, nbytes);    qfree(Cb, nbytes);
 	qfree(Ea, M*sizeof(double)); qfree(Eb, M*sizeof(double));
 }

@@ -4,6 +4,7 @@ start CO
 #memory 20 kb
 echo
 #nproc 8
+#print debug
 
 geometry units atomic
   C 0 0 0
