@@ -7,8 +7,8 @@ echo
 #print debug
 
 geometry units atomic
-  C 0 0 0
-  O 2.16464 0 0
+  C  1.23694 0 0
+  O -0.92770 0 0
 end
 
 basis "ao basis" SPHERICAL

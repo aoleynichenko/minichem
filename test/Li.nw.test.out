@@ -1,8 +1,8 @@
 Minichem 1.0
 By Alexander Oleynichenko, 2018
-Build date:    Sep 16 2018 12:12:42
-Compiler:      gcc 8.2.1
-Date:          Mon Sep 17 11:43:07 2018
+Build date:    Dec 30 2018 21:56:49
+Compiler:      gcc 4.9.2
+Date:          Wed Jan  2 11:36:02 2019
 # MPI threads: 1
 Arguments:  minichem.x Li.nw 
 ------------------------------------------------------------
@@ -86,6 +86,7 @@ begin 1e integrals...
   kinetic energy
   nuclear attraction
   X Y Z integrals
+  XX XY XZ YY YZ ZZ integrals
 done
 begin 2e integrals...
   sizeof buf (bytes) = 98304
@@ -100,40 +101,15 @@ done
           *      Parallel SCF Module     *
           ********************************
 
-
-  --------------------------- RTDB ---------------------------
-  ------------------------------------------------------------
-  top:echo                  int[1]        1 
-  top:short_name            char[3]       "li"
-  top:nproc                 int[1]        1 
-  top:memory                int[1]        209715200 
-  geom:units                int[1]        1 
-  geom:charge               int[1]        0 
-  geom:mult                 int[1]        2 
-  visual:molden             int[1]        0 
-  scf:wf                    int[1]        1 
-  scf:guess                 int[1]        1 
-  scf:diis                  int[1]        0 
-  aoints:print:overlap      int[1]        0 
-  aoints:print:kinetic      int[1]        0 
-  aoints:print:potential    int[1]        0 
-  aoints:print:eri          int[1]        0 
-  scf:maxiter               int[1]        50 
-  scf:diisbas               int[1]        5 
-  scf:conv_dens             double[1]     0.00000100 
-  scf:conv_en               double[1]     0.00000010 
-  scf:direct                int[1]        0 
-  ------------------------------------------------------------
-  ----------------------- END OF RTDB ------------------------
-
                     SCF Parameters
                     --------------
-               Wavefunction : UHF
-             Max iterations : 50
-               Density conv : 1e-06
-                Energy conv : 1e-07
-            Integral direct : off
-                       DIIS : off
+               print level : medium
+              wavefunction : UHF
+            max iterations : 50
+              density conv : 1e-06
+               energy conv : 1e-07
+           integral direct : off
+                      diis : off
 
 
 Atoms:     1
@@ -146,7 +122,7 @@ One-electron integrals read in 0.000000 sec
 Basis orthogonalization algorithm: canonical
 Basis functions elimination threshold: 1e-08
 Overlap matrix lowest eigenvalue = 0.75886335
-AO basis orthogonalization done in 0.000104 sec
+AO basis orthogonalization done in 0.000125 sec
 
 Initial guess: extended Huckel theory
 Initial energy = -7.39548055
@@ -156,19 +132,19 @@ Nbeta = 1
 
  iter.       Energy         Delta E       RMS-Dens      <S^2>       time
 --------------------------------------------------------------------------
-   1      -7.30884141     0.08663914     0.00000000    0.7500       0.00
+   1      -7.30884141     0.08663914     0.00000000    0.7500       0.03
                                          0.03075206
-   2      -7.31437361    -0.00553220     0.00000000    0.7500       0.00
+   2      -7.31437361    -0.00553220     0.00000000    0.7500       0.03
                                          0.00464380
-   3      -7.31534839    -0.00097478     0.00000000    0.7500       0.00
+   3      -7.31534839    -0.00097478     0.00000000    0.7500       0.03
                                          0.00070257
-   4      -7.31549903    -0.00015064     0.00000000    0.7500       0.00
+   4      -7.31549903    -0.00015064     0.00000000    0.7500       0.03
                                          0.00010631
-   5      -7.31552190    -0.00002287     0.00000000    0.7500       0.00
+   5      -7.31552190    -0.00002287     0.00000000    0.7500       0.03
                                          0.00001609
-   6      -7.31552536    -0.00000346     0.00000000    0.7500       0.00
+   6      -7.31552536    -0.00000346     0.00000000    0.7500       0.03
                                          0.00000243
-   7      -7.31552589    -0.00000052     0.00000000    0.7500       0.00
+   7      -7.31552589    -0.00000052     0.00000000    0.7500       0.03
                                          0.00000037
 --------------------------------------------------------------------------
           Total SCF energy =    -7.31552589
@@ -198,49 +174,58 @@ Nbeta = 1
   | 5   |  0  |     0.19091633 |     ?    |
   +-----+-----+----------------+----------+
 
+        Mulliken population analysis
+        ----------------------------
+
+      Atom     Population     Charge
+      1  Li    3.00000000   0.00000000
+
+
+        Loewdin population analysis
+        ---------------------------
+
+      Atom     Population     Charge
+      1  Li    3.00000000   0.00000000
+
+
+		SCF properties
+		--------------
+
+  moments are calculated at point (0,0,0)
+
+  dipole moment:
+  D       x            y            z
+    -0.00000000   0.00000000   0.00000000
+  |D| = 0.00000000 a.u. = 0.00000000 Debye
+
+  second moments of charge (atomic units):
+           xx           yy           zz
+      -4.365170    -4.365170    -4.365170
+           xy           xz           yz
+       0.000000     0.000000     0.000000
+  quadrupole moments (atomic units):
+           xx           yy           zz
+       0.000000     0.000000     0.000000
+           xy           xz           yz
+       0.000000     0.000000     0.000000
+  Qij = 3*r_i*r_j - \delta_ij*|r^2|
+  1 Buckingham = 1.345044 a.u.
+
+
  time for (sec):
  -------------------------------------------------------
-  One-electron integrals                          0.000
-  Two-electron integrals                          0.009
+  One-electron integrals                          0.002
+  Two-electron integrals                          0.017
   Basis set orthogonalization                     0.000
-  Initial guess                                   0.000
+  Initial guess                                   0.001
   Fock matrix diagonalization                     0.000
   Density matrix construction                     0.000
   Fock matrix construction                        0.000
  -------------------------------------------------------
-                                                  0.010
+                                                  0.020
 
 
-  --------------------------- RTDB ---------------------------
-  ------------------------------------------------------------
-  top:echo                  int[1]        1 
-  top:short_name            char[3]       "li"
-  top:nproc                 int[1]        1 
-  top:memory                int[1]        209715200 
-  geom:units                int[1]        1 
-  geom:charge               int[1]        0 
-  geom:mult                 int[1]        2 
-  visual:molden             int[1]        0 
-  scf:wf                    int[1]        1 
-  scf:guess                 int[1]        1 
-  scf:diis                  int[1]        0 
-  aoints:print:overlap      int[1]        0 
-  aoints:print:kinetic      int[1]        0 
-  aoints:print:potential    int[1]        0 
-  aoints:print:eri          int[1]        0 
-  scf:maxiter               int[1]        50 
-  scf:diisbas               int[1]        5 
-  scf:conv_dens             double[1]     0.00000100 
-  scf:conv_en               double[1]     0.00000010 
-  scf:direct                int[1]        0 
-  scf:etot                  double[1]     -7.31552589 
-  scf:enuc                  double[1]     0.00000000 
-  scf:uhf_s2                double[1]     0.75000000 
-  ------------------------------------------------------------
-  ----------------------- END OF RTDB ------------------------
-
-
-Allocated: 37480 bytes
-Freed:     34680 bytes
-Max usage: 6840 bytes
-Total time: 0.011 sec
+Allocated: 41880 bytes
+Freed:     39080 bytes
+Max usage: 7280 bytes
+Total time: 0.065 sec

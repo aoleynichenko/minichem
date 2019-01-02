@@ -1,7 +1,7 @@
 /***********************************************************************
  * aoints.c
  * ========
- * 
+ *
  * Integral evaluation module -- driver routine.
  *
  * 2018 Alexander Oleynichenko
@@ -26,9 +26,9 @@ void compute_2e_aoints(BasisFunc_t *bfns, int nbas, char *filename);
 void compute_aoints(Molecule_t *mol)
 {
 	int geom_units;
-	
+
 	rtdb_get("geom:units", &geom_units);
-	
+
 	printf("\n");
 	printf("\t\tAO integrals evaluation module\n");
 	printf("\t\t------------------------------\n\n");
@@ -37,22 +37,22 @@ void compute_aoints(Molecule_t *mol)
 	printf("  AOINTS2   two-electron integrals\n");
 	printf("One-electron integrals evaluation algorithm: Obara-Saika\n");
 	printf("Two-electron integrals evaluation algorithm: Obara-Saika\n");
-	
+
 	// print molecular geometry
 	print_molecule (mol, geom_units);
 	distance_matrix(mol, geom_units);
-	
+
 	printf("generating atom-centered basis set...\n");
 	form_atom_centered_bfns(mol, &bfns, &shells, &nbfns, &nshells);
 	printf("  # bfns   = %d\n", nbfns);
 	printf("  # shells = %d\n", nshells);
-	
+
 	// print detailed info about atom-centered basis
 	print_basis_functions(bfns, nbfns);
-	
+
 	compute_1e_aoints(bfns, nbfns, "AOINTS1");
 	compute_2e_aoints(bfns, nbfns, "AOINTS2");
-	
+
 	printf("\n");
 	line_separator();
 	printf("\n");
@@ -61,11 +61,11 @@ void compute_aoints(Molecule_t *mol)
 
 /***********************************************************************
  * compute_1e_aoints
- * 
+ *
  * Computes all one-electron integrals and write them to the binary
  * file 'filename'.
  * All matrix elements are stored (NOT only one triangle!).
- * 
+ *
  * Format of the file:
  * <nbf>   number of basis functions
  * <S>     overlap matrix (nbf x nbf)
@@ -81,17 +81,21 @@ void compute_1e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
 	double *A;   // temporary matrix
 	int err;
 	int xyz_pow[] = {0, 0, 0};
-	
+	int quad_xyz[][6] = {
+		/* XX       XY       XZ       YY       YZ       ZZ */
+		{2,0,0}, {1,1,0}, {1,0,1}, {0,2,0}, {0,1,1}, {0,0,2}
+	};
+
 	timer_new_entry("1e", "One-electron integrals");
 	timer_start("1e");
-	
+
 	// prepare
 	A = (double *) malloc(nbas*nbas * sizeof(double));
 	fd = fastio_open(filename, "w");
-	
+
 	printf("begin 1e integrals...\n");
 	fastio_write_int(fd, nbas);
-	
+
 	printf("  overlap\n");
 	for (i = 0; i < nbas; i++)
 		for (j = 0; j < nbas; j++) {
@@ -100,7 +104,7 @@ void compute_1e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
 			A[nbas*i+j] = aoint_overlap(fi, fj);
 		}
 	fastio_write_doubles(fd, A, nbas*nbas);
-	
+
 	printf("  kinetic energy\n");
 	for (i = 0; i < nbas; i++)
 		for (j = 0; j < nbas; j++) {
@@ -109,7 +113,7 @@ void compute_1e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
 			A[nbas*i+j] = aoint_kinetic(fi, fj);
 		}
 	fastio_write_doubles(fd, A, nbas*nbas);
-	
+
 	printf("  nuclear attraction\n");
 	for (i = 0; i < nbas; i++)
 		for (j = 0; j < nbas; j++) {
@@ -132,9 +136,21 @@ void compute_1e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
 		fastio_write_doubles(fd, A, nbas*nbas);
 	}
 
+	printf("  XX XY XZ YY YZ ZZ integrals\n");
+	for (k = 0; k < 6; k++) {
+		for (i = 0; i < nbas; i++) {
+			for (j = 0; j < nbas; j++) {
+				struct basis_function *fi = &bfns[i];
+				struct basis_function *fj = &bfns[j];
+				A[nbas*i+j] = aoint_multipole(fi, fj, quad_xyz[k]);
+			}
+		}
+		fastio_write_doubles(fd, A, nbas*nbas);
+	}
+
 	fastio_close(fd);
 	free(A);
-	
+
 	timer_stop("1e");
 	printf("done\n");
 }
@@ -142,7 +158,7 @@ void compute_1e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
 
 /***********************************************************************
  * compute_2e_aoints
- * 
+ *
  * Computes all permutationally-unique two-electron integrals and write
  * them to the binary file 'filename'.
  * Only non-zero integrals will are stored.
@@ -163,15 +179,15 @@ void compute_2e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
 	integral_t buf[BATCH_SIZE];
 	integral_t tmp;
 	int n_uniq = 0, n_nonzero = 0;
-	
+
 	timer_new_entry("2e", "Two-electron integrals");
 	timer_start("2e");
-	
+
 	printf("begin 2e integrals...\n");
 	printf("  sizeof buf (bytes) = %d\n", sizeof(buf));
 	printf("  sizeof integral (bytes) = %d\n", sizeof(integral_t));
 	fd = fastio_open(filename, "w");
-	
+
 	i = 0;
 	for (m = 0; m < M; m++)
 	for (n = m; n < M; n++)
@@ -196,18 +212,17 @@ void compute_2e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
 		buf[i] = tmp;
 		i++;
 	}
-	
+
 	// store remaining integrals
 	if (i > 0) {
 		fastio_write(fd, buf, i*sizeof(integral_t));
 	}
-	
+
 	printf("  # unique ERIs   = %d\n", n_uniq);
 	printf("  # non-zero ERIs = %d\n", n_nonzero);
-	
+
 	fastio_close(fd);
-	
+
 	timer_stop("2e");
 	printf("done\n");
 }
-

@@ -197,7 +197,7 @@ void directive_nproc()
 	rtdb_set("top:nproc", "%i", nproc);
 	omp_set_num_threads(nproc);
 	
-	switch (_OPENMP) {
+	/*switch (_OPENMP) {
 		case 200505: strcpy(ompv, "2.5"); break;
 		case 200805: strcpy(ompv, "3.0"); break;
 		case 201107: strcpy(ompv, "3.1"); break;
@@ -213,6 +213,7 @@ void directive_nproc()
 	printf("                * Cores available        %2d *\n", omp_get_num_procs());
 	printf("                * OpenMP version      %5s *\n", ompv);
 	printf("                *****************************\n\n");
+*/
 }
 
 

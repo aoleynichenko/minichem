@@ -11,7 +11,7 @@
 #include <string.h>
 
 #include "linalg.h"
-#include "error.h"
+//#include "error.h"
 #include "util.h"
 
 /***********************************************************************

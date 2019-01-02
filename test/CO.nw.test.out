@@ -1,8 +1,8 @@
 Minichem 1.0
 By Alexander Oleynichenko, 2018
-Build date:    Sep 16 2018 12:12:42
-Compiler:      gcc 8.2.1
-Date:          Mon Sep 17 11:42:50 2018
+Build date:    Dec 30 2018 21:56:49
+Compiler:      gcc 4.9.2
+Date:          Wed Jan  2 11:35:30 2019
 # MPI threads: 1
 Arguments:  minichem.x CO.nw 
 ------------------------------------------------------------
@@ -13,10 +13,11 @@ start CO
 #memory 20 kb
 echo
 #nproc 8
+#print debug
 
 geometry units atomic
-  C 0 0 0
-  O 2.16464 0 0
+  C  1.23694 0 0
+  O -0.92770 0 0
 end
 
 basis "ao basis" SPHERICAL
@@ -97,8 +98,8 @@ One-electron integrals evaluation algorithm: Obara-Saika
 Two-electron integrals evaluation algorithm: Obara-Saika
 
 	Atomic coordinates (atomic units):
-    [ 1]  C      0.00000000     0.00000000     0.00000000
-    [ 2]  O      2.16464000     0.00000000     0.00000000
+    [ 1]  C      1.23694000     0.00000000     0.00000000
+    [ 2]  O     -0.92770000     0.00000000     0.00000000
 
 
 	Distance matrix (atomic units):
@@ -109,14 +110,15 @@ generating atom-centered basis set...
   # shells = 6
 
 	Basis functions (atomic units):
-    C    0.000   0.000   0.000  [1]s  [2]s  [3]pz  [4]py  [5]px
-    O    2.165   0.000   0.000  [6]s  [7]s  [8]pz  [9]py  [10]px
+    C    1.237   0.000   0.000  [1]s  [2]s  [3]pz  [4]py  [5]px
+    O   -0.928   0.000   0.000  [6]s  [7]s  [8]pz  [9]py  [10]px
 
 begin 1e integrals...
   overlap
   kinetic energy
   nuclear attraction
   X Y Z integrals
+  XX XY XZ YY YZ ZZ integrals
 done
 begin 2e integrals...
   sizeof buf (bytes) = 98304
@@ -131,41 +133,16 @@ done
           *      Parallel SCF Module     *
           ********************************
 
-
-  --------------------------- RTDB ---------------------------
-  ------------------------------------------------------------
-  top:echo                  int[1]        1 
-  top:short_name            char[3]       "co"
-  top:nproc                 int[1]        1 
-  top:memory                int[1]        209715200 
-  geom:units                int[1]        1 
-  geom:charge               int[1]        0 
-  geom:mult                 int[1]        1 
-  visual:molden             int[1]        0 
-  scf:wf                    int[1]        0 
-  scf:guess                 int[1]        1 
-  scf:diis                  int[1]        1 
-  aoints:print:overlap      int[1]        0 
-  aoints:print:kinetic      int[1]        0 
-  aoints:print:potential    int[1]        0 
-  aoints:print:eri          int[1]        0 
-  scf:maxiter               int[1]        100 
-  scf:diisbas               int[1]        6 
-  scf:conv_dens             double[1]     0.00000100 
-  scf:conv_en               double[1]     0.00000010 
-  scf:direct                int[1]        1 
-  ------------------------------------------------------------
-  ----------------------- END OF RTDB ------------------------
-
                     SCF Parameters
                     --------------
-               Wavefunction : RHF
-             Max iterations : 100
-               Density conv : 1e-06
-                Energy conv : 1e-07
-            Integral direct : on
-                       DIIS : on
-                    diisbas : 6
+               print level : medium
+              wavefunction : RHF
+            max iterations : 100
+              density conv : 1e-06
+               energy conv : 1e-07
+           integral direct : on
+                      diis : on
+                   diisbas : 6
 
 
 Atoms:     2
@@ -178,24 +155,24 @@ One-electron integrals read in 0.000000 sec
 Basis orthogonalization algorithm: canonical
 Basis functions elimination threshold: 1e-08
 Overlap matrix lowest eigenvalue = 0.21393818
-AO basis orthogonalization done in 0.000130 sec
+AO basis orthogonalization done in 0.000179 sec
 
 Initial guess: extended Huckel theory
 Initial energy = -134.03920471
 
  iter.       Energy         Delta E       RMS-Dens       DIIS-Err     time
 ----------------------------------------------------------------------------
-   1    -107.45863432     4.40598247     1.97024153     0.68506300    0.12
-   2    -110.27895668    -2.82032236     0.78804385     1.08372923    0.25
-   3    -111.33923682    -1.06028014     0.20505367     0.19179998    0.37
-   4    -111.22278957     0.11644725     0.09275791     0.03392466    0.49
-   5    -111.22127881     0.00151076     0.06018666     0.01500422    0.61
-   6    -111.22887826    -0.00759945     0.01025002     0.00086794    0.74
-   7    -111.22514199     0.00373628     0.00602504     0.00148271    0.86
-   8    -111.22544280    -0.00030081     0.00033102     0.00003626    0.98
-   9    -111.22545103    -0.00000823     0.00003046     0.00000568    1.10
-  10    -111.22544958     0.00000146     0.00000130     0.00000060    1.23
-  11    -111.22544951     0.00000006     0.00000005     0.00000003    1.35
+   1    -107.45863432     4.40598247     1.97024153     0.68506300    0.22
+   2    -110.27895668    -2.82032236     0.78804385     1.09244861    0.45
+   3    -111.33923682    -1.06028014     0.20505367     0.20137155    0.67
+   4    -111.22278957     0.11644725     0.09275791     0.03103103    1.05
+   5    -111.22127881     0.00151076     0.06018666     0.01372442    1.35
+   6    -111.22887826    -0.00759945     0.01025002     0.00158609    1.58
+   7    -111.22514199     0.00373628     0.00602504     0.00135624    1.82
+   8    -111.22544280    -0.00030081     0.00033102     0.00004170    2.04
+   9    -111.22545103    -0.00000823     0.00003046     0.00000475    2.26
+  10    -111.22544958     0.00000146     0.00000130     0.00000060    2.48
+  11    -111.22544951     0.00000006     0.00000005     0.00000003    2.71
 ----------------------------------------------------------------------------
           Total SCF energy =  -111.22544951
   Nuclear repulsion energy =    22.17458792
@@ -233,56 +210,45 @@ Initial energy = -134.03920471
       1  C     5.95323785   0.04676215
       2  O     8.04676215  -0.04676215
 
-               Multipole moments
-               -----------------
-  D       x            y            z
-     0.04893493   0.00000000  -0.00000000
 
+		SCF properties
+		--------------
+
+  moments are calculated at point (0,0,0)
+
+  dipole moment:
+  D       x            y            z
+    -0.04893493  -0.00000000  -0.00000000
   |D| = 0.04893493 a.u. = 0.12438016 Debye
+
+  second moments of charge (atomic units):
+           xx           yy           zz
+      -8.713738    -6.471394    -6.471394
+           xy           xz           yz
+      -0.000000    -0.000000    -0.000000
+  quadrupole moments (atomic units):
+           xx           yy           zz
+      -4.484688     2.242344     2.242344
+           xy           xz           yz
+      -0.000000    -0.000000    -0.000000
+  Qij = 3*r_i*r_j - \delta_ij*|r^2|
+  1 Buckingham = 1.345044 a.u.
 
 
  time for (sec):
  -------------------------------------------------------
-  One-electron integrals                          0.001
-  Two-electron integrals                          0.124
+  One-electron integrals                          0.004
+  Two-electron integrals                          0.226
   Basis set orthogonalization                     0.000
   Initial guess                                   0.000
-  Fock matrix diagonalization                     0.000
+  Fock matrix diagonalization                     0.001
   Density matrix construction                     0.000
-  Fock matrix construction                        1.353
+  Fock matrix construction                        2.708
  -------------------------------------------------------
-                                                  1.478
+                                                  2.939
 
 
-  --------------------------- RTDB ---------------------------
-  ------------------------------------------------------------
-  top:echo                  int[1]        1 
-  top:short_name            char[3]       "co"
-  top:nproc                 int[1]        1 
-  top:memory                int[1]        209715200 
-  geom:units                int[1]        1 
-  geom:charge               int[1]        0 
-  geom:mult                 int[1]        1 
-  visual:molden             int[1]        0 
-  scf:wf                    int[1]        0 
-  scf:guess                 int[1]        1 
-  scf:diis                  int[1]        1 
-  aoints:print:overlap      int[1]        0 
-  aoints:print:kinetic      int[1]        0 
-  aoints:print:potential    int[1]        0 
-  aoints:print:eri          int[1]        0 
-  scf:maxiter               int[1]        100 
-  scf:diisbas               int[1]        6 
-  scf:conv_dens             double[1]     0.00000100 
-  scf:conv_en               double[1]     0.00000010 
-  scf:direct                int[1]        1 
-  scf:etot                  double[1]     -111.22544951 
-  scf:enuc                  double[1]     22.17458792 
-  ------------------------------------------------------------
-  ----------------------- END OF RTDB ------------------------
-
-
-Allocated: 110184 bytes
-Freed:     110184 bytes
+Allocated: 117384 bytes
+Freed:     117384 bytes
 Max usage: 19792 bytes
-Total time: 1.479 sec
+Total time: 2.942 sec

@@ -7,6 +7,7 @@ project(minichem)
 set(C_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE Debug)
 
+
 ############################## OpenMP ##################################
 find_package(OpenMP)
 if (OPENMP_FOUND)
@@ -29,6 +30,8 @@ include_directories(SYSTEM ${MPI_INCLUDE_PATH})   # MPI header files
 ############################# Compile it ! #############################
 
 include_directories(include)
+include_directories(/usr/local/opt/openblas/include)
+include_directories(/usr/local/opt/libomp/include)
 
 add_subdirectory(src/input)
 add_subdirectory(src/sys)
@@ -42,7 +45,7 @@ add_executable(minichem.x src/main.c)
 
 target_link_libraries(minichem.x scf aoints input util visual)
 target_link_libraries(minichem.x m ${MPI_C_LIBRARIES})
-target_link_libraries(minichem.x m lapack lapacke cblas)
+target_link_libraries(minichem.x m lapack cblas gomp -L/usr/local/Cellar/lapack/3.8.0_1/lib lapacke)
 
 set_property(TARGET minichem.x PROPERTY C_STANDARD 99)
 

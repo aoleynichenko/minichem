@@ -1,8 +1,8 @@
 Minichem 1.0
 By Alexander Oleynichenko, 2018
-Build date:    Sep 16 2018 12:12:42
-Compiler:      gcc 8.2.1
-Date:          Mon Sep 17 11:43:07 2018
+Build date:    Dec 30 2018 21:56:49
+Compiler:      gcc 4.9.2
+Date:          Wed Jan  2 11:36:02 2019
 # MPI threads: 1
 Arguments:  minichem.x CH3.nw 
 ------------------------------------------------------------
@@ -119,6 +119,7 @@ begin 1e integrals...
   kinetic energy
   nuclear attraction
   X Y Z integrals
+  XX XY XZ YY YZ ZZ integrals
 done
 begin 2e integrals...
   sizeof buf (bytes) = 98304
@@ -133,40 +134,15 @@ done
           *      Parallel SCF Module     *
           ********************************
 
-
-  --------------------------- RTDB ---------------------------
-  ------------------------------------------------------------
-  top:echo                  int[1]        1 
-  top:short_name            char[4]       "ch3"
-  top:nproc                 int[1]        1 
-  top:memory                int[1]        209715200 
-  geom:units                int[1]        0 
-  geom:charge               int[1]        0 
-  geom:mult                 int[1]        2 
-  visual:molden             int[1]        0 
-  scf:wf                    int[1]        1 
-  scf:guess                 int[1]        1 
-  scf:diis                  int[1]        0 
-  aoints:print:overlap      int[1]        0 
-  aoints:print:kinetic      int[1]        0 
-  aoints:print:potential    int[1]        0 
-  aoints:print:eri          int[1]        0 
-  scf:maxiter               int[1]        50 
-  scf:diisbas               int[1]        5 
-  scf:conv_dens             double[1]     0.00000100 
-  scf:conv_en               double[1]     0.00000010 
-  scf:direct                int[1]        0 
-  ------------------------------------------------------------
-  ----------------------- END OF RTDB ------------------------
-
                     SCF Parameters
                     --------------
-               Wavefunction : UHF
-             Max iterations : 50
-               Density conv : 1e-06
-                Energy conv : 1e-07
-            Integral direct : off
-                       DIIS : off
+               print level : medium
+              wavefunction : UHF
+            max iterations : 50
+              density conv : 1e-06
+               energy conv : 1e-07
+           integral direct : off
+                      diis : off
 
 
 Atoms:     4
@@ -179,7 +155,7 @@ One-electron integrals read in 0.000000 sec
 Basis orthogonalization algorithm: canonical
 Basis functions elimination threshold: 1e-08
 Overlap matrix lowest eigenvalue = 0.25052657
-AO basis orthogonalization done in 0.000122 sec
+AO basis orthogonalization done in 0.000199 sec
 
 Initial guess: extended Huckel theory
 Initial energy = -48.56977360
@@ -269,49 +245,64 @@ Nbeta = 4
   | 8   |  0  |     0.80152607 |     ?    |
   +-----+-----+----------------+----------+
 
+        Mulliken population analysis
+        ----------------------------
+
+      Atom     Population     Charge
+      1  C     6.17943605  -0.17943605
+      2  H     0.94018921   0.05981079
+      3  H     0.94019103   0.05980897
+      4  H     0.94018371   0.05981629
+
+
+        Loewdin population analysis
+        ---------------------------
+
+      Atom     Population     Charge
+      1  C     6.09533547  -0.09533547
+      2  H     0.96822355   0.03177645
+      3  H     0.96822388   0.03177612
+      4  H     0.96821709   0.03178291
+
+
+		SCF properties
+		--------------
+
+  moments are calculated at point (0,0,0)
+
+  dipole moment:
+  D       x            y            z
+    -0.00013130   0.00013049   0.00013535
+  |D| = 0.00022932 a.u. = 0.00058288 Debye
+
+  second moments of charge (atomic units):
+           xx           yy           zz
+      -5.236015    -5.235812    -5.235882
+           xy           xz           yz
+       0.181349     0.181549    -0.181421
+  quadrupole moments (atomic units):
+           xx           yy           zz
+      -0.000337     0.000274     0.000063
+           xy           xz           yz
+       0.544048     0.544647    -0.544263
+  Qij = 3*r_i*r_j - \delta_ij*|r^2|
+  1 Buckingham = 1.345044 a.u.
+
+
  time for (sec):
  -------------------------------------------------------
-  One-electron integrals                          0.001
-  Two-electron integrals                          0.031
+  One-electron integrals                          0.005
+  Two-electron integrals                          0.054
   Basis set orthogonalization                     0.000
   Initial guess                                   0.000
   Fock matrix diagonalization                     0.001
   Density matrix construction                     0.000
   Fock matrix construction                        0.002
  -------------------------------------------------------
-                                                  0.034
+                                                  0.062
 
 
-  --------------------------- RTDB ---------------------------
-  ------------------------------------------------------------
-  top:echo                  int[1]        1 
-  top:short_name            char[4]       "ch3"
-  top:nproc                 int[1]        1 
-  top:memory                int[1]        209715200 
-  geom:units                int[1]        0 
-  geom:charge               int[1]        0 
-  geom:mult                 int[1]        2 
-  visual:molden             int[1]        0 
-  scf:wf                    int[1]        1 
-  scf:guess                 int[1]        1 
-  scf:diis                  int[1]        0 
-  aoints:print:overlap      int[1]        0 
-  aoints:print:kinetic      int[1]        0 
-  aoints:print:potential    int[1]        0 
-  aoints:print:eri          int[1]        0 
-  scf:maxiter               int[1]        50 
-  scf:diisbas               int[1]        5 
-  scf:conv_dens             double[1]     0.00000100 
-  scf:conv_en               double[1]     0.00000010 
-  scf:direct                int[1]        0 
-  scf:etot                  double[1]     -39.07664260 
-  scf:enuc                  double[1]     9.73109626 
-  scf:uhf_s2                double[1]     0.76481407 
-  ------------------------------------------------------------
-  ----------------------- END OF RTDB ------------------------
-
-
-Allocated: 218304 bytes
-Freed:     194752 bytes
-Max usage: 32512 bytes
-Total time: 0.036 sec
+Allocated: 228224 bytes
+Freed:     204672 bytes
+Max usage: 34944 bytes
+Total time: 0.080 sec
