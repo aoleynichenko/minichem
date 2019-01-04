@@ -1,7 +1,7 @@
 /***********************************************************************
  * lexer.h
  * =======
- * 
+ *
  * 2016-2018 Alexander Oleynichenko
  **********************************************************************/
 
@@ -42,6 +42,7 @@ extern double nval;
 #define TT_KW_OUT -14
 #define TT_KW_NPROC -15
 #define TT_KW_PRINT -16
+#define TT_KW_PROPERTY -17
 
 void load(FILE *f, char *filename);
 
@@ -75,4 +76,3 @@ void match(int type);
 void setEOLSignificant(int issign);
 
 #endif /* LEXER_H_INCLUDED */
-

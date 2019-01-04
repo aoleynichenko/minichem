@@ -1,13 +1,13 @@
 /***********************************************************************
  * inp.c
  * =====
- * 
+ *
  * Kernel of minichem.
  * minichem works as a simple interpreter, it collects data from the
  * input file and performs calculations when it finds the keyword 'task'
- * 
+ *
  * 2016-2018 Alexander Oleynichenko
- * 
+ *
  **********************************************************************/
 
 #include <mpi.h>
@@ -49,14 +49,15 @@ void directive_out();
 void calc_info_defaults();
 void directive_nproc();
 void directive_print();
+void directive_property();
 
 
 /***********************************************************************
  * compute
- * 
+ *
  * This subroutine perfoms parsing and 'execution' of the input file
  * 'filename'.
- * 
+ *
  * TODO: refactoring -- maybe rename it?
  **********************************************************************/
 void compute(char *filename)
@@ -64,10 +65,10 @@ void compute(char *filename)
 	struct cart_mol *mol;
 	int i;
 	int one = 1;
-	
+
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	MPI_Comm_size(MPI_COMM_WORLD, &one /*&calc_info.nproc*/);
-	
+
 	/* master (0) reads file and broadcasts data to slaves */
 	if (rank == 0) {
 		FILE *f = fopen(filename, "r");
@@ -77,7 +78,7 @@ void compute(char *filename)
 		}
 		load(f, filename);
 	}
-	
+
 	MPI_Bcast(&fsize, 1, MPI_INT, 0, MPI_COMM_WORLD);
 	if (rank != 0) {
 		if (source)
@@ -89,11 +90,11 @@ void compute(char *filename)
 		initLexer();
 		source[fsize-1] = '\0';
 	}
-	
+
 	/* some defaults which must be set before every new task */
 	calc_info_defaults();
 	scf_init();
-	
+
 	nextToken();
 	while (ttype != TT_EOF) {
 		switch (ttype) {
@@ -133,6 +134,9 @@ void compute(char *filename)
 		case TT_KW_SCF:
 			directive_scf();
 			break;
+		case TT_KW_PROPERTY:
+			directive_property();
+			break;
 		case TT_KW_TASK:
 			directive_task();
 			break;
@@ -140,7 +144,7 @@ void compute(char *filename)
 		// ??? wrong tokens are simply skipped?
 		nextToken();
 	}
-	
+
 	MPI_Barrier(MPI_COMM_WORLD);
 }
 
@@ -157,7 +161,7 @@ void directive_start()
 
 /***********************************************************************
  * directive_out
- * 
+ *
  * Flushes data for another programs (xyz, MOs, density, etc...)
  * Supported output formats:
  *  - Molden (vectors -- MO visualization)
@@ -184,19 +188,19 @@ void directive_out()
 
 /***********************************************************************
  * directive_nproc
- * 
+ *
  * Set number of openmp threads.
  **********************************************************************/
 void directive_nproc()
 {
 	int nproc;
 	char ompv[6];
-	
+
 	match(TT_NUMBER);
 	nproc = (int) nval;
 	rtdb_set("top:nproc", "%i", nproc);
 	omp_set_num_threads(nproc);
-	
+
 	/*switch (_OPENMP) {
 		case 200505: strcpy(ompv, "2.5"); break;
 		case 200805: strcpy(ompv, "3.0"); break;
@@ -205,7 +209,7 @@ void directive_nproc()
 		case 201511: strcpy(ompv, "4.5"); break;
 		default:   strcpy(ompv, "undef"); break;
 	}
-	
+
 	printf("\n                *****************************\n");
 	printf("                *           OPENMP          *\n");
 	printf("                *           ------          *\n");
@@ -219,7 +223,7 @@ void directive_nproc()
 
 /***********************************************************************
  * directive_print
- * 
+ *
  * Sets print level: one of:
  * none | low | medium | high | debug
  * default: medium
@@ -241,21 +245,21 @@ void directive_print()
 		print_level = PRINT_DEBUG;
 	else
 		errquit("print directive: one of keywords none, low, medium, high, debug expected");
-	
+
 	rtdb_set("top:print", "%i", print_level);
 }
 
 
 /***********************************************************************
  * directive_memory
- * 
+ *
  * Set max allowed memory (RAM) usage.
  **********************************************************************/
 void directive_memory()
 {
 	int memsize;
 	int calc_memory;
-	
+
 	nextToken();
 	if (ttype != TT_NUMBER)
 		errquit("memory directive: number expected");
@@ -275,7 +279,7 @@ void directive_memory()
 		calc_memory = memsize*1024*1024*1024;
 	else
 		errquit("memory directive: one of keywords b, kb, mb, mw, gb expected");
-	
+
 	rtdb_set("top:memory", "%i", calc_memory);
 	setmemavail(calc_memory);
 }
@@ -283,7 +287,7 @@ void directive_memory()
 
 /***********************************************************************
  * directive_echo
- * 
+ *
  * Echo input file or not?
  **********************************************************************/
 void directive_echo()
@@ -294,9 +298,9 @@ void directive_echo()
 
 /***********************************************************************
  * directive_charge
- * 
+ *
  * Set molecular (total) charge.
- * 
+ *
  * TODO: just for compatibility of input files with nwchem. To be
  * removed or it is a useful feature?
  **********************************************************************/
@@ -309,14 +313,14 @@ void directive_charge()
 
 /***********************************************************************
  * directive_geometry
- * 
+ *
  * Set molecular geometry (xyz).
  **********************************************************************/
 void directive_geometry()
 {
 	int i;
 	int geom_units = UNITS_ANGSTROMS;
-	
+
 	for (;;) {
 		nextToken(); /* sval == NULL ---> seg fault */
 		if (ttype == TT_WORD) {
@@ -356,7 +360,7 @@ void directive_geometry()
 				y = nval;
 				match(TT_NUMBER);
 				z = nval;
-				
+
 				if (geom_units == UNITS_ANGSTROMS) {
 					x *= 1.889725989;
 					y *= 1.889725989;
@@ -383,7 +387,7 @@ void directive_geometry()
 
 /***********************************************************************
  * directive_task
- * 
+ *
  * Starts quantum chemistry calculation.
  **********************************************************************/
 void directive_task()
@@ -392,15 +396,86 @@ void directive_task()
 	if (ttype != TT_KW_SCF)
 		errquit("only SCF calculations can be performed");
 	nextToken();
-	if (!(ttype == TT_WORD && sval && !strcmp(sval, "energy"))) /* task scf energ */
+	if (!(ttype == TT_WORD && sval && !strcmp(sval, "energy"))) /* task scf energy */
 		lexerPushBack();
 	scf_energy(&molecule);
 }
 
 
 /***********************************************************************
+ * directive_property
+ *
+ * Input for properties calculations.
+ **********************************************************************/
+void directive_property()
+{
+	double center_x, center_y, center_z;
+
+	nextToken();
+	if (ttype != TT_WORD)
+		errquit("'property' directive: one of ['quadrupole'] expected");
+	// quadrupole
+	if (strcmp(sval, "quadrupole") == 0) {
+		nextToken();
+		for (;;) {
+			if (ttype == TT_KW_END)
+				break;
+			else if (ttype == TT_EOF)
+				errquit("reached unexpected end of input file in section 'property'");
+			else if (ttype == TT_WORD) {
+				if (strcmp(sval, "center") == 0) {
+					nextToken();
+					if (ttype != TT_WORD) {
+						errquit("error in 'property:quadrupole:center': allowed keywords "
+						        "are 'com', 'coc', 'origin', 'point'");
+					}
+					if (strcmp(sval, "com") == 0) { // center of mass
+						rtdb_set("prop:quadrupole:center", "%i", CENTER_COM);
+					}
+					else if (strcmp(sval, "coc") == 0) { // center of charge
+						rtdb_set("prop:quadrupole:center", "%i", CENTER_COC);
+					}
+					else if (strcmp(sval, "origin") == 0) { // (0,0,0)
+						rtdb_set("prop:quadrupole:center", "%i", CENTER_ORIGIN);
+					}
+					else if (strcmp(sval, "point") == 0) { // arbitrary XYZ point
+						rtdb_set("prop:quadrupole:center", "%i", CENTER_POINT);
+						nextToken();
+						if (ttype != TT_NUMBER) {
+							errquit("error in 'property:quadrupole:center': number is expected (coord X)");
+						}
+						center_x = nval;
+						nextToken();
+						if (ttype != TT_NUMBER) {
+							errquit("error in 'property:quadrupole:center': number is expected (coord Y)");
+						}
+						center_y = nval;
+						nextToken();
+						if (ttype != TT_NUMBER) {
+							errquit("error in 'property:quadrupole:center': number is expected (coord Z)");
+						}
+						center_z = nval;
+						rtdb_set("prop:quadrupole:point", "%d%d%d", center_x, center_y, center_z);
+					}
+					else {
+						errquit("error in 'property:quadrupole:center': allowed keywords "
+						        "are 'com', 'coc', 'origin', 'point'");
+					}
+				}
+				else
+					errquit("unknown keyword in 'property' section");
+			}
+			nextToken();
+		}
+	}
+	else
+		errquit("'property' directive: one of ['quadrupole'] expected");
+}
+
+
+/***********************************************************************
  * calc_info_defaults
- * 
+ *
  * Default settings for the minichem.
  **********************************************************************/
 void calc_info_defaults()
@@ -410,7 +485,7 @@ void calc_info_defaults()
 	molecule.capacity = 0;
 	molecule.charge   = 0;
 	molecule.mult     = 1; /* singlet */
-	
+
 	// and the same to the RTDB
 	/* top-level */
 	rtdb_set("top:echo", "%i", 0);
@@ -422,13 +497,8 @@ void calc_info_defaults()
 	rtdb_set("geom:units",  "%i", UNITS_ANGSTROMS);
 	rtdb_set("geom:charge", "%i", 0);  /* neutral */
 	rtdb_set("geom:mult",   "%i", 1);  /* singlet */
+	/* properties */
+	rtdb_set("prop:quadrupole:center", "%i", CENTER_ORIGIN);
 	/* output */
 	rtdb_set("visual:molden", "%i", 0);
 }
-
-
-
-
-
-
-

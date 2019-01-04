@@ -1,7 +1,7 @@
 /***********************************************************************
  * input.h
  * =======
- * 
+ *
  * 2016-2018 Alexander Oleynichenko
  **********************************************************************/
 
@@ -28,6 +28,14 @@ enum {
 	PRINT_DEBUG
 };
 extern int print_level;  // default: PRINT_MEDIUM
+
+// type of central point for origin-dependent properties
+enum {
+	CENTER_COM,     // center of mass
+	CENTER_COC,     // center of charge
+	CENTER_ORIGIN,  // point (0,0,0)
+	CENTER_POINT    // arbitrary point (given by user)
+};
 
 /* interface to the runtime database (rtdb) */
 int rtdb_set(char *key, char *fmt, ...);

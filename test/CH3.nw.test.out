@@ -1,8 +1,8 @@
 Minichem 1.0
 By Alexander Oleynichenko, 2018
-Build date:    Dec 30 2018 21:56:49
+Build date:    Jan  2 2019 22:39:09
 Compiler:      gcc 4.9.2
-Date:          Wed Jan  2 11:36:02 2019
+Date:          Fri Jan  4 14:00:30 2019
 # MPI threads: 1
 Arguments:  minichem.x CH3.nw 
 ------------------------------------------------------------
@@ -120,6 +120,7 @@ begin 1e integrals...
   nuclear attraction
   X Y Z integrals
   XX XY XZ YY YZ ZZ integrals
+    center: origin = 0.0 0.0 0.0
 done
 begin 2e integrals...
   sizeof buf (bytes) = 98304
@@ -155,7 +156,7 @@ One-electron integrals read in 0.000000 sec
 Basis orthogonalization algorithm: canonical
 Basis functions elimination threshold: 1e-08
 Overlap matrix lowest eigenvalue = 0.25052657
-AO basis orthogonalization done in 0.000199 sec
+AO basis orthogonalization done in 0.000171 sec
 
 Initial guess: extended Huckel theory
 Initial energy = -48.56977360
@@ -285,24 +286,24 @@ Nbeta = 4
       -0.000337     0.000274     0.000063
            xy           xz           yz
        0.544048     0.544647    -0.544263
-  Qij = 3*r_i*r_j - \delta_ij*|r^2|
+  Q_ij = 3*r_i*r_j - \delta_ij*|r^2|
   1 Buckingham = 1.345044 a.u.
 
 
  time for (sec):
  -------------------------------------------------------
   One-electron integrals                          0.005
-  Two-electron integrals                          0.054
+  Two-electron integrals                          0.049
   Basis set orthogonalization                     0.000
   Initial guess                                   0.000
   Fock matrix diagonalization                     0.001
   Density matrix construction                     0.000
   Fock matrix construction                        0.002
  -------------------------------------------------------
-                                                  0.062
+                                                  0.058
 
 
 Allocated: 228224 bytes
 Freed:     204672 bytes
 Max usage: 34944 bytes
-Total time: 0.080 sec
+Total time: 0.078 sec

@@ -1,8 +1,8 @@
 Minichem 1.0
 By Alexander Oleynichenko, 2018
-Build date:    Dec 30 2018 21:56:49
+Build date:    Jan  2 2019 22:39:09
 Compiler:      gcc 4.9.2
-Date:          Wed Jan  2 11:35:30 2019
+Date:          Fri Jan  4 13:59:59 2019
 # MPI threads: 1
 Arguments:  minichem.x CO.nw 
 ------------------------------------------------------------
@@ -15,9 +15,13 @@ echo
 #nproc 8
 #print debug
 
+property quadrupole
+  center com
+end
+
 geometry units atomic
-  C  1.23694 0 0
-  O -0.92770 0 0
+  C  0 0 0
+  O 2.16464 0 0
 end
 
 basis "ao basis" SPHERICAL
@@ -98,8 +102,8 @@ One-electron integrals evaluation algorithm: Obara-Saika
 Two-electron integrals evaluation algorithm: Obara-Saika
 
 	Atomic coordinates (atomic units):
-    [ 1]  C      1.23694000     0.00000000     0.00000000
-    [ 2]  O     -0.92770000     0.00000000     0.00000000
+    [ 1]  C      0.00000000     0.00000000     0.00000000
+    [ 2]  O      2.16464000     0.00000000     0.00000000
 
 
 	Distance matrix (atomic units):
@@ -110,8 +114,8 @@ generating atom-centered basis set...
   # shells = 6
 
 	Basis functions (atomic units):
-    C    1.237   0.000   0.000  [1]s  [2]s  [3]pz  [4]py  [5]px
-    O   -0.928   0.000   0.000  [6]s  [7]s  [8]pz  [9]py  [10]px
+    C    0.000   0.000   0.000  [1]s  [2]s  [3]pz  [4]py  [5]px
+    O    2.165   0.000   0.000  [6]s  [7]s  [8]pz  [9]py  [10]px
 
 begin 1e integrals...
   overlap
@@ -119,6 +123,7 @@ begin 1e integrals...
   nuclear attraction
   X Y Z integrals
   XX XY XZ YY YZ ZZ integrals
+    center: com (of mass) = 1.2364 0.0000 0.0000
 done
 begin 2e integrals...
   sizeof buf (bytes) = 98304
@@ -155,24 +160,24 @@ One-electron integrals read in 0.000000 sec
 Basis orthogonalization algorithm: canonical
 Basis functions elimination threshold: 1e-08
 Overlap matrix lowest eigenvalue = 0.21393818
-AO basis orthogonalization done in 0.000179 sec
+AO basis orthogonalization done in 0.000165 sec
 
 Initial guess: extended Huckel theory
 Initial energy = -134.03920471
 
  iter.       Energy         Delta E       RMS-Dens       DIIS-Err     time
 ----------------------------------------------------------------------------
-   1    -107.45863432     4.40598247     1.97024153     0.68506300    0.22
-   2    -110.27895668    -2.82032236     0.78804385     1.09244861    0.45
-   3    -111.33923682    -1.06028014     0.20505367     0.20137155    0.67
-   4    -111.22278957     0.11644725     0.09275791     0.03103103    1.05
-   5    -111.22127881     0.00151076     0.06018666     0.01372442    1.35
-   6    -111.22887826    -0.00759945     0.01025002     0.00158609    1.58
-   7    -111.22514199     0.00373628     0.00602504     0.00135624    1.82
-   8    -111.22544280    -0.00030081     0.00033102     0.00004170    2.04
-   9    -111.22545103    -0.00000823     0.00003046     0.00000475    2.26
-  10    -111.22544958     0.00000146     0.00000130     0.00000060    2.48
-  11    -111.22544951     0.00000006     0.00000005     0.00000003    2.71
+   1    -107.45863432     4.40598247     1.97024153     0.68506300    0.23
+   2    -110.27895668    -2.82032236     0.78804385     1.09244861    0.47
+   3    -111.33923682    -1.06028014     0.20505367     0.20137155    0.70
+   4    -111.22278957     0.11644725     0.09275791     0.03103103    0.93
+   5    -111.22127881     0.00151076     0.06018666     0.01372442    1.17
+   6    -111.22887826    -0.00759945     0.01025002     0.00079391    1.39
+   7    -111.22514199     0.00373628     0.00602504     0.00135624    1.64
+   8    -111.22544280    -0.00030081     0.00033102     0.00004170    1.89
+   9    -111.22545103    -0.00000823     0.00003046     0.00000568    2.10
+  10    -111.22544958     0.00000146     0.00000130     0.00000060    2.33
+  11    -111.22544951     0.00000006     0.00000005     0.00000003    2.54
 ----------------------------------------------------------------------------
           Total SCF energy =  -111.22544951
   Nuclear repulsion energy =    22.17458792
@@ -218,37 +223,37 @@ Initial energy = -134.03920471
 
   dipole moment:
   D       x            y            z
-    -0.04893493  -0.00000000  -0.00000000
+     0.04893493   0.00000000   0.00000000
   |D| = 0.04893493 a.u. = 0.12438016 Debye
 
   second moments of charge (atomic units):
            xx           yy           zz
-      -8.713738    -6.471394    -6.471394
+      -8.713689    -6.471394    -6.471394
            xy           xz           yz
-      -0.000000    -0.000000    -0.000000
+       0.000000    -0.000000    -0.000000
   quadrupole moments (atomic units):
            xx           yy           zz
-      -4.484688     2.242344     2.242344
+      -4.484590     2.242295     2.242295
            xy           xz           yz
-      -0.000000    -0.000000    -0.000000
-  Qij = 3*r_i*r_j - \delta_ij*|r^2|
+       0.000000    -0.000000    -0.000000
+  Q_ij = 3*r_i*r_j - \delta_ij*|r^2|
   1 Buckingham = 1.345044 a.u.
 
 
  time for (sec):
  -------------------------------------------------------
-  One-electron integrals                          0.004
-  Two-electron integrals                          0.226
+  One-electron integrals                          0.005
+  Two-electron integrals                          0.223
   Basis set orthogonalization                     0.000
   Initial guess                                   0.000
   Fock matrix diagonalization                     0.001
   Density matrix construction                     0.000
-  Fock matrix construction                        2.708
+  Fock matrix construction                        2.537
  -------------------------------------------------------
-                                                  2.939
+                                                  2.766
 
 
 Allocated: 117384 bytes
 Freed:     117384 bytes
 Max usage: 19792 bytes
-Total time: 2.942 sec
+Total time: 2.770 sec

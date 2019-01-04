@@ -6,9 +6,13 @@ echo
 #nproc 8
 #print debug
 
+property quadrupole
+  center com
+end
+
 geometry units atomic
-  C  1.23694 0 0
-  O -0.92770 0 0
+  C  0 0 0
+  O 2.16464 0 0
 end
 
 basis "ao basis" SPHERICAL

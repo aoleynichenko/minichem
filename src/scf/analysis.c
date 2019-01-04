@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "input.h"
 #include "aoints.h"
 #include "basis.h"
 #include "chem.h"
@@ -137,6 +138,7 @@ void scf_properties(struct cart_mol *geom, double *Pa, double *Pb, int dim)
 	double *coord[3];               // array of three coord matrices (X, Y, Z)
 	double *quad_mat[6];            // integrals XX, XY, XZ, YY, YZ, ZZ
 	double quad[] = {0,0,0,0,0,0};  // quadrupole moments (cartesian)
+	double center_quad[] = {0,0,0}; // translation to the center of quadrupole mom
 
 	printf("\n");
 	printf("\t\tSCF properties\n");
@@ -200,6 +202,8 @@ void scf_properties(struct cart_mol *geom, double *Pa, double *Pb, int dim)
 	printf("\n");
 
 	/* SECOND MOMENTS (and quadrupole) */
+	rtdb_get("prop:quadrupole:translation",
+			&center_quad[0], &center_quad[1], &center_quad[2]);
 	// electronic contribution:
 	for (i = 0; i < dim; i++)
 		for (j = 0; j < dim; j++) {
@@ -210,9 +214,9 @@ void scf_properties(struct cart_mol *geom, double *Pa, double *Pb, int dim)
 	// nuclear contribution:
 	for (i = 0; i < geom->size; i++) {
 		double Zi = geom->atoms[i].Z;
-		double xi = geom->atoms[i].r[0];
-		double yi = geom->atoms[i].r[1];
-		double zi = geom->atoms[i].r[2];
+		double xi = geom->atoms[i].r[0] - center_quad[0]; // translate to center
+		double yi = geom->atoms[i].r[1] - center_quad[1];
+		double zi = geom->atoms[i].r[2] - center_quad[2];
 		quad[0] += Zi * xi * xi;  // XX
 		quad[1] += Zi * xi * yi;  // XY
 		quad[2] += Zi * xi * zi;  // XZ

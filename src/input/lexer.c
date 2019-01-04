@@ -1,11 +1,11 @@
 /***********************************************************************
  * lexer.c
  * =======
- * 
+ *
  * Tokenizer for reading formatted input files.
- * 
+ *
  * 2016-2018 Alexander Oleynichenko
- * 
+ *
  ***********************************************************************
  *   Input file can consist of:
  *    - keywords: start, echo, geometry, scf
@@ -15,7 +15,7 @@
  *    - doubles
  *  Language is case-insensitive.
  *  Example input file:
- *  
+ *
  *  start HeH+
  *  memory 200 mb
  *  echo
@@ -62,11 +62,11 @@ void load(FILE *f, char *filename)
 {
     int c, sz = 0;
     char *s;
-    
+
     fseek(f, 0L, SEEK_END);   /* to end */
 	sz = ftell(f);
 	fseek(f, 0L, SEEK_SET);   /* to begin */
-	
+
     if (source)
         free(source);
     source = (char *)malloc(sizeof(char) * sz + 2);
@@ -78,14 +78,14 @@ void load(FILE *f, char *filename)
     }
     *s++ = EOF;
     *s = '\0';
-    
+
     initLexer();
 }
 
 void initLexer()
 {
     prog = source;
-    
+
     lexerSetWordChars('a', 'z');
     lexerSetWordChars('A', 'Z');
     lexerSetWordChars(128 + 32, 255);
@@ -197,19 +197,19 @@ int nextToken()
     char *ct = ctype;
     int ctype;
     int c, d, c2;
-    
+
     if (pushedBack) {
         pushedBack = 0;
         return ttype;
     }
-    
-    
+
+
     if (sval)
         free(sval);
     sval = NULL;
-    
+
     c = peekc;
-    
+
     if (c < 0)
         c = NEED_CHAR;
     if (c == SKIP_LF) {
@@ -225,14 +225,14 @@ int nextToken()
             return ttype = TT_EOF;
     }
     ttype = c;              /* Just to be safe */
-    
+
     /* Set peekc so that the next invocation of nextToken will read
      * another character unless peekc is reset in this invocation
      */
     peekc = NEED_CHAR;
-    
+
     ctype = c < 256 ? ct[c] : CT_ALPHA;
-    
+
     while ((ctype & CT_WHITESPACE) != 0) { /* ignore while whitespace */
         if (c == '\r') {
             line_n++;
@@ -248,7 +248,7 @@ int nextToken()
                 line_n++;
                 if (isEolSign)
                     return ttype = TT_EOL;
-                
+
             }
             c = readChar();
         }
@@ -256,7 +256,7 @@ int nextToken()
             return ttype = TT_EOF;
         ctype = c < 256 ? ct[c] : CT_ALPHA;
     }
-    
+
     /* is it number? */
     if ((ctype & CT_DIGIT) != 0) {
         double v = 0;
@@ -285,7 +285,7 @@ int nextToken()
 				c = readChar();
                 goto word;
 			} else break;
-            
+
             c = readChar();
         }
         peekc = c;
@@ -302,7 +302,7 @@ int nextToken()
         nval = neg ? -v : v;
         return ttype = TT_NUMBER;
     }
-    
+
     /* letter or digit (example: 6-31g**) */
 word:
     if ((ctype & (CT_ALPHA | CT_DIGIT)) != 0) {
@@ -317,14 +317,14 @@ word:
             ctype = c < 0 ? CT_WHITESPACE : c < 256 ? ct[c] : CT_ALPHA;
         } while ((ctype & (CT_ALPHA | CT_DIGIT)) != 0 || c == '*'); /* '*' are allowed in identifiers */
         peekc = c;
-        
+
         buf[i++] = '\0';
         sval = (char *)malloc(sizeof(char) * i);
         strcpy(sval, buf);
         forceLower(sval);
         return ttype = checkForKeyword(sval);
     }
-    
+
     /* опасно что взял название ctype, перекрывание имен вышло */
     if ((ctype & CT_QUOTE) != 0) {  /* кавычка нам попалась */
         int i = 0;
@@ -388,20 +388,20 @@ word:
             }
             buf[i++] = (char)c;
         }
-        
+
         /* If we broke out of the loop because we found a matching quote
          * character then arrange to read a new character next time
          * around; otherwise, save the character.
          */
         peekc = (d == ttype) ? NEED_CHAR : d;
-        
+
         buf[i++] = '\0';
         sval = (char *)malloc(sizeof(char) * i);
         strcpy(sval, buf);
-        
+
         return ttype;
     }
-    
+
     /* #-comments */
     if ((ctype & CT_COMMENT) != 0) {
         while ((c = readChar()) != '\n' && c != '\r' && !(c < 0 && c > -3));
@@ -435,6 +435,7 @@ static struct kw_mapping {
 	{"charge", TT_KW_CHARGE},
 	{"nproc", TT_KW_NPROC},
 	{"print", TT_KW_PRINT},
+	{"property", TT_KW_PROPERTY},
     {0, 0}
 };
 
@@ -480,27 +481,3 @@ void print_tokens()
 		nextToken();
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

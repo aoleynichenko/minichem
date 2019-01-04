@@ -19,7 +19,7 @@
 #include "sys.h"
 
 // locally used routines
-void compute_1e_aoints(BasisFunc_t *bfns, int nbas, char *filename);
+void compute_1e_aoints(BasisFunc_t *bfns, int nbas, char *filename, Molecule_t *mol);
 void compute_2e_aoints(BasisFunc_t *bfns, int nbas, char *filename);
 
 
@@ -50,7 +50,7 @@ void compute_aoints(Molecule_t *mol)
 	// print detailed info about atom-centered basis
 	print_basis_functions(bfns, nbfns);
 
-	compute_1e_aoints(bfns, nbfns, "AOINTS1");
+	compute_1e_aoints(bfns, nbfns, "AOINTS1", mol);
 	compute_2e_aoints(bfns, nbfns, "AOINTS2");
 
 	printf("\n");
@@ -75,7 +75,7 @@ void compute_aoints(Molecule_t *mol)
  * <Y>
  * <Z>
  **********************************************************************/
-void compute_1e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
+void compute_1e_aoints(BasisFunc_t *bfns, int nbas, char *filename, Molecule_t *mol)
 {
 	int i, j, k, fd;
 	double *A;   // temporary matrix
@@ -85,6 +85,8 @@ void compute_1e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
 		/* XX       XY       XZ       YY       YZ       ZZ */
 		{2,0,0}, {1,1,0}, {1,0,1}, {0,2,0}, {0,1,1}, {0,0,2}
 	};
+	double center_quad[] = {0.0,0.0,0.0};
+	int center_type;
 
 	timer_new_entry("1e", "One-electron integrals");
 	timer_start("1e");
@@ -137,6 +139,56 @@ void compute_1e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
 	}
 
 	printf("  XX XY XZ YY YZ ZZ integrals\n");
+	// find the center of expansion for the quadrupole calculations
+	rtdb_get("prop:quadrupole:center", &center_type);
+	if (center_type == CENTER_ORIGIN) {
+			printf("    center: origin = 0.0 0.0 0.0\n");
+	}
+	else if (center_type == CENTER_COM) {
+		  double total_M = 0.0;
+			for (i = 0; i < mol->size; i++) {
+					total_M += searchByZ(mol->atoms[i].Z)->m;
+			}
+		  for (i = 0; i < mol->size; i++) {
+					int Z = mol->atoms[i].Z;
+					double m = searchByZ(Z)->m;
+					center_quad[0] += m * mol->atoms[i].r[0] / total_M;
+					center_quad[1] += m * mol->atoms[i].r[1] / total_M;
+					center_quad[2] += m * mol->atoms[i].r[2] / total_M;
+			}
+			printf("    center: com (of mass) = %.4f %.4f %.4f\n",
+					center_quad[0], center_quad[1], center_quad[2]);
+	}
+	else if (center_type == CENTER_COC) {
+		  double total_Z = 0.0;
+			for (i = 0; i < mol->size; i++) {
+					total_Z += mol->atoms[i].Z;
+			}
+		  for (i = 0; i < mol->size; i++) {
+					int Z = mol->atoms[i].Z;
+					center_quad[0] += Z * mol->atoms[i].r[0] / total_Z;
+					center_quad[1] += Z * mol->atoms[i].r[1] / total_Z;
+					center_quad[2] += Z * mol->atoms[i].r[2] / total_Z;
+			}
+			printf("    center: coc (of charge) = %.4f %.4f %.4f\n",
+					center_quad[0], center_quad[1], center_quad[2]);
+	}
+	else if (center_type == CENTER_POINT) {
+			rtdb_get("prop:quadrupole:point",
+					&center_quad[0], &center_quad[1], &center_quad[2]);
+			printf("    center: point %.4f %.4f %.4f\n",
+					center_quad[0], center_quad[1], center_quad[2]);
+	}
+	// translate atomic coordinates to the point center_quad[3]
+	for (i = 0; i < mol->size; i++) {
+			mol->atoms[i].r[0] -= center_quad[0];
+			mol->atoms[i].r[1] -= center_quad[1];
+			mol->atoms[i].r[2] -= center_quad[2];
+	}
+	rtdb_set("prop:quadrupole:translation", "%d%d%d",
+			center_quad[0], center_quad[1], center_quad[2]);
+	form_atom_centered_bfns(mol, &bfns, &shells, &nbfns, &nshells);
+	// calculate 2nd electric moments integrals
 	for (k = 0; k < 6; k++) {
 		for (i = 0; i < nbas; i++) {
 			for (j = 0; j < nbas; j++) {
@@ -147,6 +199,13 @@ void compute_1e_aoints(BasisFunc_t *bfns, int nbas, char *filename)
 		}
 		fastio_write_doubles(fd, A, nbas*nbas);
 	}
+	// "back translation"
+	for (i = 0; i < mol->size; i++) {
+			mol->atoms[i].r[0] += center_quad[0];
+			mol->atoms[i].r[1] += center_quad[1];
+			mol->atoms[i].r[2] += center_quad[2];
+	}
+	form_atom_centered_bfns(mol, &bfns, &shells, &nbfns, &nshells);
 
 	fastio_close(fd);
 	free(A);

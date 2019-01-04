@@ -1,8 +1,8 @@
 Minichem 1.0
 By Alexander Oleynichenko, 2018
-Build date:    Dec 30 2018 21:56:49
+Build date:    Jan  2 2019 22:39:09
 Compiler:      gcc 4.9.2
-Date:          Wed Jan  2 11:35:34 2019
+Date:          Fri Jan  4 14:00:04 2019
 # MPI threads: 1
 Arguments:  minichem.x C6H6.nw 
 ------------------------------------------------------------
@@ -209,6 +209,7 @@ begin 1e integrals...
   nuclear attraction
   X Y Z integrals
   XX XY XZ YY YZ ZZ integrals
+    center: origin = 0.0 0.0 0.0
 done
 begin 2e integrals...
   sizeof buf (bytes) = 98304
@@ -241,25 +242,25 @@ Mol mass:  0.000
 Charge:    0
 Spin mult: 1
 Units:     angstroms
-One-electron integrals read in 0.000036 sec
+One-electron integrals read in 0.000000 sec
 Basis orthogonalization algorithm: canonical
 Basis functions elimination threshold: 1e-08
 Overlap matrix lowest eigenvalue = 0.17195555
-AO basis orthogonalization done in 0.027672 sec
+AO basis orthogonalization done in 0.091304 sec
 
 Initial guess: extended Huckel theory
 Initial energy = -429.76043481
 
  iter.       Energy         Delta E       RMS-Dens       DIIS-Err     time
 ----------------------------------------------------------------------------
-   1    -229.31830420    -2.92583491     0.91076057     0.30543339    0.20
-   2    -227.58718307     1.73112113     0.24353524     0.04234603    0.21
-   3    -227.93799952    -0.35081645     0.04430170     0.00598920    0.23
-   4    -227.88916423     0.04883529     0.00352539     0.00040233    0.24
-   5    -227.89088132    -0.00171709     0.00030488     0.00002394    0.26
-   6    -227.89074306     0.00013826     0.00001088     0.00000195    0.27
-   7    -227.89074407    -0.00000100     0.00000200     0.00000027    0.29
-   8    -227.89074473    -0.00000066     0.00000024     0.00000010    0.31
+   1    -229.31830420    -2.92583491     0.91076057     0.30543339    0.17
+   2    -227.58718307     1.73112113     0.24353524     0.04234603    0.19
+   3    -227.93799952    -0.35081645     0.04430170     0.00598920    0.20
+   4    -227.88916423     0.04883529     0.00352539     0.00040233    0.22
+   5    -227.89088132    -0.00171709     0.00030488     0.00002394    0.23
+   6    -227.89074306     0.00013826     0.00001088     0.00000195    0.25
+   7    -227.89074407    -0.00000100     0.00000200     0.00000027    0.26
+   8    -227.89074473    -0.00000066     0.00000024     0.00000010    0.28
 ----------------------------------------------------------------------------
           Total SCF energy =  -227.89074473
   Nuclear repulsion energy =   203.36796552
@@ -364,24 +365,24 @@ Initial energy = -429.76043481
        2.901899     2.907655    -5.809554
            xy           xz           yz
       -0.000000     0.000000    -0.000000
-  Qij = 3*r_i*r_j - \delta_ij*|r^2|
+  Q_ij = 3*r_i*r_j - \delta_ij*|r^2|
   1 Buckingham = 1.345044 a.u.
 
 
  time for (sec):
  -------------------------------------------------------
-  One-electron integrals                          0.085
-  Two-electron integrals                         26.310
-  Basis set orthogonalization                     0.028
-  Initial guess                                   0.040
-  Fock matrix diagonalization                     0.046
-  Density matrix construction                     0.003
-  Fock matrix construction                        0.175
+  One-electron integrals                          0.145
+  Two-electron integrals                         26.033
+  Basis set orthogonalization                     0.091
+  Initial guess                                   0.039
+  Fock matrix diagonalization                     0.043
+  Density matrix construction                     0.002
+  Fock matrix construction                        0.135
  -------------------------------------------------------
-                                                 26.687
+                                                 26.490
 
 
 Allocated: 805912 bytes
 Freed:     805912 bytes
 Max usage: 207232 bytes
-Total time: 26.762 sec
+Total time: 26.486 sec

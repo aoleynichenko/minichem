@@ -1,8 +1,8 @@
 Minichem 1.0
 By Alexander Oleynichenko, 2018
-Build date:    Dec 30 2018 21:56:49
+Build date:    Jan  2 2019 22:39:09
 Compiler:      gcc 4.9.2
-Date:          Wed Jan  2 11:36:02 2019
+Date:          Fri Jan  4 14:00:30 2019
 # MPI threads: 1
 Arguments:  minichem.x Li.nw 
 ------------------------------------------------------------
@@ -87,6 +87,7 @@ begin 1e integrals...
   nuclear attraction
   X Y Z integrals
   XX XY XZ YY YZ ZZ integrals
+    center: origin = 0.0 0.0 0.0
 done
 begin 2e integrals...
   sizeof buf (bytes) = 98304
@@ -122,7 +123,7 @@ One-electron integrals read in 0.000000 sec
 Basis orthogonalization algorithm: canonical
 Basis functions elimination threshold: 1e-08
 Overlap matrix lowest eigenvalue = 0.75886335
-AO basis orthogonalization done in 0.000125 sec
+AO basis orthogonalization done in 0.000122 sec
 
 Initial guess: extended Huckel theory
 Initial energy = -7.39548055
@@ -132,19 +133,19 @@ Nbeta = 1
 
  iter.       Energy         Delta E       RMS-Dens      <S^2>       time
 --------------------------------------------------------------------------
-   1      -7.30884141     0.08663914     0.00000000    0.7500       0.03
+   1      -7.30884141     0.08663914     0.00000000    0.7500       0.00
                                          0.03075206
-   2      -7.31437361    -0.00553220     0.00000000    0.7500       0.03
+   2      -7.31437361    -0.00553220     0.00000000    0.7500       0.00
                                          0.00464380
-   3      -7.31534839    -0.00097478     0.00000000    0.7500       0.03
+   3      -7.31534839    -0.00097478     0.00000000    0.7500       0.00
                                          0.00070257
-   4      -7.31549903    -0.00015064     0.00000000    0.7500       0.03
+   4      -7.31549903    -0.00015064     0.00000000    0.7500       0.00
                                          0.00010631
-   5      -7.31552190    -0.00002287     0.00000000    0.7500       0.03
+   5      -7.31552190    -0.00002287     0.00000000    0.7500       0.00
                                          0.00001609
-   6      -7.31552536    -0.00000346     0.00000000    0.7500       0.03
+   6      -7.31552536    -0.00000346     0.00000000    0.7500       0.00
                                          0.00000243
-   7      -7.31552589    -0.00000052     0.00000000    0.7500       0.03
+   7      -7.31552589    -0.00000052     0.00000000    0.7500       0.00
                                          0.00000037
 --------------------------------------------------------------------------
           Total SCF energy =    -7.31552589
@@ -208,24 +209,24 @@ Nbeta = 1
        0.000000     0.000000     0.000000
            xy           xz           yz
        0.000000     0.000000     0.000000
-  Qij = 3*r_i*r_j - \delta_ij*|r^2|
+  Q_ij = 3*r_i*r_j - \delta_ij*|r^2|
   1 Buckingham = 1.345044 a.u.
 
 
  time for (sec):
  -------------------------------------------------------
-  One-electron integrals                          0.002
+  One-electron integrals                          0.021
   Two-electron integrals                          0.017
   Basis set orthogonalization                     0.000
-  Initial guess                                   0.001
+  Initial guess                                   0.000
   Fock matrix diagonalization                     0.000
   Density matrix construction                     0.000
   Fock matrix construction                        0.000
  -------------------------------------------------------
-                                                  0.020
+                                                  0.039
 
 
 Allocated: 41880 bytes
 Freed:     39080 bytes
 Max usage: 7280 bytes
-Total time: 0.065 sec
+Total time: 0.054 sec

@@ -396,6 +396,26 @@ what additional information should be printed (but not printed by default). The 
 \item [noprint] disables printing of additional information. Arguments are the same as for \texttt{print} (see above).
 \end{labeling}
 
+\subsection{prop}
+
+Syntax:
+
+\begin{lstlisting}
+prop (quadrupole)
+  [center ((origin || com || coc || point <real x y z>) default origin)]
+end
+\end{lstlisting}
+
+Properties calculations. Currently available properties are electric dipole and quadrupole moments.
+
+As with any multipole moment, if a lower-order moment, monopole or dipole in this case, is non-zero, then the value of the quadrupole moment depends on the choice of the coordinate origin. Another properties can depend on coordinate origin too. 
+The user also has the option \texttt{center} to choose the center of multipole expansion.
+
+\begin{labeling}{alligator}
+\item [center] Coordinate origin for properties calculations. Allowed variants are 
+\texttt{origin} (point (0,0,0)), \texttt{com} (center of mass), \texttt{coc} (center of charge), \texttt{point} (arbitrary point given by th user). Default value -- \texttt{origin}.
+\end{labeling}
+
 \subsection{out}
 
 Syntax:
